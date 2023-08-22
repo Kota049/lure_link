@@ -1,0 +1,19 @@
+version: "3.4"
+services:
+  development:
+    build:
+      context: .
+      dockerfile: Dockerfile.rust
+      target : build-env
+    volumes:
+      - ./api:/app
+    tty: true
+    command: ["bash"]  # 開発用シェルを起動
+
+  production:
+    build:
+      context: .
+      dockerfile: Dockerfile.rust
+      target : production
+    ports:
+      - "80:80"  # 本番環境のポート設定
