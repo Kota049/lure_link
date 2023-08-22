@@ -1,6 +1,6 @@
 version: "3.4"
 services:
-  development:
+  rust-dev:
     build:
       context: .
       dockerfile: Dockerfile.rust
@@ -10,7 +10,7 @@ services:
     tty: true
     command: ["bash"]  # 開発用シェルを起動
 
-  production:
+  rust-prod:
     build:
       context: .
       dockerfile: Dockerfile.rust
