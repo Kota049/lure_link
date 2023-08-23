@@ -4,16 +4,58 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.rust
-      target : build-env
+      target: build-env
     volumes:
       - ./api:/app
     tty: true
-    command: ["bash"]  # 開発用シェルを起動
+    command: [ "bash" ]  # 開発用シェルを起動
+
+  rust-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.rust
+      target: build-env
+    tty: true
+    command: [ "bash" ]  # 開発用シェルを起動
 
   rust-prod:
     build:
       context: .
       dockerfile: Dockerfile.rust
-      target : production
+      target: production
     ports:
       - "80:80"  # 本番環境のポート設定
+  db-dev:
+    image: postgres:15
+    volumes:
+      - 'db-dev-data:/var/lib/postgresql/data'
+    environment:
+      - 'POSTGRES_USER=${POSTGRES_DEV_USER}'
+      - 'POSTGRES_PASSWORD=${POSTGRES_DEV_PASSWORD}'
+      - 'POSTGRES_DB=${POSTGRES_DEV_DB}'
+    ports:
+      - "5434:5434"
+  db-test:
+    image: postgres:15
+    volumes:
+      - 'db-test-data:/var/lib/postgresql/data'
+    environment:
+      - 'POSTGRES_USER=${POSTGRES_TEST_USER}'
+      - 'POSTGRES_PASSWORD=${POSTGRES_TEST_PASSWORD}'
+      - 'POSTGRES_DB=${POSTGRES_TEST_DB}'
+    ports:
+      - "5433:5433"
+  db-prod:
+    image: postgres:15
+    volumes:
+      - 'db-prod-data:/var/lib/postgresql/data'
+    environment:
+      - 'POSTGRES_USER=${POSTGRES_PROD_USER}'
+      - 'POSTGRES_PASSWORD=${POSTGRES_PROD_PASSWORD}'
+      - 'POSTGRES_DB=${POSTGRES_PROD_DB}'
+    ports:
+      - "5432:5432"
+volumes:
+  db-test-data:
+  db-dev-data:
+  db-prod-data:

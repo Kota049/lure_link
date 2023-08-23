@@ -2,6 +2,7 @@
 .PHONY: rust-dev-up
 rust-dev-up:
 	docker compose up -d rust-dev
+	docker compose up -d db-dev
 
 .PHONY: rust-dev-in
 rust-dev-in:
