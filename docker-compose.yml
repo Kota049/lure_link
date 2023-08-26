@@ -9,6 +9,8 @@ services:
       - ./api:/app
     tty: true
     command: [ "bash" ]  # 開発用シェルを起動
+    ports:
+      - "4002:4002"
 
   rust-test:
     build:
@@ -17,14 +19,15 @@ services:
       target: build-env
     tty: true
     command: [ "bash" ]  # 開発用シェルを起動
-
+    ports:
+      - "4001:4001"
   rust-prod:
     build:
       context: .
       dockerfile: Dockerfile.rust
       target: production
     ports:
-      - "80:80"  # 本番環境のポート設定
+      - "4000:4000"  # 本番環境のポート設定
   db-dev:
     image: postgres:15
     volumes:
