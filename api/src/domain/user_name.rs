@@ -1,7 +1,8 @@
+#[cfg(test)]
 pub mod tests;
-pub mod user_name;
 
 #[allow(dead_code)]
+#[derive(Debug, PartialEq)]
 pub struct UserName {
     value: String,
 }
