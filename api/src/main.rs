@@ -6,11 +6,14 @@ use tokio;
 
 #[tokio::main]
 async fn main() {
+    let port_number = std::env::var("RUST_PORT").unwrap_or_else(|e| {
+        eprint!("{e}");
+        String::from("4000")
+    });
+    let bind_target = format!("0.0.0.0:{}", port_number);
     // build our application with a single route
     let app = Router::new().route("/", get(|| async { "Hello, World!" }));
-
-    // run it with hyper on localhost:3000
-    axum::Server::bind(&"0.0.0.0:4002".parse().unwrap())
+    axum::Server::bind(&bind_target.parse().unwrap())
         .serve(app.into_make_service())
         .await
         .unwrap();
