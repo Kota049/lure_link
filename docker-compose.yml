@@ -1,0 +1,82 @@
+version: "3.4"
+services:
+  rust-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.rust
+      target: build-env
+    volumes:
+      - ./api:/app
+    environment:
+      - RUST_PORT=4002
+      - RUST_DB_USER=${POSTGRES_DEV_USER}
+      - RUST_DB_PASSWORD=${POSTGRES_DEV_PASSWORD}
+      - RUST_DB_NAME=${POSTGRES_DEV_DB}
+      - RUST_DB_HOST=${POSTGRES_DEV_HOST}
+    tty: true
+    command: [ "bash" ]  # 開発用シェルを起動
+    ports:
+      - "4002:4002"
+
+  rust-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.rust
+      target: build-env
+    tty: true
+    environment:
+      - RUST_PORT=4001
+      - RUST_DB_PASSWORD=${POSTGRES_TEST_USER}
+      - RUST_DB_USER=${POSTGRES_TEST_PASSWORD}
+      - RUST_DB_NAME=${POSTGRES_TEST_DB}
+      - RUST_DB_HOST=${POSTGRES_TEST_HOST}
+    command: [ "bash" ]  # 開発用シェルを起動
+    ports:
+      - "4001:4001"
+  rust-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile.rust
+      target: production
+    environment:
+      - RUST_PORT=4000
+      - RUST_DB_PASSWORD=${POSTGRES_PROD_USER}
+      - RUST_DB_USER=${POSTGRES_PROD_PASSWORD}
+      - RUST_DB_HOST=${POSTGRES_PROD_HOST}
+      - RUST_DB_NAME=${POSTGRES_PROD_DB}
+    ports:
+      - "4000:4000"  # 本番環境のポート設定
+  db-dev:
+    image: postgres:15
+    volumes:
+      - 'db-dev-data:/var/lib/postgresql/data'
+    environment:
+      - 'POSTGRES_USER=${POSTGRES_DEV_USER}'
+      - 'POSTGRES_PASSWORD=${POSTGRES_DEV_PASSWORD}'
+      - 'POSTGRES_DB=${POSTGRES_DEV_DB}'
+    ports:
+      - "5434:5434"
+  db-test:
+    image: postgres:15
+    volumes:
+      - 'db-test-data:/var/lib/postgresql/data'
+    environment:
+      - 'POSTGRES_USER=${POSTGRES_TEST_USER}'
+      - 'POSTGRES_PASSWORD=${POSTGRES_TEST_PASSWORD}'
+      - 'POSTGRES_DB=${POSTGRES_TEST_DB}'
+    ports:
+      - "5433:5433"
+  db-prod:
+    image: postgres:15
+    volumes:
+      - 'db-prod-data:/var/lib/postgresql/data'
+    environment:
+      - 'POSTGRES_USER=${POSTGRES_PROD_USER}'
+      - 'POSTGRES_PASSWORD=${POSTGRES_PROD_PASSWORD}'
+      - 'POSTGRES_DB=${POSTGRES_PROD_DB}'
+    ports:
+      - "5432:5432"
+volumes:
+  db-test-data:
+  db-dev-data:
+  db-prod-data:
