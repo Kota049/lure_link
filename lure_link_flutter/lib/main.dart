@@ -37,17 +37,31 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
             backgroundColor: Colors.lightBlue, title: const Text("LURELINK")),
-        body: const RecruitmentList(title: '富津岬', user: "村岡正憲"),
+        body: const RecruitmentList(),
       ),
     );
   }
 }
 
 class RecruitmentList extends StatelessWidget {
+  const RecruitmentList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        RecruitmentCard(title: '富津岬', user: '村岡正憲'),
+        RecruitmentCard(title: '国府津海岸', user: 'RED鈴木')
+      ],
+    );
+  }
+}
+
+class RecruitmentCard extends StatelessWidget {
   final String title;
   final String user;
 
-  const RecruitmentList({super.key, required this.title, required this.user});
+  const RecruitmentCard({super.key, required this.title, required this.user});
 
   @override
   Widget build(BuildContext context) {
