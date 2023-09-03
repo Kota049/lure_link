@@ -52,10 +52,31 @@ class RecruitmentList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: ListTile(
-        title: Text(title),
-        subtitle: Text(user),
-      ),
-    );
+        child: Row(
+      children: <Widget>[
+        // ClipRRect(
+        //   borderRadius: BorderRadius.circular(10),
+        //   child: Image.asset(
+        //     'images/saba.png',
+        //     width: 100,
+        //     height: 100,
+        //     alignment: Alignment.center,
+        //   ),
+        // ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(20), // Image border
+          child: SizedBox.fromSize(
+            size: const Size.fromRadius(48), // Image radius
+            child: Image.asset('images/saba.png', fit: BoxFit.cover),
+          ),
+        ),
+        Flexible(
+          child: ListTile(
+            subtitle: Text(user),
+            title: Text(title),
+          ),
+        )
+      ],
+    ));
   }
 }
