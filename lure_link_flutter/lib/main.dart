@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+
   const MyApp({super.key});
 
   // This widget is the root of your application.
@@ -53,27 +51,37 @@ class RecruitmentCard extends StatelessWidget {
     return Card(
         child: Row(
       children: <Widget>[
-        // ClipRRect(
-        //   borderRadius: BorderRadius.circular(10),
-        //   child: Image.asset(
-        //     'images/saba.png',
-        //     width: 100,
-        //     height: 100,
-        //     alignment: Alignment.center,
-        //   ),
-        // ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(20), // Image border
-          child: SizedBox.fromSize(
-            size: const Size.fromRadius(48), // Image radius
-            child: Image.asset('images/saba.png', fit: BoxFit.cover),
+        Flexible(
+          flex: 1,
+          fit:FlexFit.loose,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20), // Image border
+            child: SizedBox.fromSize(
+              size: const Size.fromRadius(30), // Image radius
+              child: Image.asset('images/saba.png', fit: BoxFit.cover),
+            ),
           ),
         ),
         Flexible(
+          flex: 5,
+          fit: FlexFit.loose,
           child: ListTile(
             subtitle: Text(user),
             title: Text(title),
           ),
+        ),
+        const Flexible(
+          flex: 3,
+          fit: FlexFit.loose,
+          child: Column(
+            children: [
+              Text("釣行費用"),
+              Text("3000円"),
+              Text("釣行人数"),
+              Text("0/2人")
+            ],
+          ),
+          
         )
       ],
     ));
