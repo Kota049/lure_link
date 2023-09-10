@@ -58,16 +58,16 @@ class RecruitmentCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(10), // Image border
                 child: AspectRatio(
-                    aspectRatio: 1/1,
+                    aspectRatio: 1 / 1,
                     child: Image.asset('images/saba.png', fit: BoxFit.cover)),
               ),
               SizedBox(
                   width: double.infinity,
                   child: Center(
-                    child: Text(user,
-                    style: const TextStyle(
-                      fontSize: 8
-                    ),),
+                    child: Text(
+                      user,
+                      style: const TextStyle(fontSize: 8),
+                    ),
                   ))
             ],
           ),
@@ -76,7 +76,26 @@ class RecruitmentCard extends StatelessWidget {
           flex: 5,
           fit: FlexFit.loose,
           child: ListTile(
-            title: Text(title),
+            title: Column(
+              children: [
+                const FittedBox(
+                    fit: BoxFit.scaleDown, child: Text("2023/09/10 18:00")),
+                Row(
+                  children: [
+                    const Icon(IconData(0xe3ab, fontFamily: 'MaterialIcons')),
+                    Text(title),
+                  ],
+                ),
+              ],
+            ),
+            subtitle: const FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  children: [
+                    Icon(IconData(0xe1d7, fontFamily: 'MaterialIcons')),
+                    Text("東京都新宿区"),
+                  ],
+                )),
           ),
         ),
         const Flexible(
