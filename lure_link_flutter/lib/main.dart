@@ -5,7 +5,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-
   const MyApp({super.key});
 
   // This widget is the root of your application.
@@ -53,20 +52,30 @@ class RecruitmentCard extends StatelessWidget {
       children: <Widget>[
         Flexible(
           flex: 1,
-          fit:FlexFit.loose,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20), // Image border
-            child: SizedBox.fromSize(
-              size: const Size.fromRadius(30), // Image radius
-              child: Image.asset('images/saba.png', fit: BoxFit.cover),
-            ),
+          fit: FlexFit.tight,
+          child: Column(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10), // Image border
+                child: AspectRatio(
+                    aspectRatio: 1/1,
+                    child: Image.asset('images/saba.png', fit: BoxFit.cover)),
+              ),
+              SizedBox(
+                  width: double.infinity,
+                  child: Center(
+                    child: Text(user,
+                    style: const TextStyle(
+                      fontSize: 8
+                    ),),
+                  ))
+            ],
           ),
         ),
         Flexible(
           flex: 5,
           fit: FlexFit.loose,
           child: ListTile(
-            subtitle: Text(user),
             title: Text(title),
           ),
         ),
@@ -74,14 +83,8 @@ class RecruitmentCard extends StatelessWidget {
           flex: 3,
           fit: FlexFit.loose,
           child: Column(
-            children: [
-              Text("釣行費用"),
-              Text("3000円"),
-              Text("釣行人数"),
-              Text("0/2人")
-            ],
+            children: [Text("釣行費用"), Text("3000円"), Text("釣行人数"), Text("0/2人")],
           ),
-          
         )
       ],
     ));
