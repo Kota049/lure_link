@@ -27,7 +27,7 @@ impl UserName {
 
         for n in 1..full_width_sym.len() {
             if s.contains(full_width_sym[n]){
-                return Err("全角記号が含まれています".to_string());
+                return Err("使用不可能な文字が含まれています".to_string());
             }
         }
 
