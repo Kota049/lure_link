@@ -41,7 +41,7 @@ impl UserName {
         }
 
         //文字数制限
-        let mut s_length = s.len();
+        let s_length = s.len();
 
         if s_length > 26 {
             return Err("26字以内に収めてください".to_string());
