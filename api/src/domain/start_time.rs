@@ -8,6 +8,6 @@ pub struct StartDate {
 
 impl StartDate{
     pub fn new(start_date:&str)->Result<Self,String>{
-        todo!()
+        Ok(StartDate{inner:start_date.to_string()})
     }
 }
