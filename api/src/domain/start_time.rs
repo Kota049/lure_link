@@ -10,14 +10,14 @@ pub struct StartDate {
 
 impl StartDate {
     pub fn new(start_date: &str) -> Result<Self, String> {
-        is_date(start_date)?;
+        validate_date(start_date)?;
         Ok(StartDate {
             inner: start_date.to_string(),
         })
     }
 }
 
-fn is_date(s: &str) -> Result<(), String> {
+pub fn validate_date(s: &str) -> Result<(), String> {
     if s.is_empty() {
         return Err(error_message::START_DATE.to_string());
     }
