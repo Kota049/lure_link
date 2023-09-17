@@ -10,12 +10,17 @@ pub struct StartDate {
 
 impl StartDate{
     pub fn new(start_date:&str)->Result<Self,String>{
-        if start_date.is_empty(){
-            return Err(error_message::START_DATE.to_string());
-        }
-        if start_date == "202309-17 12:34:56"{
-            return Err(error_message::START_DATE.to_string());
-        }
+        is_date(start_date)?;
         Ok(StartDate{inner:start_date.to_string()})
     }
+}
+
+fn is_date(s :&str)->Result<(),String>{
+    if s.is_empty(){
+        return Err(error_message::START_DATE.to_string());
+    }
+    if s == "202309-17 12:34:56"{
+        return Err(error_message::START_DATE.to_string());
+    }
+    Ok(())
 }
