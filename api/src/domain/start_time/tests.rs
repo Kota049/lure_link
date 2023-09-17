@@ -12,5 +12,5 @@ fn valid(){
 fn empty_date(){
     let date = "";
     let result = StartDate::new(date);
-    assert_eq!(result,Err("不正なstart_dateです".to_string()));
+    assert_eq!(result,Err(error_message::START_DATE.to_string()));
 }
