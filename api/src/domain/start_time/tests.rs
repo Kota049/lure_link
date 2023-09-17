@@ -8,3 +8,9 @@ fn valid(){
     let result = StartDate::new(date);
     assert_eq!(result,Ok(StartDate{inner: VALID_DATETIME.to_string()}));
 }
+#[test]
+fn empty_date(){
+    let date = "";
+    let result = StartDate::new(date);
+    assert_eq!(result,Err("不正なstart_dateです".to_string()));
+}
