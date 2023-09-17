@@ -8,6 +8,8 @@ pub struct RecruitmentDeadline {
 
 impl RecruitmentDeadline {
     pub fn new(deadline: &str) -> Result<Self, String> {
-        todo!()
+        Ok(RecruitmentDeadline {
+            inner: deadline.to_string(),
+        })
     }
 }
