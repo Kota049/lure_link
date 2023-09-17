@@ -14,3 +14,10 @@ fn empty_date(){
     let result = StartDate::new(date);
     assert_eq!(result,Err(error_message::START_DATE.to_string()));
 }
+#[test]
+fn non_date_format(){
+    let date = "202309-17 12:34:56";
+    let result = StartDate::new(date);
+    assert_eq!(result,Err(error_message::START_DATE.to_string()));
+
+}
