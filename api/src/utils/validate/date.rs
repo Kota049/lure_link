@@ -135,4 +135,6 @@ mod tests {
         "2023-09-17 12:34:a6",
         Err(error_message::START_DATE.to_string())
     );
+    date_test!(valid, VALID_DATETIME, Ok(()));
+    const VALID_DATETIME: &'static str = "2023-09-17 12:34:56";
 }
