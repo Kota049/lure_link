@@ -15,6 +15,9 @@ impl StartDate {
             inner: start_date.to_string(),
         })
     }
+    pub fn to_string(&self) -> String {
+        self.inner.clone()
+    }
 }
 
 pub fn validate_date(s: &str) -> Result<(), String> {
