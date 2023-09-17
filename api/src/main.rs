@@ -7,7 +7,8 @@ use api::db::connection::connection;
 
 #[tokio::main]
 async fn main() {
-    let _client = connection().await.unwrap();
+    let client = connection().await.unwrap();
+
     let port_number = std::env::var("RUST_PORT").unwrap_or_else(|e| {
         eprint!("{e}");
         String::from("4000")
