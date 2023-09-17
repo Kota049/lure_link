@@ -20,3 +20,9 @@ fn non_date_format(){
     let result = StartDate::new(date);
     assert_eq!(result,Err(error_message::START_DATE.to_string()));
 }
+#[test]
+fn non_date_format_another(){
+    let date = "202309-16 12:34:56";
+    let result = StartDate::new(date);
+    assert_eq!(result,Err(error_message::START_DATE.to_string()));
+}
