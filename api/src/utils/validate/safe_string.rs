@@ -2,6 +2,9 @@ use crate::constants::error_message::INVALID_COMMON_MESSAGE;
 
 pub fn validate_safe_string(s: &str) -> Result<(), String> {
     check_length(s)?;
+    if s.contains('<') {
+        return Err(INVALID_COMMON_MESSAGE.to_string());
+    }
     Ok(())
 }
 
