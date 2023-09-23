@@ -1,5 +1,5 @@
 pub fn validate_safe_string(s: &str) -> Result<(), String> {
-    todo!()
+    Ok(())
 }
 
 #[cfg(test)]
