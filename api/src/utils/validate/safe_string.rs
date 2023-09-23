@@ -5,6 +5,9 @@ pub fn validate_safe_string(s: &str) -> Result<(), String> {
     if s.contains('<') {
         return Err(INVALID_COMMON_MESSAGE.to_string());
     }
+    if s.contains('>') {
+        return Err(INVALID_COMMON_MESSAGE.to_string());
+    }
     Ok(())
 }
 
