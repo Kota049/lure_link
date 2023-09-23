@@ -17,6 +17,6 @@ impl RecruitmentDeadline {
         })
     }
     pub fn to_string(&self) -> String {
-        todo!()
+        self.inner.clone()
     }
 }
