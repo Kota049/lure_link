@@ -12,4 +12,11 @@ mod tests {
         let result = validate_safe_string(&valid);
         assert_eq!(result, Ok(()));
     }
+
+    #[test]
+    fn empty() {
+        let valid = "";
+        let result = validate_safe_string(&valid);
+        assert_eq!(result, Err("不正な文字列です".to_string()));
+    }
 }
