@@ -16,4 +16,7 @@ impl RecruitmentDeadline {
             inner: deadline.to_string(),
         })
     }
+    pub fn to_string(&self) -> String {
+        todo!()
+    }
 }
