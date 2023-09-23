@@ -48,4 +48,10 @@ mod tests {
         let result = validate_safe_string(&valid);
         assert_eq!(result, Err(INVALID_COMMON_MESSAGE.to_string()));
     }
+    #[test]
+    fn opposite_comparator() {
+        let valid = "a>";
+        let result = validate_safe_string(&valid);
+        assert_eq!(result, Err(INVALID_COMMON_MESSAGE.to_string()));
+    }
 }
