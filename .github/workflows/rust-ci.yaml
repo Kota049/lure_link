@@ -18,8 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Change Directory
-        run: cd api
       - name: Build
-        run: cargo build --verbose
+        run: cargo build --verbose --manifest-path /home/runner/work/lure_link/lure_link/Cargo.toml
       - name: Run tests
-        run: cargo test --verbose
+        run: cargo test --verbose --manifest-path /home/runner/work/lure_link/lure_link/Cargo.toml
