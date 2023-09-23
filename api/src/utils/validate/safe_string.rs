@@ -1,5 +1,8 @@
 pub fn validate_safe_string(s: &str) -> Result<(), String> {
     is_empty(s)?;
+    if s.chars().count() > 255 {
+        return Err("不正な文字列です".to_string());
+    }
     Ok(())
 }
 
