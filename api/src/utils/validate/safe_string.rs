@@ -1,14 +1,16 @@
+use crate::constants::error_message::INVALID_COMMON_MESSAGE;
+
 pub fn validate_safe_string(s: &str) -> Result<(), String> {
-    is_empty(s)?;
-    if s.chars().count() > 255 {
-        return Err("不正な文字列です".to_string());
-    }
+    check_length(s)?;
     Ok(())
 }
 
-fn is_empty(s: &str) -> Result<(), String> {
+fn check_length(s: &str) -> Result<(), String> {
     if s.is_empty() {
-        return Err("不正な文字列です".to_string());
+        return Err(INVALID_COMMON_MESSAGE.to_string());
+    }
+    if s.chars().count() > 255 {
+        return Err(INVALID_COMMON_MESSAGE.to_string());
     }
     Ok(())
 }
@@ -28,13 +30,13 @@ mod tests {
     fn empty() {
         let valid = "";
         let result = validate_safe_string(&valid);
-        assert_eq!(result, Err("不正な文字列です".to_string()));
+        assert_eq!(result, Err(INVALID_COMMON_MESSAGE.to_string()));
     }
 
     #[test]
     fn too_large() {
         let valid = "a".repeat(256);
         let result = validate_safe_string(&valid);
-        assert_eq!(result, Err("不正な文字列です".to_string()));
+        assert_eq!(result, Err(INVALID_COMMON_MESSAGE.to_string()));
     }
 }
