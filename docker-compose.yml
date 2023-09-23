@@ -1,5 +1,17 @@
 version: "3.4"
 services:
+#  flutter:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile.flutter # Flutter 環境を構築するための Dockerfile
+#    stdin_open: true
+#    tty: true
+#    volumes:
+#      - ./flutter:/app
+#    environment:
+#      - FLUTTER_HOME=/usr/local/flutter
+#      - PATH=$FLUTTER_HOME/bin:$PATH
+#    command: /bin/bash # 例: bash でコンテナを起動
   rust-dev:
     build:
       context: .
