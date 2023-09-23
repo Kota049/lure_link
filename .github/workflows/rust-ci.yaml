@@ -18,6 +18,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build
-        run: cargo build --verbose --manifest-path /home/runner/work/lure_link/lure_link/Cargo.toml
+        run: cargo build --verbose --manifest-path /home/runner/work/lure_link/lure_link/api/Cargo.toml
       - name: Run tests
-        run: cargo test --verbose --manifest-path /home/runner/work/lure_link/lure_link/Cargo.toml
+        run: cargo test --verbose --manifest-path /home/runner/work/lure_link/lure_link/api/Cargo.toml
