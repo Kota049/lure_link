@@ -1,3 +1,4 @@
+use crate::constants::error_message::VALIDATE_DEADLINE_MESSAGE;
 use crate::utils::validate::date::validate_date;
 
 #[cfg(test)]
@@ -10,9 +11,7 @@ pub struct RecruitmentDeadline {
 
 impl RecruitmentDeadline {
     pub fn new(deadline: &str) -> Result<Self, String> {
-        if validate_date(deadline).is_err() {
-            return Err("不正なrecruitment_deadlineです".to_string());
-        }
+        validate_date(deadline).map_err(|_| VALIDATE_DEADLINE_MESSAGE)?;
         Ok(RecruitmentDeadline {
             inner: deadline.to_string(),
         })

@@ -14,5 +14,5 @@ fn valid() {
 fn invalid() {
     let valid = "2023-09-1a 12:34:56";
     let result = RecruitmentDeadline::new(valid);
-    assert_eq!(result, Err("不正なrecruitment_deadlineです".to_string()));
+    assert_eq!(result, Err(VALIDATE_DEADLINE_MESSAGE.to_string()));
 }
