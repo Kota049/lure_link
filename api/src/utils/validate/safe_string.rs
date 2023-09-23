@@ -9,7 +9,7 @@ fn check_length(s: &str) -> Result<(), String> {
     if s.is_empty() {
         return Err(INVALID_COMMON_MESSAGE.to_string());
     }
-    if s.chars().count() > 255 {
+    if s.chars().count() > 100 {
         return Err(INVALID_COMMON_MESSAGE.to_string());
     }
     Ok(())
@@ -35,7 +35,7 @@ mod tests {
 
     #[test]
     fn too_large() {
-        let valid = "a".repeat(256);
+        let valid = "a".repeat(101);
         let result = validate_safe_string(&valid);
         assert_eq!(result, Err(INVALID_COMMON_MESSAGE.to_string()));
     }
