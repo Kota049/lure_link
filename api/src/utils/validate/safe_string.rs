@@ -1,4 +1,7 @@
 pub fn validate_safe_string(s: &str) -> Result<(), String> {
+    if s.is_empty() {
+        return Err("不正な文字列です".to_string());
+    }
     Ok(())
 }
 
