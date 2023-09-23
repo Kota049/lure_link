@@ -1,11 +1,14 @@
 use crate::constants::error_message::INVALID_COMMON_MESSAGE;
+use crate::constants::validate::UNSAFE_CHARS;
 
 pub fn validate_safe_string(s: &str) -> Result<(), String> {
     check_length(s)?;
-    if s.contains('<') {
-        return Err(INVALID_COMMON_MESSAGE.to_string());
-    }
-    if s.contains('>') {
+    check_safety(s)?;
+    Ok(())
+}
+
+fn check_safety(s: &str) -> Result<(), String> {
+    if s.chars().any(|c| UNSAFE_CHARS.contains(&c)) {
         return Err(INVALID_COMMON_MESSAGE.to_string());
     }
     Ok(())
