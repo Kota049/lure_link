@@ -10,3 +10,10 @@ fn valid() {
         })
     );
 }
+
+#[test]
+fn empty() {
+    let empty = "";
+    let result = NickName::new(empty);
+    assert_eq!(result, Err("不正なnick_nameです".to_string()));
+}
