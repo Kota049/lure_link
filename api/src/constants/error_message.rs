@@ -11,3 +11,5 @@ pub const INVALID_MUNICIPALITY_MESSAGE: &'static str = "不正なmunicipalityで
 pub const INVALID_BUDGET_MESSAGE: &'static str = "不正なbudgetです";
 
 pub const INVALID_PARTICIPANT_COUNT_MESSAGE: &'static str = "不正なparticipant_countです";
+
+pub const INVALID_NICK_NAME_MESSAGE: &'static str = "不正なnick_nameです";
