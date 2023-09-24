@@ -14,6 +14,9 @@ impl Domain for NickName {
     where
         Self: Sized,
     {
+        if nick_name.chars().count() > 20 {
+            return Err("不正なnick_nameです".to_string());
+        }
         validate_safe_string(nick_name).map_err(|_| "不正なnick_nameです".to_string())?;
         Ok(NickName {
             inner: nick_name.to_string(),
