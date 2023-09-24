@@ -13,6 +13,8 @@ impl Domain for ID {
     where
         Self: Sized,
     {
+        let id = id.parse::<i64>().unwrap();
+        Ok(ID { inner: id })
     }
 
     fn to_string(self) -> String {
