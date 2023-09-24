@@ -1,5 +1,6 @@
 pub mod budget;
 pub mod municipality;
+pub mod nick_name;
 pub mod participant_count;
 pub mod prefecture;
 pub mod recruitment_deadline;
