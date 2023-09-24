@@ -1,4 +1,5 @@
 pub mod budget;
+pub mod id;
 pub mod municipality;
 pub mod nick_name;
 pub mod participant_count;
