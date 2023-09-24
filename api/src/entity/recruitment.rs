@@ -9,9 +9,11 @@ use crate::domain::start_time::StartDate;
 use crate::domain::Domain;
 use serde_json::{json, Value};
 
+pub mod primitive;
 #[cfg(test)]
 mod tests;
 
+#[derive(Debug, PartialEq)]
 pub struct Recruitment {
     id: ID,
     organizer_nick_name: NickName,

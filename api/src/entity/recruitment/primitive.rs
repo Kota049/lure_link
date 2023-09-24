@@ -1,3 +1,9 @@
+use crate::entity::recruitment::Recruitment;
+use serde::Deserialize;
+
+#[cfg(test)]
+mod tests;
+#[derive(Debug, PartialEq, Deserialize)]
 pub struct PrimitiveRecruitment {
     id: String,
     organizer_nick_name: String,
@@ -10,4 +16,10 @@ pub struct PrimitiveRecruitment {
     destination_point: String,
     budget: String,
     participant_count: String,
+}
+
+impl PrimitiveRecruitment {
+    pub fn sophisticate(self) -> Result<Recruitment, String> {
+        todo!()
+    }
 }
