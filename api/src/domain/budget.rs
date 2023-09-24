@@ -13,7 +13,9 @@ impl Domain for Budget {
     where
         Self: Sized,
     {
-        let budget = budget.parse::<i32>().unwrap();
+        let budget = budget
+            .parse::<i32>()
+            .map_err(|_| "不正なbudgetです".to_string())?;
         Ok(Budget { inner: budget })
     }
 
