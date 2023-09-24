@@ -11,13 +11,13 @@ pub struct PointName {
 }
 
 impl Domain for PointName {
-    fn new(poin_name: &str) -> Result<Self, String>
+    fn new(point_name: &str) -> Result<Self, String>
     where
         Self: Sized,
     {
-        validate_safe_string(poin_name).map_err(|_| INVALID_POINT_NAME.to_string())?;
+        validate_safe_string(point_name).map_err(|_| INVALID_POINT_NAME.to_string())?;
         Ok(PointName {
-            inner: poin_name.to_string(),
+            inner: point_name.to_string(),
         })
     }
 
