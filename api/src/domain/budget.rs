@@ -17,6 +17,9 @@ impl Domain for Budget {
         let budget = budget
             .parse::<i32>()
             .map_err(|_| INVALID_BUDGET_MESSAGE.to_string())?;
+        if budget < 0 || budget > 100000 {
+            return Err(INVALID_BUDGET_MESSAGE.to_string());
+        }
         Ok(Budget { inner: budget })
     }
 
