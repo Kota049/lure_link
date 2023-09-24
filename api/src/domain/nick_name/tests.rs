@@ -24,3 +24,12 @@ fn too_large() {
     let result = NickName::new(&too_large);
     assert_eq!(result, Err(INVALID_NICK_NAME_MESSAGE.to_string()));
 }
+
+#[test]
+fn to_string() {
+    let nick_name = NickName {
+        inner: "サンプル太郎".to_string(),
+    };
+    let result = nick_name.to_string();
+    assert_eq!(result, "サンプル太郎");
+}
