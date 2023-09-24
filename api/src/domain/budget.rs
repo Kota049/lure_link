@@ -9,11 +9,12 @@ pub struct Budget {
 }
 
 impl Domain for Budget {
-    fn new(_: &str) -> Result<Self, String>
+    fn new(budget: &str) -> Result<Self, String>
     where
         Self: Sized,
     {
-        todo!()
+        let budget = budget.parse::<i32>().unwrap();
+        Ok(Budget { inner: budget })
     }
 
     fn to_string(self) -> String {
