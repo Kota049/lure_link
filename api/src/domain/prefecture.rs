@@ -3,6 +3,7 @@ use crate::domain::Domain;
 #[cfg(test)]
 mod tests;
 
+#[derive(Debug, PartialEq)]
 pub struct Prefecture {
     inner: String,
 }
