@@ -15,7 +15,7 @@ fn non_integer() {
 
 #[test]
 fn out_of_range() {
-    let out_of_range = 50.to_string();
+    let out_of_range = 51.to_string();
     let result = ParticipantCount::new(&out_of_range);
     assert_eq!(result, Err(INVALID_PARTICIPANT_COUNT_MESSAGE.to_string()));
 }

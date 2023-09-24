@@ -17,6 +17,9 @@ impl Domain for ParticipantCount {
         let participant_count = participant_count
             .parse::<i16>()
             .map_err(|_| INVALID_PARTICIPANT_COUNT_MESSAGE.to_string())?;
+        if participant_count < 1 || participant_count > 50 {
+            return Err(INVALID_PARTICIPANT_COUNT_MESSAGE.to_string());
+        }
         Ok(ParticipantCount {
             inner: participant_count,
         })
