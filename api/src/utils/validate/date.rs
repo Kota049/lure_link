@@ -57,7 +57,6 @@ pub fn validate_date(s: &str) -> Result<(), String> {
     }
     // 秒の部分の確認
     for _ in 0..2 {
-        println!("{}", s_char.as_str());
         if !s_char.next().is_some_and(|c| c.is_digit(10)) {
             return Err(error_message::START_DATE.to_string());
         }
