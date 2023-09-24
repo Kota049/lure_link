@@ -16,5 +16,5 @@ fn valid() {
 fn invalid() {
     let prefecture = ";";
     let result = Prefecture::new(prefecture);
-    assert_eq!(result, Err("不正なprefectureです".to_string()));
+    assert_eq!(result, Err(INVALID_PREFECTURE_MESSAGE.to_string()));
 }

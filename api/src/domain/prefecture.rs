@@ -1,3 +1,4 @@
+use crate::constants::error_message::INVALID_PREFECTURE_MESSAGE;
 use crate::domain::Domain;
 use crate::utils::validate::safe_string::validate_safe_string;
 
@@ -14,7 +15,7 @@ impl Domain for Prefecture {
     where
         Self: Sized,
     {
-        validate_safe_string(prefecture).map_err(|_| "不正なprefectureです".to_string())?;
+        validate_safe_string(prefecture).map_err(|_| INVALID_PREFECTURE_MESSAGE.to_string())?;
         Ok(Prefecture {
             inner: prefecture.to_string(),
         })
