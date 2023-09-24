@@ -22,6 +22,6 @@ impl Domain for Prefecture {
     }
 
     fn to_string(self) -> String {
-        todo!()
+        self.inner
     }
 }
