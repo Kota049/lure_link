@@ -9,6 +9,7 @@ use crate::domain::point_name::PointName;
 use crate::domain::prefecture::Prefecture;
 use crate::domain::start_time::StartDate;
 use crate::domain::Domain;
+
 #[test]
 fn valid() {
     let primitive_recruitment = PrimitiveRecruitment {
