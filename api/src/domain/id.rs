@@ -13,7 +13,7 @@ impl Domain for ID {
     where
         Self: Sized,
     {
-        let id = id.parse::<i64>().unwrap();
+        let id = id.parse::<i64>().map_err(|_| "不正なidです".to_string())?;
         Ok(ID { inner: id })
     }
 
