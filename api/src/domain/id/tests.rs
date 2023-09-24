@@ -20,3 +20,10 @@ fn minus_integer() {
     let result = ID::new(non_integer);
     assert_eq!(result, Err(INVALID_ID_MESSAGE.to_string()));
 }
+
+#[test]
+fn to_string() {
+    let budget = ID { inner: 11111 };
+    let result = budget.to_string();
+    assert_eq!(result, "11111");
+}
