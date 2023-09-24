@@ -13,7 +13,9 @@ impl Domain for Prefecture {
     where
         Self: Sized,
     {
-        todo!()
+        Ok(Prefecture {
+            inner: prefecture.to_string(),
+        })
     }
 
     fn to_string(self) -> String {
