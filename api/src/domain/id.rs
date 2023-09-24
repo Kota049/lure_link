@@ -17,6 +17,9 @@ impl Domain for ID {
         let id = id
             .parse::<i64>()
             .map_err(|_| INVALID_ID_MESSAGE.to_string())?;
+        if id < 1 {
+            return Err(INVALID_ID_MESSAGE.to_string());
+        }
         Ok(ID { inner: id })
     }
 
