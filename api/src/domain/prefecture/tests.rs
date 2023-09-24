@@ -2,7 +2,7 @@ use super::*;
 
 #[test]
 fn valid() {
-    let prefecture = "埼玉県";
+    let prefecture = VALID_PREFECTURE;
     let result = Prefecture::new(prefecture);
     assert_eq!(
         result,
@@ -19,12 +19,14 @@ fn invalid() {
     assert_eq!(result, Err(INVALID_PREFECTURE_MESSAGE.to_string()));
 }
 
+const VALID_PREFECTURE: &'static str = "埼玉県";
+
 #[test]
 fn to_string() {
     let prefecture = Prefecture {
-        inner: "埼玉県".to_string(),
+        inner: VALID_PREFECTURE.to_string(),
     };
     let result = prefecture.to_string();
 
-    assert_eq!(result, "埼玉県");
+    assert_eq!(result, VALID_PREFECTURE);
 }
