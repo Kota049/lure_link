@@ -13,7 +13,9 @@ impl Domain for ParticipantCount {
     where
         Self: Sized,
     {
-        let participant_count = participant_count.parse::<i16>().unwrap();
+        let participant_count = participant_count
+            .parse::<i16>()
+            .map_err(|_| "不正なparticipant_countです".to_string())?;
         Ok(ParticipantCount {
             inner: participant_count,
         })
