@@ -19,3 +19,10 @@ fn out_of_range() {
     let result = Budget::new(&out_of_range);
     assert_eq!(result, Err(INVALID_BUDGET_MESSAGE.to_string()));
 }
+
+#[test]
+fn to_string() {
+    let budget = Budget { inner: 1000 };
+    let result = budget.to_string();
+    assert_eq!(result, "1000");
+}
