@@ -9,11 +9,13 @@ pub struct Municipality {
 }
 
 impl Domain for Municipality {
-    fn new(_: &str) -> Result<Self, String>
+    fn new(municipality: &str) -> Result<Self, String>
     where
         Self: Sized,
     {
-        todo!()
+        Ok(Municipality {
+            inner: municipality.to_string(),
+        })
     }
 
     fn to_string(self) -> String {
