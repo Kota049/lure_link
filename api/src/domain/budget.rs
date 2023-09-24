@@ -19,7 +19,7 @@ impl Domain for Budget {
     }
 
     fn to_string(self) -> String {
-        todo!()
+        self.inner.to_string()
     }
 }
 
