@@ -14,16 +14,21 @@ impl Domain for Budget {
     where
         Self: Sized,
     {
-        let budget = budget
-            .parse::<i32>()
-            .map_err(|_| INVALID_BUDGET_MESSAGE.to_string())?;
-        if budget < 0 || budget > 100000 {
-            return Err(INVALID_BUDGET_MESSAGE.to_string());
-        }
+        let budget = check_budget(budget)?;
         Ok(Budget { inner: budget })
     }
 
     fn to_string(self) -> String {
         todo!()
     }
+}
+
+fn check_budget(budget: &str) -> Result<i32, String> {
+    let budget = budget
+        .parse::<i32>()
+        .map_err(|_| INVALID_BUDGET_MESSAGE.to_string())?;
+    if budget < 0 || budget > 100000 {
+        return Err(INVALID_BUDGET_MESSAGE.to_string());
+    }
+    Ok(budget)
 }
