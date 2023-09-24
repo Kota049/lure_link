@@ -26,6 +26,6 @@ impl Domain for ParticipantCount {
     }
 
     fn to_string(self) -> String {
-        todo!()
+        self.inner.to_string()
     }
 }
