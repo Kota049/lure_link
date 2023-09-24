@@ -5,3 +5,5 @@ pub const VALIDATE_DEADLINE_MESSAGE: &'static str = "不正なrecruitment_deadli
 pub const INVALID_COMMON_MESSAGE: &'static str = "不正な文字列です";
 
 pub const INVALID_PREFECTURE_MESSAGE: &'static str = "不正なprefectureです";
+
+pub const INVALID_MUNICIPALITY_MESSAGE: &'static str = "不正なmunicipalityです";

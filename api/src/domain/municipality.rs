@@ -1,3 +1,4 @@
+use crate::constants::error_message::INVALID_MUNICIPALITY_MESSAGE;
 use crate::domain::Domain;
 use crate::utils::validate::safe_string::validate_safe_string;
 
@@ -14,7 +15,7 @@ impl Domain for Municipality {
     where
         Self: Sized,
     {
-        validate_safe_string(municipality).map_err(|_| "不正なmunicipalityです".to_string())?;
+        validate_safe_string(municipality).map_err(|_| INVALID_MUNICIPALITY_MESSAGE.to_string())?;
         Ok(Municipality {
             inner: municipality.to_string(),
         })
