@@ -11,5 +11,5 @@ fn valid() {
 fn non_integer() {
     let non_integer = "a";
     let result = Budget::new(non_integer);
-    assert_eq!(result, Err("不正なbudgetです".to_string()));
+    assert_eq!(result, Err(INVALID_BUDGET_MESSAGE.to_string()));
 }

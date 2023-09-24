@@ -1,3 +1,4 @@
+use crate::constants::error_message::INVALID_BUDGET_MESSAGE;
 use crate::domain::Domain;
 
 #[cfg(test)]
@@ -15,7 +16,7 @@ impl Domain for Budget {
     {
         let budget = budget
             .parse::<i32>()
-            .map_err(|_| "不正なbudgetです".to_string())?;
+            .map_err(|_| INVALID_BUDGET_MESSAGE.to_string())?;
         Ok(Budget { inner: budget })
     }
 
