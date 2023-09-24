@@ -1,4 +1,5 @@
 use crate::domain::Domain;
+use crate::utils::validate::safe_string::validate_safe_string;
 
 #[cfg(test)]
 mod tests;
@@ -13,6 +14,7 @@ impl Domain for Municipality {
     where
         Self: Sized,
     {
+        validate_safe_string(municipality).map_err(|_| "不正なmunicipalityです".to_string())?;
         Ok(Municipality {
             inner: municipality.to_string(),
         })

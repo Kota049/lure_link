@@ -7,9 +7,16 @@ fn valid() {
     let municipality = VALID_MUNICIPALITY;
     let result = Municipality::new(municipality);
     assert_eq!(
-        municipality,
+        result,
         Ok(Municipality {
             inner: VALID_MUNICIPALITY.to_string()
         })
     );
+}
+
+#[test]
+fn invalid() {
+    let unsafe_string = ";";
+    let result = Municipality::new(unsafe_string);
+    assert_eq!(result, Err("不正なmunicipalityです".to_string()));
 }
