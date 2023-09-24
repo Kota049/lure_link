@@ -9,11 +9,14 @@ pub struct ParticipantCount {
 }
 
 impl Domain for ParticipantCount {
-    fn new(_: &str) -> Result<Self, String>
+    fn new(participant_count: &str) -> Result<Self, String>
     where
         Self: Sized,
     {
-        todo!()
+        let participant_count = participant_count.parse::<i16>()?;
+        Ok(ParticipantCount {
+            inner: participant_count,
+        })
     }
 
     fn to_string(self) -> String {
