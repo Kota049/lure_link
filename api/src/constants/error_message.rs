@@ -15,3 +15,5 @@ pub const INVALID_PARTICIPANT_COUNT_MESSAGE: &'static str = "不正なparticipan
 pub const INVALID_NICK_NAME_MESSAGE: &'static str = "不正なnick_nameです";
 
 pub const INVALID_POINT_NAME: &'static str = "不正なpoint_nameです";
+
+pub const INVALID_ID_MESSAGE: &'static str = "不正なidです";

@@ -11,5 +11,12 @@ fn valid() {
 fn non_integer() {
     let non_integer = "a";
     let result = ID::new(non_integer);
-    assert_eq!(result, Err("不正なidです".to_string()));
+    assert_eq!(result, Err(INVALID_ID_MESSAGE.to_string()));
+}
+
+#[test]
+fn minus_integer() {
+    let non_integer = "-1";
+    let result = ID::new(non_integer);
+    assert_eq!(result, Err(INVALID_ID_MESSAGE.to_string()));
 }

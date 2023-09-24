@@ -1,3 +1,4 @@
+use crate::constants::error_message::INVALID_ID_MESSAGE;
 use crate::domain::Domain;
 
 #[cfg(test)]
@@ -13,7 +14,9 @@ impl Domain for ID {
     where
         Self: Sized,
     {
-        let id = id.parse::<i64>().map_err(|_| "不正なidです".to_string())?;
+        let id = id
+            .parse::<i64>()
+            .map_err(|_| INVALID_ID_MESSAGE.to_string())?;
         Ok(ID { inner: id })
     }
 
