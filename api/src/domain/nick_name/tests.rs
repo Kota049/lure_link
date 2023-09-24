@@ -17,3 +17,10 @@ fn empty() {
     let result = NickName::new(empty);
     assert_eq!(result, Err("不正なnick_nameです".to_string()));
 }
+
+#[test]
+fn too_large() {
+    let too_large = "a".repeat(21);
+    let result = NickName::new(&too_large);
+    assert_eq!(result, Err("不正なnick_nameです".to_string()));
+}
