@@ -19,3 +19,10 @@ fn out_of_range() {
     let result = ParticipantCount::new(&out_of_range);
     assert_eq!(result, Err(INVALID_PARTICIPANT_COUNT_MESSAGE.to_string()));
 }
+
+#[test]
+fn to_string() {
+    let participant_count = ParticipantCount { inner: 3 };
+    let result = participant_count.to_string();
+    assert_eq!(result, "3");
+}
