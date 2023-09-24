@@ -24,6 +24,6 @@ impl Domain for ID {
     }
 
     fn to_string(self) -> String {
-        todo!()
+        self.inner.to_string()
     }
 }

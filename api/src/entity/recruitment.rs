@@ -6,7 +6,8 @@ use crate::domain::participant_count::ParticipantCount;
 use crate::domain::point_name::PointName;
 use crate::domain::prefecture::Prefecture;
 use crate::domain::start_time::StartDate;
-use serde_json::Value;
+use crate::domain::Domain;
+use serde_json::{json, Value};
 
 #[cfg(test)]
 mod tests;
@@ -27,6 +28,18 @@ pub struct Recruitment {
 
 impl Recruitment {
     pub fn to_value(self) -> Value {
-        todo!()
+        json!({
+            "id":self.id.to_string(),
+            "organizer_nick_name":self.organizer_nick_name.to_string(),
+            "start_date":self.start_date.to_string(),
+            "rendezvous_prefecture":self.rendezvous_prefecture.to_string(),
+            "rendezvous_municipality":self.rendezvous_municipality.to_string(),
+            "rendezvous_point":self.rendezvous_point.to_string(),
+            "destination_prefecture":self.destination_prefecture.to_string(),
+            "destination_municipality":self.destination_municipality.to_string(),
+            "destination_point":self.destination_point.to_string(),
+            "budget":self.budget.to_string(),
+            "participant_count":self.participant_count.to_string()
+        })
     }
 }
