@@ -13,7 +13,7 @@ impl Domain for ParticipantCount {
     where
         Self: Sized,
     {
-        let participant_count = participant_count.parse::<i16>()?;
+        let participant_count = participant_count.parse::<i16>().unwrap();
         Ok(ParticipantCount {
             inner: participant_count,
         })
