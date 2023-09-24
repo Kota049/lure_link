@@ -22,6 +22,6 @@ impl Domain for Municipality {
     }
 
     fn to_string(self) -> String {
-        todo!()
+        self.inner
     }
 }
