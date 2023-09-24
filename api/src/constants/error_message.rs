@@ -9,3 +9,5 @@ pub const INVALID_PREFECTURE_MESSAGE: &'static str = "不正なprefectureです"
 pub const INVALID_MUNICIPALITY_MESSAGE: &'static str = "不正なmunicipalityです";
 
 pub const INVALID_BUDGET_MESSAGE: &'static str = "不正なbudgetです";
+
+pub const INVALID_PARTICIPANT_COUNT_MESSAGE: &'static str = "不正なparticipant_countです";

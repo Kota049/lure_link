@@ -1,3 +1,4 @@
+use crate::constants::error_message::INVALID_PARTICIPANT_COUNT_MESSAGE;
 use crate::domain::Domain;
 
 #[cfg(test)]
@@ -15,7 +16,7 @@ impl Domain for ParticipantCount {
     {
         let participant_count = participant_count
             .parse::<i16>()
-            .map_err(|_| "不正なparticipant_countです".to_string())?;
+            .map_err(|_| INVALID_PARTICIPANT_COUNT_MESSAGE.to_string())?;
         Ok(ParticipantCount {
             inner: participant_count,
         })
