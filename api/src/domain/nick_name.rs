@@ -13,7 +13,9 @@ impl Domain for NickName {
     where
         Self: Sized,
     {
-        todo!()
+        Ok(NickName {
+            inner: nick_name.to_string(),
+        })
     }
 
     fn to_string(self) -> String {
