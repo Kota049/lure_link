@@ -11,21 +11,21 @@ pub mod error{
     pub fn half_width_num_value(){
         let half_width_num="1234";
         let result = UserName::new(half_width_num);
-        assert_eq!(result,Err("半角数字が含まれています".to_string()));
+        assert_eq!(result,Err("使用不可能な文字が含まれています".to_string()));
     }
 
     #[test]
     pub fn full_width_num_value(){
         let full_width_num = "１２３４";
         let result = UserName::new(full_width_num);
-        assert_eq!(result,Err("全角数字が含まれています".to_string()));
+        assert_eq!(result,Err("使用不可能な文字が含まれています".to_string()));
     }
 
     #[test]
     pub fn full_width_sym_value(){
         let sym = "★";
         let result = UserName::new(sym);
-        assert_eq!(result,Err("全角記号が含まれています".to_string()));
+        assert_eq!(result,Err("使用不可能な文字が含まれています".to_string()));
     }
 
     #[test]
@@ -33,5 +33,17 @@ pub mod error{
         let length_limit_value = "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふ";
         let result = UserName::new(length_limit_value);
         assert_eq!(result,Err("26字以内に収めてください".to_string()));
+    }
+}
+
+
+pub mod success {
+    use super::super::*;
+
+    #[test]
+    pub fn valid() {
+        let valid_name = "サンプル太郎";
+        let result = UserName::new(valid_name);
+        assert_eq!(result,Ok(UserName{value:valid_name.to_string()}));
     }
 }
