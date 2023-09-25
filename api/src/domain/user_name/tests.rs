@@ -44,6 +44,6 @@ pub mod success {
     pub fn valid() {
         let valid_name = "サンプル太郎";
         let result = UserName::new(valid_name);
-        assert_eq!(result,Ok(UserName{value:valid_name.to_string()}));
+        assert_eq!(result,Ok(UserName{inner:valid_name.to_string()}));
     }
 }

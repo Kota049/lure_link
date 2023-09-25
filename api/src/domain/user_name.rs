@@ -4,11 +4,10 @@ pub mod tests;
 #[allow(dead_code)]
 #[derive(Debug, PartialEq)]
 pub struct UserName {
-    value: String,
+    inner: String,
 }
 
 impl UserName {
-    #[allow(dead_code)]
     pub fn new(s: &str) -> Result<UserName, String> {
         // 空文字の場合
         if s == "" {
@@ -32,7 +31,11 @@ impl UserName {
         }
 
         Ok(UserName {
-            value: s.to_string(),
+            inner: s.to_string(),
         })
+    }
+
+    pub fn to_string(self) -> String {
+        self.inner
     }
 }
