@@ -7,27 +7,7 @@ mod tests;
 pub async fn get_recruitment_summary_list(
     client: &Client,
 ) -> Result<Vec<PrimitiveRecruitment>, String> {
-    let query = "
-        SELECT
-            r.id::TEXT,
-            u.nick_name::TEXT AS organizer_nick_name,
-            r.start_datetime::TEXT AS start_date,
-            rp.name::TEXT AS rendezvous_prefecture,
-            rm.name::TEXT AS rendezvous_municipality,
-            r.rendezvous_point::TEXT AS rendezvous_point,
-            dp.name::TEXT AS destination_prefecture,
-            dm.name::TEXT AS destination_municipality,
-            r.destination_point::TEXT AS destination_point,
-            r.budget::TEXT AS budget,
-            r.participant_count::TEXT AS participant_count
-        FROM recruitments AS r
-        LEFT JOIN users  AS u ON u.id = r.organizer_id
-        LEFT JOIN prefectures AS rp ON rp.id = r.rendezvous_prefecture_id
-        LEFT JOIN prefectures AS dp ON dp.id = r.destination_prefecture_id
-        LEFT JOIN prefectures AS rm ON rm.id = r.rendezvous_municipality_id
-        LEFT JOIN prefectures AS dm ON dm.id = r.destination_municipality_id
-        ORDER BY start_date ASC NULLS LAST;
-";
+    let query = GET_RECRUITMENT_SUMMARY_QUERY;
 
     let rows = client.query(query, &[]).await.unwrap();
     Ok(rows
@@ -70,3 +50,24 @@ pub async fn get_recruitment_summary_list(
         })
         .collect())
 }
+const GET_RECRUITMENT_SUMMARY_QUERY: &'static str = "
+        SELECT
+            r.id::TEXT,
+            u.nick_name::TEXT AS organizer_nick_name,
+            r.start_datetime::TEXT AS start_date,
+            rp.name::TEXT AS rendezvous_prefecture,
+            rm.name::TEXT AS rendezvous_municipality,
+            r.rendezvous_point::TEXT AS rendezvous_point,
+            dp.name::TEXT AS destination_prefecture,
+            dm.name::TEXT AS destination_municipality,
+            r.destination_point::TEXT AS destination_point,
+            r.budget::TEXT AS budget,
+            r.participant_count::TEXT AS participant_count
+        FROM recruitments AS r
+        LEFT JOIN users  AS u ON u.id = r.organizer_id
+        LEFT JOIN prefectures AS rp ON rp.id = r.rendezvous_prefecture_id
+        LEFT JOIN prefectures AS dp ON dp.id = r.destination_prefecture_id
+        LEFT JOIN prefectures AS rm ON rm.id = r.rendezvous_municipality_id
+        LEFT JOIN prefectures AS dm ON dm.id = r.destination_municipality_id
+        ORDER BY start_date ASC NULLS LAST;
+";

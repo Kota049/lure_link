@@ -14,8 +14,8 @@ mod tests;
 
 #[derive(Debug, PartialEq)]
 pub struct PrimitiveRecruitment {
-    pub id: String,
-    pub organizer_nick_name: String,
+    pub(crate) id: String,
+    pub(crate) organizer_nick_name: String,
     pub(crate) start_date: String,
     pub(crate) rendezvous_prefecture: String,
     pub(crate) rendezvous_municipality: String,
