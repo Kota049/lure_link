@@ -8,24 +8,23 @@ use crate::domain::prefecture::Prefecture;
 use crate::domain::start_time::StartDate;
 use crate::domain::Domain;
 use crate::entity::recruitment::Recruitment;
-use serde::Deserialize;
 
 #[cfg(test)]
 mod tests;
 
-#[derive(Debug, PartialEq, Deserialize)]
+#[derive(Debug, PartialEq)]
 pub struct PrimitiveRecruitment {
-    id: String,
-    organizer_nick_name: String,
-    start_date: String,
-    rendezvous_prefecture: String,
-    rendezvous_municipality: String,
-    rendezvous_point: String,
-    destination_prefecture: String,
-    destination_municipality: String,
-    destination_point: String,
-    budget: String,
-    participant_count: String,
+    pub id: String,
+    pub organizer_nick_name: String,
+    pub(crate) start_date: String,
+    pub(crate) rendezvous_prefecture: String,
+    pub(crate) rendezvous_municipality: String,
+    pub(crate) rendezvous_point: String,
+    pub(crate) destination_prefecture: String,
+    pub(crate) destination_municipality: String,
+    pub(crate) destination_point: String,
+    pub(crate) budget: String,
+    pub(crate) participant_count: String,
 }
 
 impl PrimitiveRecruitment {
