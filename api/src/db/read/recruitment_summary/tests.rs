@@ -1,7 +1,6 @@
 use super::*;
 use crate::db::connection::connection;
 use crate::db::connection::tests::connection_hoge;
-use tokio_postgres::NoTls;
 
 #[tokio::test]
 async fn get_recruitments() {
