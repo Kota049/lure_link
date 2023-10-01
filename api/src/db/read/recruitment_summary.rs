@@ -1,3 +1,4 @@
+use crate::constants::error_response::DB_ERROR;
 use crate::entity::recruitment::primitive::PrimitiveRecruitment;
 use tokio_postgres::Client;
 
@@ -12,7 +13,7 @@ pub async fn get_recruitment_summary_list(
     let rows = client
         .query(query, &[])
         .await
-        .map_err(|_| "データが取得できませんでした".to_string())?;
+        .map_err(|_| DB_ERROR.to_string())?;
     Ok(rows
         .iter()
         .map(|row| PrimitiveRecruitment {

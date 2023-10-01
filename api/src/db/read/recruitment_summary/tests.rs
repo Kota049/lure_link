@@ -16,5 +16,5 @@ async fn db_error() {
 
     let result = get_recruitment_summary_list(&client).await;
 
-    assert_eq!(result, Err("データが取得できませんでした".to_string()));
+    assert_eq!(result, Err(DB_ERROR.to_string()));
 }
