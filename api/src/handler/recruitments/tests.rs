@@ -58,7 +58,7 @@ async fn db_error() {
 
     let mut result = read_recruitments(State(state)).await.err().unwrap();
 
-    assert_eq!(StatusCode::OK, result.status());
+    assert_eq!(StatusCode::INTERNAL_SERVER_ERROR, result.status());
     let body = result.data().await.unwrap().unwrap();
     assert_eq!(body, "データが取得できませんでした");
 }

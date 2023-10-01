@@ -12,11 +12,16 @@ mod tests;
 pub async fn read_recruitments(
     State(state): State<Arc<ClientState>>,
 ) -> Result<Response, Response> {
-    let primitive_recruitments = get_recruitment_summary_list(&state.client).await.unwrap();
+    let primitive_recruitments = get_recruitment_summary_list(&state.client).await;
+    if let Err(e) = primitive_recruitments {
+        return Err((StatusCode::INTERNAL_SERVER_ERROR, e).into_response());
+    }
+    let primitive_recruitments = primitive_recruitments.unwrap();
 
     let mut result: Vec<Value> = Vec::new();
     for recruitment in primitive_recruitments {
         let recruitment = recruitment.sophisticate();
+        // 正常でない募集の場合はレスポンスに含まない
         if recruitment.is_err() {
             continue;
         }
