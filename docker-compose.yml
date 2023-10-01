@@ -63,6 +63,7 @@ services:
     volumes:
       - 'db-dev-data:/var/lib/postgresql/data'
       - './initdb:/docker-entrypoint-initdb.d'
+      - './test_data:/test_data'
     environment:
       - 'POSTGRES_USER=${POSTGRES_USER}'
       - 'POSTGRES_PASSWORD=${POSTGRES_PASSWORD}'
@@ -74,6 +75,7 @@ services:
     volumes:
       - 'db-test-data:/var/lib/postgresql/data'
       - './initdb:/docker-entrypoint-initdb.d'
+      - './test_data:/test_data'
     environment:
       - 'POSTGRES_USER=${POSTGRES_USER}'
       - 'POSTGRES_PASSWORD=${POSTGRES_PASSWORD}'
