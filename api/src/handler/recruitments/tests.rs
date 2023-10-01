@@ -1,6 +1,7 @@
+use super::*;
 use crate::db::app_state::ClientState;
 use crate::db::connection::connection;
-use crate::handler::recruitments::read_recruitments;
+use crate::db::connection::tests::connection_hoge;
 use axum::body::HttpBody;
 use axum::extract::State;
 use axum::http::StatusCode;
@@ -48,4 +49,16 @@ async fn valid_response() {
     assert!(expected
         .iter()
         .all(|v| { v.get("participant_count").is_some() }));
+}
+
+#[tokio::test]
+async fn db_error() {
+    let client = connection_hoge().await.unwrap();
+    let state = Arc::new(ClientState { client });
+
+    let mut result = read_recruitments(State(state)).await.err().unwrap();
+
+    assert_eq!(StatusCode::OK, result.status());
+    let body = result.data().await.unwrap().unwrap();
+    assert_eq!(body, "データが取得できませんでした");
 }
