@@ -9,7 +9,10 @@ pub async fn get_recruitment_summary_list(
 ) -> Result<Vec<PrimitiveRecruitment>, String> {
     let query = GET_RECRUITMENT_SUMMARY_QUERY;
 
-    let rows = client.query(query, &[]).await.unwrap();
+    let rows = client
+        .query(query, &[])
+        .await
+        .map_err(|_| "データが取得できませんでした".to_string())?;
     Ok(rows
         .iter()
         .map(|row| PrimitiveRecruitment {

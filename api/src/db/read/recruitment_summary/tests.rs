@@ -1,5 +1,6 @@
 use super::*;
 use crate::db::connection::connection;
+use crate::db::connection::tests::connection_hoge;
 use tokio_postgres::NoTls;
 
 #[tokio::test]
@@ -12,7 +13,7 @@ async fn get_recruitments() {
 }
 #[tokio::test]
 async fn db_error() {
-    let (client, _) = tokio_postgres::connect("", NoTls).await.unwrap();
+    let client = connection_hoge().await.unwrap();
 
     let result = get_recruitment_summary_list(&client).await;
 
