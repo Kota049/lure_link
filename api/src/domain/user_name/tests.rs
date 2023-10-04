@@ -47,3 +47,15 @@ pub mod success {
         assert_eq!(result,Ok(UserName{inner:valid_name.to_string()}));
     }
 }
+
+pub mod get_value{
+    use super::super::*;
+
+    #[test]
+    pub fn get() {
+        let get_name = "サンプル太郎";
+        let checked_name = UserName::new(get_name).unwrap();
+        let result = checked_name.to_string();
+        assert_eq!(result,get_name);
+    }
+}
