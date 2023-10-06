@@ -24,4 +24,4 @@ jobs:
       - name: Run tests
         run: docker compose exec rust-test cargo test --verbose
       - name: Stop Containers
-      run: docker-compose -f docker-compose.yml down
+        run: docker-compose -f docker-compose.yml down
