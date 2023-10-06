@@ -17,7 +17,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: Start Docker containers
+        run: docker-compose -f docker-compose.yml up -d
       - name: Build
-        run: cargo build --verbose --manifest-path /home/runner/work/lure_link/lure_link/api/Cargo.toml
+        run: docker compose exec rust-test cargo build --verbose --manifest-path /home/runner/work/lure_link/lure_link/api/Cargo.toml
       - name: Run tests
-        run: cargo test --verbose --manifest-path /home/runner/work/lure_link/lure_link/api/Cargo.toml
+        run: docker compose exec rust-test cargo test --verbose --manifest-path /home/runner/work/lure_link/lure_link/api/Cargo.toml
