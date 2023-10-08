@@ -1,9 +1,6 @@
 name: Rust Test
 
 on:
-  push:
-    branches:
-      - '*' # 全てのブランチにワークフローを適用
   pull_request:
     branches:
       - main
