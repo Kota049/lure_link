@@ -1,0 +1,1 @@
+psql -f /test_data/202310011808_create_hoge_databese.sql -U "$POSTGRES_USER"
