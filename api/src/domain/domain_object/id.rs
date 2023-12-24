@@ -1,4 +1,4 @@
-use serde::{de, Deserialize, Deserializer, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 use serde::de::Error as DeError;
 use tokio_postgres::types::{FromSql, IsNull, ToSql, Type};
 use tokio_postgres::types::private::BytesMut;
@@ -8,10 +8,16 @@ use crate::error::Error;
 #[derive(Debug, Clone, Serialize, PartialOrd, PartialEq)]
 pub struct Id(i64);
 
+impl Id {
+    pub fn validate(i: i64) -> bool {
+        i > 0
+    }
+}
+
 impl<'a> FromSql<'a> for Id {
     fn from_sql(type_: &Type, raw: &'a [u8]) -> Result<Self, Box<dyn std::error::Error + 'static + Sync + Send>> {
         let id: i64 = FromSql::from_sql(type_, raw)?;
-        if id < 0 {
+        if !Id::validate(id) {
             return Err(Box::new(Error::ValidateError("id is negative".to_string())));
         }
         Ok(Id(id))
@@ -25,8 +31,7 @@ impl ToSql for Id {
         out.extend_from_slice(id.to_string().as_bytes());
         Ok(IsNull::No)
     }
-    fn accepts(type_: &Type) -> bool {
-        // この実装は全てのTypeに対応することを示しています
+    fn accepts(_type_: &Type) -> bool {
         true
     }
     tokio_postgres::types::to_sql_checked!();
@@ -38,33 +43,10 @@ impl<'de> Deserialize<'de> for Id {
             D: Deserializer<'de>,
     {
         let value = i64::deserialize(deserializer)?;
-        if value < 0{
+        if !Id::validate(value) {
             return Err(DeError::custom("id must be positive"));
         }
         Ok(Id(value))
-        // struct IdVisitor;
-        //
-        // impl<'de> de::Visitor<'de> for IdVisitor {
-        //     type Value = Id;
-        //
-        //     fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        //         formatter.write_str("struct Id")
-        //     }
-        //
-        //     fn visit_i64<E>(self, value: i64) -> Result<Self::Value, E>
-        //         where
-        //             E: de::Error,
-        //     {
-        //         // i64が0以上の場合のみデシリアライズを許可
-        //         if value >= 0 {
-        //             Ok(Id(value))
-        //         } else {
-        //             Err(de::Error::custom("Id must be non-negative"))
-        //         }
-        //     }
-        // }
-        //
-        // deserializer.deserialize_i64(IdVisitor)
     }
 }
 
@@ -82,6 +64,11 @@ async fn test_raw_mapper() {
     let id: Id = row.try_get("id").unwrap();
     assert_eq!(id, Id(42));
 
+    // couldn't get negative id
+    let row = db.client().await.query_one("SELECT -42::BIGINT", &[]).await.unwrap();
+    let id = row.try_get::<_, Id>(0);
+    assert!(id.is_err());
+
     // deserialize test
     let str = r#"
     {
@@ -94,4 +81,13 @@ async fn test_raw_mapper() {
     }
     let id: Test = serde_json::from_str(str).unwrap();
     assert_eq!(id.id, Id(42));
+
+    // couldn't deserialize invalid id
+    let str = r#"
+    {
+        "id":-42
+    }
+    "#;
+    let id = serde_json::from_str::<Test>(str);
+    assert!(id.is_err())
 }
