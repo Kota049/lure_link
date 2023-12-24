@@ -2,7 +2,7 @@ use super::*;
 use crate::constants::error_response::DB_ERROR;
 use crate::db::app_state::ClientState;
 use crate::db::connection::connection;
-use crate::db::connection::tests::connection_hoge;
+use crate::db::connection::e_tests::connection_hoge;
 use axum::body::HttpBody;
 use axum::extract::State;
 use axum::http::StatusCode;

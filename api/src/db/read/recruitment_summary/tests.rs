@@ -1,6 +1,6 @@
 use super::*;
 use crate::db::connection::connection;
-use crate::db::connection::tests::connection_hoge;
+use crate::db::connection::e_tests::connection_hoge;
 
 #[tokio::test]
 async fn get_recruitments() {
