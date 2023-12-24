@@ -2,6 +2,7 @@ use std::fmt::{Display, Formatter};
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 
+#[derive(Debug)]
 pub enum Error {
     DbError(String),
     ValidateError(String),
@@ -17,6 +18,9 @@ impl Display for Error {
         }
     }
 }
+
+// to adapt Box<dyn std::error::Error>
+impl std::error::Error for Error{}
 
 impl IntoResponse for Error {
     fn into_response(self) -> Response {

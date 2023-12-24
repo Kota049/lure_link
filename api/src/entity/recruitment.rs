@@ -15,17 +15,17 @@ mod tests;
 
 #[derive(Debug, PartialEq)]
 pub struct Recruitment {
-    id: ID,
-    organizer_nick_name: NickName,
-    start_date: StartDate,
-    rendezvous_prefecture: Prefecture,
-    rendezvous_municipality: Municipality,
-    rendezvous_point: PointName,
-    destination_prefecture: Prefecture,
-    destination_municipality: Municipality,
-    destination_point: PointName,
-    budget: Budget,
-    participant_count: ParticipantCount,
+    pub id: ID,
+    pub organizer_nick_name: NickName,
+    pub start_date: StartDate,
+    pub rendezvous_prefecture: Prefecture,
+    pub rendezvous_municipality: Municipality,
+    pub rendezvous_point: PointName,
+    pub destination_prefecture: Prefecture,
+    pub destination_municipality: Municipality,
+    pub destination_point: PointName,
+    pub budget: Budget,
+    pub participant_count: ParticipantCount,
 }
 
 impl Recruitment {

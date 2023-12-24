@@ -72,7 +72,7 @@ pub mod e_tests {
 }
 
 #[derive(Debug, Clone)]
-struct DbManager {
+pub struct DbManager {
     pool: Pool,
 }
 

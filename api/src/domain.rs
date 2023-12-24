@@ -8,6 +8,8 @@ pub mod prefecture;
 pub mod recruitment_deadline;
 pub mod start_time;
 
+pub mod domain_object;
+
 pub trait Domain {
     fn new(_: &str) -> Result<Self, String>
     where
