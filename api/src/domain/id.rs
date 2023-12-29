@@ -1,4 +1,3 @@
-use tokio_postgres::types::FromSql;
 use crate::constants::error_message::INVALID_ID_MESSAGE;
 use crate::domain::Domain;
 
