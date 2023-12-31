@@ -4,8 +4,9 @@ use serde::de::Error as DeError;
 use tokio_postgres::types::{FromSql, IsNull, ToSql, Type};
 use tokio_postgres::types::private::BytesMut;
 use crate::constants::regex::NAME_RULE;
-use crate::db::connection::DbManager;
 use crate::error::Error;
+#[cfg(test)]
+mod tests;
 
 #[derive(Debug, Clone, Serialize, PartialOrd, PartialEq)]
 pub struct Name(String);
@@ -54,46 +55,4 @@ impl<'de> Deserialize<'de> for Name {
         let value = String::deserialize(deserializer)?;
         value.try_into().map_err(|_| D::Error::custom("validate name error"))
     }
-}
-
-#[tokio::test]
-async fn test_raw_mapper() {
-    let db = DbManager::new();
-    // get test
-    let row = db.client().await.query_one("SELECT '田中太郎', 'some'", &[]).await.unwrap();
-    let name = row.try_get::<_, Name>(0).unwrap();
-    assert_eq!(name, Name("田中太郎".to_string()));
-
-    // set test
-    let name = Name("田中太郎".to_string());
-    let row = db.client().await.query_one("SELECT $1::TEXT AS name", &[&name]).await.unwrap();
-    let res: Name = row.try_get("name").unwrap();
-    assert_eq!(name, res);
-
-    // couldn't get invalid name
-    let row = db.client().await.query_one("SELECT ''", &[]).await.unwrap();
-    let prefecture = row.try_get::<_, Name>(0);
-    assert!(prefecture.is_err());
-
-    // deserialize test
-    let str = r#"
-    {
-        "test": "田中太郎"
-    }
-    "#;
-    #[derive(Deserialize)]
-    struct Test {
-        pub test: Name,
-    }
-    let test: Test = serde_json::from_str(str).unwrap();
-    assert_eq!(test.test, Name("田中太郎".to_string()));
-
-    // couldn't deserialize invalid id
-    let str = r#"
-    {
-        "test":""
-    }
-    "#;
-    let res = serde_json::from_str::<Test>(str);
-    assert!(res.is_err())
 }

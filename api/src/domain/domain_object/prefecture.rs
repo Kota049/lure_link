@@ -3,8 +3,9 @@ use serde::{Deserialize, Deserializer, Serialize};
 use serde::de::Error as DeError;
 use tokio_postgres::types::{FromSql, IsNull, ToSql, Type};
 use tokio_postgres::types::private::BytesMut;
-use crate::db::connection::DbManager;
 use crate::error::Error;
+#[cfg(test)]
+mod tests;
 
 #[derive(Debug, Clone, Serialize, PartialOrd, PartialEq)]
 pub enum Prefecture {
@@ -196,46 +197,4 @@ impl<'de> Deserialize<'de> for Prefecture {
         let value = String::deserialize(deserializer)?;
         value.try_into().map_err(|_| D::Error::custom("validate prefecture error"))
     }
-}
-
-#[tokio::test]
-async fn test_raw_mapper() {
-    let db = DbManager::new();
-    // get test
-    let row = db.client().await.query_one("SELECT '埼玉県', 'some'", &[]).await.unwrap();
-    let prefecture = row.try_get::<_, Prefecture>(0).unwrap();
-    assert_eq!(prefecture, Prefecture::Saitama);
-
-    // set test
-    let prefecture = Prefecture::Saitama;
-    let row = db.client().await.query_one("SELECT $1::TEXT AS prefecture", &[&prefecture]).await.unwrap();
-    let res: Prefecture = row.try_get("prefecture").unwrap();
-    assert_eq!(prefecture, res);
-
-    // couldn't get invalid prefecture name
-    let row = db.client().await.query_one("SELECT 'invalid'", &[]).await.unwrap();
-    let prefecture = row.try_get::<_, Prefecture>(0);
-    assert!(prefecture.is_err());
-
-    // deserialize test
-    let str = r#"
-    {
-        "test": "埼玉県"
-    }
-    "#;
-    #[derive(Deserialize)]
-    struct Test {
-        pub test: Prefecture,
-    }
-    let test: Test = serde_json::from_str(str).unwrap();
-    assert_eq!(test.test, Prefecture::Saitama);
-
-    // couldn't deserialize invalid id
-    let str = r#"
-    {
-        "test":"invalid"
-    }
-    "#;
-    let res = serde_json::from_str::<Test>(str);
-    assert!(res.is_err())
 }
