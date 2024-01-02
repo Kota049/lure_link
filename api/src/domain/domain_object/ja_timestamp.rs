@@ -10,7 +10,7 @@ use crate::error::Error;
 mod tests;
 
 #[derive(Debug, Clone, Serialize, PartialOrd, PartialEq)]
-pub struct JaTimeStamp(DateTime<Tz>);
+pub struct JaTimeStamp(pub(crate) DateTime<Tz>);
 
 impl TryFrom<DateTime<Utc>> for JaTimeStamp {
     type Error = Error;
