@@ -6,8 +6,8 @@ use serde::{Deserialize, Deserializer, Serialize};
 use tokio_postgres::types::{FromSql, IsNull, ToSql, Type};
 use tokio_postgres::types::private::BytesMut;
 use crate::error::Error;
-// #[cfg(test)]
-// mod tests;
+#[cfg(test)]
+mod tests;
 
 #[derive(Debug, Clone, Serialize, PartialOrd, PartialEq)]
 pub struct JaTimeStamp(DateTime<Tz>);
@@ -35,11 +35,11 @@ impl Display for JaTimeStamp {
 
 impl ToSql for JaTimeStamp {
     fn to_sql(&self, _ty: &Type, out: &mut BytesMut) -> Result<IsNull, Box<dyn std::error::Error + 'static + Sync + Send>> {
-        let timestamp = self.to_string();
+        let timestamp = self.0.format("%Y-%m-%d %H:%M:%S%:z").to_string();
         out.extend_from_slice(timestamp.as_bytes());
         Ok(IsNull::No)
     }
-    fn accepts(_type_: &Type) -> bool {
+    fn accepts(_ty: &Type) -> bool {
         true
     }
     tokio_postgres::types::to_sql_checked!();
