@@ -50,9 +50,24 @@ async fn test_verify_user() {
     let res = uc.verify_user(valid_code.clone()).await;
     assert!(res.is_ok());
 
-    // profileが取得できなかった場合にはエラーを返す
-    let mut lc = create_lc();
+    // lineのtokenが取得できなかった場合にはエラーを返す
+    let mut lc = MockLineValue::new();
     lc.expect_line_token().returning(|| Err(Error::LineError("test line error".to_string())));
+    lc.expect_line_profile().returning(||Ok(LineProfile { line_user_id: "valid".to_string() }));
+    let ur = create_ur();
+    let uc = LoginUseCase { u_repo: Arc::new(MockUserRepo { inner: ur }), line_client: Arc::new(MockLineRepo { inner: lc }) };
+    let res = uc.verify_user(valid_code.clone()).await;
+    assert!(res.is_err());
+
+    // profileが取得できなかった場合にはエラーを返す
+    let mut lc = MockLineValue::new();
+    lc.expect_line_token().returning(|| Ok(LineToken {
+        access_token: "valid".to_string(),
+        expires_in: 0,
+        refresh_token: "valid".to_string(),
+        id_token: "valid".to_string(),
+    }));
+    lc.expect_line_profile().returning(||Err(Error::LineError("test line error".to_string())));
     let ur = create_ur();
     let uc = LoginUseCase { u_repo: Arc::new(MockUserRepo { inner: ur }), line_client: Arc::new(MockLineRepo { inner: lc }) };
     let res = uc.verify_user(valid_code).await;
