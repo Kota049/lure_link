@@ -1,4 +1,6 @@
 use std::sync::Arc;
+use crate::entity::users::User;
+use crate::error::Error;
 use crate::repository::line::LineClientTrait;
 use crate::repository::user::UserRepositoryTrait;
 #[cfg(test)]
@@ -11,7 +13,9 @@ pub struct LoginUseCase {
 
 impl LoginUseCase {
     // Lineの確認コードからデータを取得→正常ならトークンを発行、なければトークンを削除
-    pub async fn verify_user(&self) {}
+    pub async fn verify_user(&self)->Result<User,Error> {
+        todo!()
+    }
     // ユーザーを作成する
     async fn create_user(&self) {}
     // トークンを検証する

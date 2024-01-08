@@ -3,6 +3,7 @@ use serde::de::Error as DeError;
 use tokio_postgres::types::{FromSql, IsNull, ToSql, Type};
 use tokio_postgres::types::private::BytesMut;
 use crate::error::Error;
+
 #[cfg(test)]
 mod tests;
 
@@ -12,6 +13,16 @@ pub struct Id(i64);
 impl Id {
     pub fn validate(i: i64) -> bool {
         i > 0
+    }
+}
+
+impl TryFrom<i64> for Id {
+    type Error = Error;
+    fn try_from(value: i64) -> Result<Self, Self::Error> {
+        if !Id::validate(value) {
+            return Err(Error::ValidateError("id is negative".to_string()));
+        }
+        Ok(Id(value))
     }
 }
 

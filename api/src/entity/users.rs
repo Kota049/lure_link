@@ -8,6 +8,5 @@ pub struct User {
     pub application_refresh_token: String,
     pub line_access_token: String,
     pub line_refresh_token: String,
-    pub line_id_token: String,
     pub line_id: String,
 }
