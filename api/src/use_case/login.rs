@@ -14,7 +14,14 @@ pub struct LoginUseCase {
 impl LoginUseCase {
     // Lineの確認コードからデータを取得→正常ならトークンを発行、なければトークンを削除
     pub async fn verify_user(&self)->Result<User,Error> {
-        todo!()
+        Ok(User{
+            id: 1i64.try_into()?,
+            application_token: "".to_string(),
+            application_refresh_token: "".to_string(),
+            line_access_token: "".to_string(),
+            line_refresh_token: "".to_string(),
+            line_id: "".to_string(),
+        })
     }
     // ユーザーを作成する
     async fn create_user(&self) {}
