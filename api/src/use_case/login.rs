@@ -17,6 +17,7 @@ impl LoginUseCase {
     pub async fn verify_user(&self, _code: String) -> Result<User, Error> {
         // get token
         let line_token = self.line_client.get_token(&_code).await?;
+        let line_profile = self.line_client.get_profile(line_token.clone()).await?;
 
         Ok(User {
             id: 1i64.try_into()?,
@@ -24,7 +25,7 @@ impl LoginUseCase {
             application_refresh_token: "".to_string(),
             line_access_token: line_token.access_token,
             line_refresh_token:line_token.refresh_token,
-            line_id: "".to_string(),
+            line_id: line_profile.line_user_id,
         })
     }
     // ユーザーを作成する
