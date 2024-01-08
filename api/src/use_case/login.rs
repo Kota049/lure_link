@@ -15,12 +15,15 @@ pub struct LoginUseCase {
 impl LoginUseCase {
     // Lineの確認コードからデータを取得→正常ならトークンを発行、なければトークンを削除
     pub async fn verify_user(&self, _code: String) -> Result<User, Error> {
+        // get token
+        let line_token = self.line_client.get_token(&_code).await?;
+
         Ok(User {
             id: 1i64.try_into()?,
             application_token: "".to_string(),
             application_refresh_token: "".to_string(),
-            line_access_token: "".to_string(),
-            line_refresh_token: "".to_string(),
+            line_access_token: line_token.access_token,
+            line_refresh_token:line_token.refresh_token,
             line_id: "".to_string(),
         })
     }
