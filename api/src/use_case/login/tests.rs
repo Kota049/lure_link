@@ -44,6 +44,22 @@ impl UserRepositoryTrait for MockUserRepo {
 async fn test_verify_user() {
     let valid_code = "valid code".to_string();
     // 正常な場合はUser情報を返す
+    let lc = create_lc();
+    let ur = create_ur();
+    let uc = LoginUseCase { u_repo: Arc::new(MockUserRepo { inner: ur }), line_client: Arc::new(MockLineRepo { inner: lc }) };
+    let res = uc.verify_user(valid_code.clone()).await;
+    assert!(res.is_ok());
+
+    // profileが取得できなかった場合にはエラーを返す
+    let mut lc = create_lc();
+    lc.expect_line_token().returning(|| Err(Error::LineError("test line error".to_string())));
+    let ur = create_ur();
+    let uc = LoginUseCase { u_repo: Arc::new(MockUserRepo { inner: ur }), line_client: Arc::new(MockLineRepo { inner: lc }) };
+    let res = uc.verify_user(valid_code).await;
+    assert!(res.is_err());
+}
+
+fn create_lc() -> MockLineValue {
     let mut lc = MockLineValue::new();
     lc.expect_line_token().returning(|| Ok(LineToken {
         access_token: "valid".to_string(),
@@ -52,7 +68,10 @@ async fn test_verify_user() {
         id_token: "valid".to_string(),
     }));
     lc.expect_line_profile().returning(|| Ok(LineProfile { line_user_id: "valid".to_string() }));
+    lc
+}
 
+fn create_ur() -> MockUserValue {
     let mut ur = MockUserValue::new();
     ur.expect_create_res().returning(|| Ok(User {
         id: 1i64.try_into().unwrap(),
@@ -62,27 +81,5 @@ async fn test_verify_user() {
         line_refresh_token: "".to_string(),
         line_id: "".to_string(),
     }));
-
-    let uc = LoginUseCase { u_repo: Arc::new(MockUserRepo { inner: ur }), line_client: Arc::new(MockLineRepo { inner: lc }) };
-    let res = uc.verify_user(valid_code.clone()).await;
-    assert!(res.is_ok());
-
-    // 正常なprofileが取得できなかった場合にはエラーを返す
-    let mut lc = MockLineValue::new();
-    lc.expect_line_token().returning(|| Err(Error::LineError("test line error".to_string())));
-    lc.expect_line_profile().returning(|| Ok(LineProfile { line_user_id: "valid".to_string() }));
-
-    let mut ur = MockUserValue::new();
-    ur.expect_create_res().returning(|| Ok(User {
-        id: 1i64.try_into().unwrap(),
-        application_token: "".to_string(),
-        application_refresh_token: "".to_string(),
-        line_access_token: "".to_string(),
-        line_refresh_token: "".to_string(),
-        line_id: "".to_string(),
-    }));
-
-    let uc = LoginUseCase { u_repo: Arc::new(MockUserRepo { inner: ur }), line_client: Arc::new(MockLineRepo { inner: lc }) };
-    let res = uc.verify_user(valid_code).await;
-    assert!(res.is_err());
+    ur
 }
