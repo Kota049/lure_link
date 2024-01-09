@@ -33,6 +33,8 @@ class RecruitmentList extends StatelessWidget {
     return const Column(
       children: [
         RecruitmentCard(
+          destinationPrefecture: "" ,
+          destinationCity: "",
           destination: "富津岬",
           user: '村岡正憲',
           startDate: "2023/09/10 18:00",
@@ -41,6 +43,8 @@ class RecruitmentList extends StatelessWidget {
           memberCount: "0/2人",
         ),
         RecruitmentCard(
+          destinationPrefecture: "" ,
+          destinationCity: "",
           destination: "潮風公園",
           user: 'RED鈴木',
           startDate: "2023/09/24 0:00",
@@ -49,6 +53,8 @@ class RecruitmentList extends StatelessWidget {
           memberCount: "1/2人",
         ),
         RecruitmentCard(
+          destinationPrefecture: "" ,
+          destinationCity: "",
           destination: "豊洲ぐるり公園",
           user: '高橋優介',
           startDate: "2023/09/10 18:00",
@@ -57,6 +63,8 @@ class RecruitmentList extends StatelessWidget {
           memberCount: "0/1人",
         ),
         RecruitmentCard(
+          destinationPrefecture: "" ,
+          destinationCity: "",
           destination: "武庫川一文字",
           user: '橋本翔大',
           startDate: "2023/09/10 18:00",
@@ -70,6 +78,8 @@ class RecruitmentList extends StatelessWidget {
 }
 
 class RecruitmentCard extends StatelessWidget {
+  final String destinationPrefecture;
+  final String destinationCity;
   final String destination;
   final String user;
   final String startDate;
@@ -79,6 +89,8 @@ class RecruitmentCard extends StatelessWidget {
 
   const RecruitmentCard(
       {super.key,
+        required this.destinationPrefecture,
+        required this.destinationCity,
       required this.destination,
       required this.user,
       required this.startDate,
