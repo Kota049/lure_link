@@ -25,13 +25,24 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
-class ConsentPage extends StatelessWidget {
+class ConsentPage extends StatefulWidget {
   const ConsentPage({super.key});
 
   @override
+  _ConsentPage createState() => _ConsentPage();
+}
+
+class _ConsentPage extends State<ConsentPage> {
+  bool _checkBox = false;
+  void _checkConsent(checkBox){
+    setState(() {
+      _checkBox = checkBox;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: <Widget>[
         Text(
           '同意画面'
@@ -42,8 +53,13 @@ class ConsentPage extends StatelessWidget {
         Text(
           'テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト'
         ),
-        Text(
-          '同意する'
+        CheckboxListTile(
+          value:_checkBox,
+          controlAffinity: ListTileControlAffinity.leading,
+          title: Text(
+            '同意する',
+          ),
+          onChanged: _checkConsent,
         ),
         ElevatedButton(
           child:Text('送信'),
@@ -53,5 +69,6 @@ class ConsentPage extends StatelessWidget {
     );
   }
 }
+
 
 
