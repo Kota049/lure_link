@@ -1,5 +1,3 @@
-use crate::domain::domain_object::application_token::ApplicationToken;
-use crate::domain::domain_object::id::Id;
 use crate::entity::line::{LineProfile, LineToken};
 use crate::entity::users::User;
 use crate::error::Error;
@@ -147,7 +145,10 @@ async fn test_upsert_token() {
     let line_profile = LineProfile {
         line_user_id: "".to_string(),
     };
-    let res = uc.upsert_user(line_token, line_profile).await.unwrap();
+    let res = uc
+        .find_or_create_user(line_token, line_profile)
+        .await
+        .unwrap();
     assert_eq!(res, create_ur().user_by_line_token().unwrap());
 
     // line_idからデータが見つからない場合はデータを作成する
@@ -169,7 +170,10 @@ async fn test_upsert_token() {
     let line_profile = LineProfile {
         line_user_id: "".to_string(),
     };
-    let res = uc.upsert_user(line_token, line_profile).await.unwrap();
+    let res = uc
+        .find_or_create_user(line_token, line_profile)
+        .await
+        .unwrap();
     assert_eq!(res, create_some_user());
 
     // ユーザーの作成に失敗した場合にはエラーを返す
@@ -192,15 +196,15 @@ async fn test_upsert_token() {
     let line_profile = LineProfile {
         line_user_id: "".to_string(),
     };
-    let res = uc.upsert_user(line_token, line_profile).await;
+    let res = uc.find_or_create_user(line_token, line_profile).await;
     assert!(res.is_err());
 }
 
 fn create_some_user() -> User {
     User {
-        id: Id(100),
-        application_token: ApplicationToken("test not found".to_string()),
-        application_refresh_token: ApplicationToken("test not found".to_string()),
+        id: 100.try_into().unwrap(),
+        application_token: "test not found".to_string().try_into().unwrap(),
+        application_refresh_token: "test not found".to_string().try_into().unwrap(),
         line_access_token: "".to_string(),
         line_refresh_token: "".to_string(),
         line_id: "".to_string(),
@@ -212,8 +216,8 @@ fn create_ur() -> MockUserValue {
     ur.expect_create_res().returning(|| {
         Ok(User {
             id: 1i64.try_into().unwrap(),
-            application_token: ApplicationToken("".to_string()),
-            application_refresh_token: ApplicationToken("".to_string()),
+            application_token: "a".to_string().try_into().unwrap(),
+            application_refresh_token: "a".to_string().try_into().unwrap(),
             line_access_token: "".to_string(),
             line_refresh_token: "".to_string(),
             line_id: "".to_string(),
@@ -222,8 +226,8 @@ fn create_ur() -> MockUserValue {
     ur.expect_user_by_line_token().returning(|| {
         Ok(User {
             id: 2i64.try_into().unwrap(),
-            application_token: ApplicationToken("".to_string()),
-            application_refresh_token: ApplicationToken("".to_string()),
+            application_token: "a".to_string().try_into().unwrap(),
+            application_refresh_token: "a".to_string().try_into().unwrap(),
             line_access_token: "".to_string(),
             line_refresh_token: "".to_string(),
             line_id: "".to_string(),

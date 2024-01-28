@@ -1,4 +1,3 @@
-use crate::domain::domain_object::application_token::ApplicationToken;
 use crate::entity::line::{LineProfile, LineToken};
 use crate::entity::users::User;
 use crate::error::Error;
@@ -20,18 +19,10 @@ impl LoginUseCase {
         // get token
         let line_token = self.line_client.get_token(&_code).await?;
         let line_profile = self.line_client.get_profile(line_token.clone()).await?;
-
-        Ok(User {
-            id: 1i64.try_into()?,
-            application_token: ApplicationToken("".to_string()),
-            application_refresh_token: ApplicationToken("".to_string()),
-            line_access_token: line_token.access_token,
-            line_refresh_token: line_token.refresh_token,
-            line_id: line_profile.line_user_id,
-        })
+        self.find_or_create_user(line_token, line_profile).await
     }
     // ユーザーを作成する
-    async fn upsert_user(
+    async fn find_or_create_user(
         &self,
         line_token: LineToken,
         line_profile: LineProfile,
@@ -53,8 +44,4 @@ impl LoginUseCase {
     pub async fn refresh_token(&self, line_token: LineToken) {
         todo!()
     }
-}
-
-fn create_token() -> ApplicationToken {
-    todo!()
 }
