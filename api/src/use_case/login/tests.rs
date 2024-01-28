@@ -138,8 +138,16 @@ async fn test_upsert_token() {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
         line_client: Arc::new(MockLineRepo { inner: lc }),
     };
-    let line_id = String::from("some_line_id");
-    let res = uc.upsert_user(&line_id).await.unwrap();
+    let line_token = LineToken {
+        access_token: "".to_string(),
+        expires_in: 0,
+        refresh_token: "".to_string(),
+        id_token: "".to_string(),
+    };
+    let line_profile = LineProfile {
+        line_user_id: "".to_string(),
+    };
+    let res = uc.upsert_user(line_token, line_profile).await.unwrap();
     assert_eq!(res, create_ur().user_by_line_token().unwrap());
 
     // line_idからデータが見つからない場合はデータを作成する
@@ -148,12 +156,20 @@ async fn test_upsert_token() {
     ur.expect_user_by_line_token()
         .returning(|| Err(Error::DbError("not found".to_string())));
     ur.expect_create_res().returning(|| Ok(create_some_user()));
-    let line_id = String::from("test not found".to_string());
     let uc = LoginUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
         line_client: Arc::new(MockLineRepo { inner: lc }),
     };
-    let res = uc.upsert_user(&line_id).await.unwrap();
+    let line_token = LineToken {
+        access_token: "".to_string(),
+        expires_in: 0,
+        refresh_token: "".to_string(),
+        id_token: "".to_string(),
+    };
+    let line_profile = LineProfile {
+        line_user_id: "".to_string(),
+    };
+    let res = uc.upsert_user(line_token, line_profile).await.unwrap();
     assert_eq!(res, create_some_user());
 
     // ユーザーの作成に失敗した場合にはエラーを返す
@@ -167,8 +183,16 @@ async fn test_upsert_token() {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
         line_client: Arc::new(MockLineRepo { inner: lc }),
     };
-    let line_id = String::from("test error");
-    let res = uc.upsert_user(&line_id).await;
+    let line_token = LineToken {
+        access_token: "".to_string(),
+        expires_in: 0,
+        refresh_token: "".to_string(),
+        id_token: "".to_string(),
+    };
+    let line_profile = LineProfile {
+        line_user_id: "".to_string(),
+    };
+    let res = uc.upsert_user(line_token, line_profile).await;
     assert!(res.is_err());
 }
 

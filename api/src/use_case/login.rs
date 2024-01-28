@@ -1,5 +1,5 @@
 use crate::domain::domain_object::application_token::ApplicationToken;
-use crate::entity::line::LineToken;
+use crate::entity::line::{LineProfile, LineToken};
 use crate::entity::users::User;
 use crate::error::Error;
 use crate::repository::line::LineClientTrait;
@@ -31,8 +31,19 @@ impl LoginUseCase {
         })
     }
     // ユーザーを作成する
-    async fn upsert_user(&self, line_id: &String) -> Result<User, Error> {
-        todo!()
+    async fn upsert_user(
+        &self,
+        line_token: LineToken,
+        line_profile: LineProfile,
+    ) -> Result<User, Error> {
+        let exists_user = self
+            .u_repo
+            .find_by_line_token(&line_profile.line_user_id)
+            .await;
+        if let Ok(u) = exists_user {
+            return Ok(u);
+        }
+        self.u_repo.create(&line_token, &line_profile).await
     }
     // トークンを検証する
     pub async fn verify_token(&self) -> Result<User, Error> {
