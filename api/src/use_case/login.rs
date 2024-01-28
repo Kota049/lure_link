@@ -1,8 +1,10 @@
-use std::sync::Arc;
+use crate::domain::domain_object::application_token::ApplicationToken;
+use crate::entity::line::LineToken;
 use crate::entity::users::User;
 use crate::error::Error;
 use crate::repository::line::LineClientTrait;
 use crate::repository::user::UserRepositoryTrait;
+use std::sync::Arc;
 
 #[cfg(test)]
 mod tests;
@@ -21,18 +23,24 @@ impl LoginUseCase {
 
         Ok(User {
             id: 1i64.try_into()?,
-            application_token: "".to_string(),
-            application_refresh_token: "".to_string(),
+            application_token: ApplicationToken("".to_string()),
+            application_refresh_token: ApplicationToken("".to_string()),
             line_access_token: line_token.access_token,
-            line_refresh_token:line_token.refresh_token,
+            line_refresh_token: line_token.refresh_token,
             line_id: line_profile.line_user_id,
         })
     }
     // ユーザーを作成する
-    async fn create_user(&self) {}
+    async fn create_user(&self) -> Result<User, Error> {
+        todo!()
+    }
     // トークンを検証する
-    pub async fn verify_token(&self) {}
+    pub async fn verify_token(&self) -> Result<User, Error> {
+        todo!()
+    }
     // トークンを再取得する
-    pub async fn refresh_token(&self) {}
+    pub async fn refresh_token(&self, line_token: LineToken) {
+        todo!()
+    }
     async fn create_token(&self) {}
 }
