@@ -34,7 +34,10 @@ impl LoginUseCase {
         if let Ok(u) = exists_user {
             return Ok(u);
         }
-        self.u_repo.create(&line_token, &line_profile).await
+        if let Err(Error::NotFound(_)) = exists_user {
+            return self.u_repo.create(&line_token, &line_profile).await;
+        }
+        exists_user
     }
     // トークンを検証する
     pub async fn verify_token(&self) -> Result<User, Error> {
