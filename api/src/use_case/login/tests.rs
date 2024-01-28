@@ -270,7 +270,7 @@ async fn test_verify_token() {
 
 #[tokio::test]
 async fn test_refresh_token() {
-    // application_tokenからデータが取得できた場合にはそのUserを返す
+    // refresh_tokenが存在する場合はトークンを更新する
     let lc = create_lc();
     let ur = create_ur();
     let uc = LoginUseCase {
@@ -281,10 +281,10 @@ async fn test_refresh_token() {
     let res = uc.refresh_token(&application_token).await;
     assert!(res.is_ok());
 
-    // ユーザーが存在しない場合エラーを返す
+    // tokenが存在しない場合はエラーを返す
     let lc = create_lc();
     let mut ur = MockUserValue::new();
-    ur.expect_user_by_application_token()
+    ur.expect_update_token()
         .returning(|| Err(NotFound("not found".to_string())));
     let uc = LoginUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
@@ -297,7 +297,7 @@ async fn test_refresh_token() {
     // DB接続等でエラーが発生した場合はエラーを返す
     let lc = create_lc();
     let mut ur = MockUserValue::new();
-    ur.expect_user_by_application_token()
+    ur.expect_update_token()
         .returning(|| Err(DbError("some db error occurs".to_string())));
     let uc = LoginUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),

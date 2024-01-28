@@ -48,6 +48,6 @@ impl LoginUseCase {
     }
     // トークンを再取得する
     pub async fn refresh_token(&self, refresh_token: &ApplicationToken) -> Result<User, Error> {
-        todo!()
+        self.u_repo.update_token(refresh_token).await
     }
 }
