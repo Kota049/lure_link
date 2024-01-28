@@ -30,7 +30,7 @@ impl LoginUseCase {
     ) -> Result<User, Error> {
         let exists_user = self
             .u_repo
-            .find_by_line_token(&line_profile.line_user_id)
+            .find_by_line_id(&line_profile.line_user_id)
             .await;
         if let Ok(u) = exists_user {
             return Ok(u);
@@ -47,7 +47,7 @@ impl LoginUseCase {
             .await
     }
     // トークンを再取得する
-    pub async fn refresh_token(&self, line_token: LineToken) {
+    pub async fn refresh_token(&self, refresh_token: &ApplicationToken) -> Result<User, Error> {
         todo!()
     }
 }

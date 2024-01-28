@@ -35,6 +35,7 @@ pub trait UserValue {
     fn create_res(&self) -> Result<User, Error>;
     fn user_by_application_token(&self) -> Result<User, Error>;
     fn user_by_line_token(&self) -> Result<User, Error>;
+    fn update_token(&self) -> Result<User, Error>;
 }
 
 struct MockUserRepo {
@@ -54,8 +55,12 @@ impl UserRepositoryTrait for MockUserRepo {
         self.inner.create_res()
     }
 
-    async fn find_by_line_token(&self, line_id: &String) -> Result<User, Error> {
+    async fn find_by_line_id(&self, _line_id: &String) -> Result<User, Error> {
         self.inner.user_by_line_token()
+    }
+
+    async fn update_token(&self, _refresh_token: &ApplicationToken) -> Result<User, Error> {
+        self.inner.update_token()
     }
 }
 
@@ -263,6 +268,46 @@ async fn test_verify_token() {
     assert!(res.is_err());
 }
 
+#[tokio::test]
+async fn test_refresh_token() {
+    // application_tokenからデータが取得できた場合にはそのUserを返す
+    let lc = create_lc();
+    let ur = create_ur();
+    let uc = LoginUseCase {
+        u_repo: Arc::new(MockUserRepo { inner: ur }),
+        line_client: Arc::new(MockLineRepo { inner: lc }),
+    };
+    let application_token = "valid_token".to_string().try_into().unwrap();
+    let res = uc.refresh_token(&application_token).await;
+    assert!(res.is_ok());
+
+    // ユーザーが存在しない場合エラーを返す
+    let lc = create_lc();
+    let mut ur = MockUserValue::new();
+    ur.expect_user_by_application_token()
+        .returning(|| Err(NotFound("not found".to_string())));
+    let uc = LoginUseCase {
+        u_repo: Arc::new(MockUserRepo { inner: ur }),
+        line_client: Arc::new(MockLineRepo { inner: lc }),
+    };
+    let application_token = "valid_token".to_string().try_into().unwrap();
+    let res = uc.refresh_token(&application_token).await;
+    assert!(res.is_err());
+
+    // DB接続等でエラーが発生した場合はエラーを返す
+    let lc = create_lc();
+    let mut ur = MockUserValue::new();
+    ur.expect_user_by_application_token()
+        .returning(|| Err(DbError("some db error occurs".to_string())));
+    let uc = LoginUseCase {
+        u_repo: Arc::new(MockUserRepo { inner: ur }),
+        line_client: Arc::new(MockLineRepo { inner: lc }),
+    };
+    let application_token = "valid_token".to_string().try_into().unwrap();
+    let res = uc.refresh_token(&application_token).await;
+    assert!(res.is_err());
+}
+
 fn create_some_user() -> User {
     User {
         id: 100.try_into().unwrap(),
@@ -299,6 +344,16 @@ fn create_ur() -> MockUserValue {
     ur.expect_user_by_application_token().returning(|| {
         Ok(User {
             id: 3i64.try_into().unwrap(),
+            application_token: "a".to_string().try_into().unwrap(),
+            application_refresh_token: "a".to_string().try_into().unwrap(),
+            line_access_token: "".to_string(),
+            line_refresh_token: "".to_string(),
+            line_id: "".to_string(),
+        })
+    });
+    ur.expect_update_token().returning(|| {
+        Ok(User {
+            id: 4i64.try_into().unwrap(),
             application_token: "a".to_string().try_into().unwrap(),
             application_refresh_token: "a".to_string().try_into().unwrap(),
             line_access_token: "".to_string(),
