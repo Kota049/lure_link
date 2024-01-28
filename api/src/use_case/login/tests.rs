@@ -1,7 +1,9 @@
 use crate::domain::domain_object::application_token::ApplicationToken;
+use crate::domain::domain_object::id::Id;
 use crate::entity::line::{LineProfile, LineToken};
 use crate::entity::users::User;
 use crate::error::Error;
+use crate::error::Error::DbError;
 use crate::repository::line::LineClientTrait;
 use crate::repository::user::UserRepositoryTrait;
 use crate::use_case::login::LoginUseCase;
@@ -33,6 +35,7 @@ impl LineClientTrait for MockLineRepo {
 pub trait UserValue {
     fn create_res(&self) -> Result<User, Error>;
     fn user_by_application_token(&self) -> Result<User, Error>;
+    fn user_by_line_token(&self) -> Result<User, Error>;
 }
 
 struct MockUserRepo {
@@ -50,6 +53,10 @@ impl UserRepositoryTrait for MockUserRepo {
         _line_profile: &LineProfile,
     ) -> Result<User, Error> {
         self.inner.create_res()
+    }
+
+    async fn find_by_line_token(&self, line_id: &String) -> Result<User, Error> {
+        self.inner.user_by_line_token()
     }
 }
 
@@ -122,11 +129,75 @@ fn create_lc() -> MockLineValue {
     lc
 }
 
+#[tokio::test]
+async fn test_upsert_token() {
+    // line_idからデータが取得できた場合にはそのUserを返す
+    let lc = create_lc();
+    let ur = create_ur();
+    let uc = LoginUseCase {
+        u_repo: Arc::new(MockUserRepo { inner: ur }),
+        line_client: Arc::new(MockLineRepo { inner: lc }),
+    };
+    let line_id = String::from("some_line_id");
+    let res = uc.upsert_user(&line_id).await.unwrap();
+    assert_eq!(res, create_ur().user_by_line_token().unwrap());
+
+    // line_idからデータが見つからない場合はデータを作成する
+    let lc = create_lc();
+    let mut ur = MockUserValue::new();
+    ur.expect_user_by_line_token()
+        .returning(|| Err(Error::DbError("not found".to_string())));
+    ur.expect_create_res().returning(|| Ok(create_some_user()));
+    let line_id = String::from("test not found".to_string());
+    let uc = LoginUseCase {
+        u_repo: Arc::new(MockUserRepo { inner: ur }),
+        line_client: Arc::new(MockLineRepo { inner: lc }),
+    };
+    let res = uc.upsert_user(&line_id).await.unwrap();
+    assert_eq!(res, create_some_user());
+
+    // ユーザーの作成に失敗した場合にはエラーを返す
+    let lc = create_lc();
+    let mut ur = MockUserValue::new();
+    ur.expect_user_by_line_token()
+        .returning(|| Err(DbError("error".to_string())));
+    ur.expect_create_res()
+        .returning(|| Err(DbError("error".to_string())));
+    let uc = LoginUseCase {
+        u_repo: Arc::new(MockUserRepo { inner: ur }),
+        line_client: Arc::new(MockLineRepo { inner: lc }),
+    };
+    let line_id = String::from("test error");
+    let res = uc.upsert_user(&line_id).await;
+    assert!(res.is_err());
+}
+
+fn create_some_user() -> User {
+    User {
+        id: Id(100),
+        application_token: ApplicationToken("test not found".to_string()),
+        application_refresh_token: ApplicationToken("test not found".to_string()),
+        line_access_token: "".to_string(),
+        line_refresh_token: "".to_string(),
+        line_id: "".to_string(),
+    }
+}
+
 fn create_ur() -> MockUserValue {
     let mut ur = MockUserValue::new();
     ur.expect_create_res().returning(|| {
         Ok(User {
             id: 1i64.try_into().unwrap(),
+            application_token: ApplicationToken("".to_string()),
+            application_refresh_token: ApplicationToken("".to_string()),
+            line_access_token: "".to_string(),
+            line_refresh_token: "".to_string(),
+            line_id: "".to_string(),
+        })
+    });
+    ur.expect_user_by_line_token().returning(|| {
+        Ok(User {
+            id: 2i64.try_into().unwrap(),
             application_token: ApplicationToken("".to_string()),
             application_refresh_token: ApplicationToken("".to_string()),
             line_access_token: "".to_string(),

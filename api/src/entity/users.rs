@@ -2,7 +2,7 @@ use crate::domain::domain_object::application_token::ApplicationToken;
 use crate::domain::domain_object::id::Id;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialOrd, PartialEq)]
 pub struct User {
     pub id: Id,
     pub application_token: ApplicationToken,

@@ -31,7 +31,7 @@ impl LoginUseCase {
         })
     }
     // ユーザーを作成する
-    async fn create_user(&self) -> Result<User, Error> {
+    async fn upsert_user(&self, line_id: &String) -> Result<User, Error> {
         todo!()
     }
     // トークンを検証する
@@ -42,5 +42,8 @@ impl LoginUseCase {
     pub async fn refresh_token(&self, line_token: LineToken) {
         todo!()
     }
-    async fn create_token(&self) {}
+}
+
+fn create_token() -> ApplicationToken {
+    todo!()
 }
