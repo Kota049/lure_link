@@ -222,6 +222,46 @@ async fn test_upsert_token() {
     assert!(res.is_err());
 }
 
+#[tokio::test]
+async fn test_verify_token() {
+    // application_tokenからデータが取得できた場合にはそのUserを返す
+    let lc = create_lc();
+    let ur = create_ur();
+    let uc = LoginUseCase {
+        u_repo: Arc::new(MockUserRepo { inner: ur }),
+        line_client: Arc::new(MockLineRepo { inner: lc }),
+    };
+    let application_token = "valid_token".to_string().try_into().unwrap();
+    let res = uc.verify_token(&application_token).await;
+    assert!(res.is_ok());
+
+    // ユーザーが存在しない場合エラーを返す
+    let lc = create_lc();
+    let mut ur = MockUserValue::new();
+    ur.expect_user_by_application_token()
+        .returning(|| Err(NotFound("not found".to_string())));
+    let uc = LoginUseCase {
+        u_repo: Arc::new(MockUserRepo { inner: ur }),
+        line_client: Arc::new(MockLineRepo { inner: lc }),
+    };
+    let application_token = "valid_token".to_string().try_into().unwrap();
+    let res = uc.verify_token(&application_token).await;
+    assert!(res.is_err());
+
+    // DB接続等でエラーが発生した場合はエラーを返す
+    let lc = create_lc();
+    let mut ur = MockUserValue::new();
+    ur.expect_user_by_application_token()
+        .returning(|| Err(DbError("some db error occurs".to_string())));
+    let uc = LoginUseCase {
+        u_repo: Arc::new(MockUserRepo { inner: ur }),
+        line_client: Arc::new(MockLineRepo { inner: lc }),
+    };
+    let application_token = "valid_token".to_string().try_into().unwrap();
+    let res = uc.verify_token(&application_token).await;
+    assert!(res.is_err());
+}
+
 fn create_some_user() -> User {
     User {
         id: 100.try_into().unwrap(),

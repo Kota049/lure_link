@@ -1,3 +1,4 @@
+use crate::domain::domain_object::application_token::ApplicationToken;
 use crate::entity::line::{LineProfile, LineToken};
 use crate::entity::users::User;
 use crate::error::Error;
@@ -40,7 +41,7 @@ impl LoginUseCase {
         exists_user
     }
     // トークンを検証する
-    pub async fn verify_token(&self) -> Result<User, Error> {
+    pub async fn verify_token(&self, application_token: &ApplicationToken) -> Result<User, Error> {
         todo!()
     }
     // トークンを再取得する
