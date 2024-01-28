@@ -1,7 +1,7 @@
 use crate::entity::line::{LineProfile, LineToken};
 use crate::entity::users::User;
 use crate::error::Error;
-use crate::error::Error::DbError;
+use crate::error::Error::{DbError, NotFound};
 use crate::repository::line::LineClientTrait;
 use crate::repository::user::UserRepositoryTrait;
 use crate::use_case::login::LoginUseCase;
@@ -155,7 +155,7 @@ async fn test_upsert_token() {
     let lc = create_lc();
     let mut ur = MockUserValue::new();
     ur.expect_user_by_line_token()
-        .returning(|| Err(Error::DbError("not found".to_string())));
+        .returning(|| Err(NotFound("not found".to_string())));
     ur.expect_create_res().returning(|| Ok(create_some_user()));
     let uc = LoginUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
@@ -175,6 +175,28 @@ async fn test_upsert_token() {
         .await
         .unwrap();
     assert_eq!(res, create_some_user());
+
+    // ユーザー検索の際に予期せぬエラーが発生した場合はエラーを返す
+    let lc = create_lc();
+    let mut ur = MockUserValue::new();
+    ur.expect_user_by_line_token()
+        .returning(|| Err(DbError("some problem occurs".to_string())));
+    ur.expect_create_res().returning(|| Ok(create_some_user()));
+    let uc = LoginUseCase {
+        u_repo: Arc::new(MockUserRepo { inner: ur }),
+        line_client: Arc::new(MockLineRepo { inner: lc }),
+    };
+    let line_token = LineToken {
+        access_token: "".to_string(),
+        expires_in: 0,
+        refresh_token: "".to_string(),
+        id_token: "".to_string(),
+    };
+    let line_profile = LineProfile {
+        line_user_id: "".to_string(),
+    };
+    let res = uc.find_or_create_user(line_token, line_profile).await;
+    assert!(res.is_err());
 
     // ユーザーの作成に失敗した場合にはエラーを返す
     let lc = create_lc();
