@@ -1,3 +1,4 @@
+use crate::domain::domain_object::application_token::ApplicationToken;
 use crate::entity::line::{LineProfile, LineToken};
 use crate::entity::users::User;
 use crate::error::Error;
@@ -6,7 +7,10 @@ use axum::async_trait;
 #[async_trait]
 pub trait UserRepositoryTrait {
     // アクセストークンによるユーザーの取得
-    async fn find_by_application_token(&self, application_token: &String) -> Result<User, Error>;
+    async fn find_by_application_token(
+        &self,
+        application_token: &ApplicationToken,
+    ) -> Result<User, Error>;
     // ユーザーの作成
     async fn create(
         &self,

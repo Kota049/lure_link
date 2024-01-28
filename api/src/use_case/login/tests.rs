@@ -1,3 +1,4 @@
+use crate::domain::domain_object::application_token::ApplicationToken;
 use crate::entity::line::{LineProfile, LineToken};
 use crate::entity::users::User;
 use crate::error::Error;
@@ -42,7 +43,7 @@ struct MockUserRepo {
 
 #[async_trait]
 impl UserRepositoryTrait for MockUserRepo {
-    async fn find_by_application_token(&self, _token: &String) -> Result<User, Error> {
+    async fn find_by_application_token(&self, _token: &ApplicationToken) -> Result<User, Error> {
         self.inner.user_by_application_token()
     }
     async fn create(
@@ -288,6 +289,16 @@ fn create_ur() -> MockUserValue {
     ur.expect_user_by_line_token().returning(|| {
         Ok(User {
             id: 2i64.try_into().unwrap(),
+            application_token: "a".to_string().try_into().unwrap(),
+            application_refresh_token: "a".to_string().try_into().unwrap(),
+            line_access_token: "".to_string(),
+            line_refresh_token: "".to_string(),
+            line_id: "".to_string(),
+        })
+    });
+    ur.expect_user_by_application_token().returning(|| {
+        Ok(User {
+            id: 3i64.try_into().unwrap(),
             application_token: "a".to_string().try_into().unwrap(),
             application_refresh_token: "a".to_string().try_into().unwrap(),
             line_access_token: "".to_string(),

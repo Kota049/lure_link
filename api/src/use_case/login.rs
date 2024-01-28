@@ -42,7 +42,9 @@ impl LoginUseCase {
     }
     // トークンを検証する
     pub async fn verify_token(&self, application_token: &ApplicationToken) -> Result<User, Error> {
-        todo!()
+        self.u_repo
+            .find_by_application_token(application_token)
+            .await
     }
     // トークンを再取得する
     pub async fn refresh_token(&self, line_token: LineToken) {
