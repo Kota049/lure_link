@@ -21,7 +21,9 @@ impl TryFrom<String> for UserStatus {
         match value.as_str() {
             "TRIAL" => Ok(Self::Trial),
             "REGISTRATION" => Ok(Self::Trial),
-            _ => Err(Error::ValidateError("invalid user status".to_string())),
+            _ => Err(Error::ValidateError(
+                "invalid user_use_case status".to_string(),
+            )),
         }
     }
 }
@@ -32,8 +34,11 @@ impl<'a> FromSql<'a> for UserStatus {
         raw: &'a [u8],
     ) -> Result<Self, Box<dyn std::error::Error + 'static + Sync + Send>> {
         let s: String = FromSql::from_sql(type_, raw)?;
-        Ok(s.try_into()
-            .map_err(|_| Box::new(Error::ValidateError("invalid user status".to_string())))?)
+        Ok(s.try_into().map_err(|_| {
+            Box::new(Error::ValidateError(
+                "invalid user_use_case status".to_string(),
+            ))
+        })?)
     }
     fn accepts(_type_: &Type) -> bool {
         true
@@ -73,6 +78,6 @@ impl<'de> Deserialize<'de> for UserStatus {
         let value = String::deserialize(deserializer)?;
         value
             .try_into()
-            .map_err(|_| D::Error::custom("validate user status error"))
+            .map_err(|_| D::Error::custom("validate user_use_case status error"))
     }
 }

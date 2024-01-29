@@ -6,18 +6,18 @@ use axum::async_trait;
 
 #[async_trait]
 pub trait UserRepositoryTrait {
-    // find user by application token
+    // find user_use_case by application token
     async fn find_by_application_token(
         &self,
         application_token: &ApplicationToken,
     ) -> Result<User, Error>;
-    // create user
+    // create user_use_case
     async fn create(
         &self,
         line_token: &LineToken,
         line_profile: &LineProfile,
     ) -> Result<User, Error>;
-    // find user by line id
+    // find user_use_case by line id
     async fn find_by_line_id(&self, line_id: &String) -> Result<User, Error>;
 
     // update application token

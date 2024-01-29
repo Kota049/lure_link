@@ -9,6 +9,8 @@ use std::sync::Arc;
 #[cfg(test)]
 mod tests;
 
+pub mod dto;
+
 pub struct LoginUseCase {
     u_repo: Arc<dyn UserRepositoryTrait + Send + Sync>,
     line_client: Arc<dyn LineClientTrait + Send + Sync>,

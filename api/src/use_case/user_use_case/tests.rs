@@ -5,7 +5,7 @@ use crate::error::Error;
 use crate::error::Error::{DbError, NotFound};
 use crate::repository::line::LineClientTrait;
 use crate::repository::user::UserRepositoryTrait;
-use crate::use_case::login::LoginUseCase;
+use crate::use_case::user_use_case::LoginUseCase;
 use axum::async_trait;
 use mockall::automock;
 use std::sync::Arc;
