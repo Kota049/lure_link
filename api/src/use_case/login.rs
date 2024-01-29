@@ -50,4 +50,5 @@ impl LoginUseCase {
     pub async fn refresh_token(&self, refresh_token: &ApplicationToken) -> Result<User, Error> {
         self.u_repo.update_token(refresh_token).await
     }
+    // 登録する
 }
