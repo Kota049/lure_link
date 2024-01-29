@@ -51,4 +51,7 @@ impl LoginUseCase {
         self.u_repo.update_token(refresh_token).await
     }
     // 登録する
+    pub async fn sign_up(&self, user: User) -> Result<User, Error> {
+        todo!()
+    }
 }

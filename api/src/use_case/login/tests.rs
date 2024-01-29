@@ -311,11 +311,7 @@ async fn test_refresh_token() {
 fn create_some_user() -> User {
     User {
         id: 100.try_into().unwrap(),
-        application_token: "test not found".to_string().try_into().unwrap(),
-        application_refresh_token: "test not found".to_string().try_into().unwrap(),
-        line_access_token: "".to_string(),
-        line_refresh_token: "".to_string(),
-        line_id: "".to_string(),
+        ..User::default()
     }
 }
 
@@ -324,41 +320,25 @@ fn create_ur() -> MockUserValue {
     ur.expect_create_res().returning(|| {
         Ok(User {
             id: 1i64.try_into().unwrap(),
-            application_token: "a".to_string().try_into().unwrap(),
-            application_refresh_token: "a".to_string().try_into().unwrap(),
-            line_access_token: "".to_string(),
-            line_refresh_token: "".to_string(),
-            line_id: "".to_string(),
+            ..User::default()
         })
     });
     ur.expect_user_by_line_token().returning(|| {
         Ok(User {
             id: 2i64.try_into().unwrap(),
-            application_token: "a".to_string().try_into().unwrap(),
-            application_refresh_token: "a".to_string().try_into().unwrap(),
-            line_access_token: "".to_string(),
-            line_refresh_token: "".to_string(),
-            line_id: "".to_string(),
+            ..User::default()
         })
     });
     ur.expect_user_by_application_token().returning(|| {
         Ok(User {
             id: 3i64.try_into().unwrap(),
-            application_token: "a".to_string().try_into().unwrap(),
-            application_refresh_token: "a".to_string().try_into().unwrap(),
-            line_access_token: "".to_string(),
-            line_refresh_token: "".to_string(),
-            line_id: "".to_string(),
+            ..User::default()
         })
     });
     ur.expect_update_token().returning(|| {
         Ok(User {
             id: 4i64.try_into().unwrap(),
-            application_token: "a".to_string().try_into().unwrap(),
-            application_refresh_token: "a".to_string().try_into().unwrap(),
-            line_access_token: "".to_string(),
-            line_refresh_token: "".to_string(),
-            line_id: "".to_string(),
+            ..User::default()
         })
     });
     ur
