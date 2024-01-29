@@ -350,6 +350,8 @@ async fn test_sign_up() {
     // 登録に失敗した場合
     let lc = create_lc();
     let mut ur = MockUserValue::new();
+    ur.expect_user_by_application_token()
+        .returning(|| Ok(User::default()));
     ur.expect_register_user()
         .returning(|| Err(DbError("error".to_string())));
     let uc = UserUseCase {

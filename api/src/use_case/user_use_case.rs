@@ -56,6 +56,7 @@ impl UserUseCase {
     }
     // 登録する
     pub async fn first_register_user(&self, user: UpdateUser) -> Result<User, Error> {
+        self.verify_token(&user.application_token).await?;
         validate_first_register_user(&user)?;
         self.u_repo.register_user(user).await
     }
