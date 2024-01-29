@@ -334,6 +334,19 @@ async fn test_sign_up() {
     let res = uc.first_register_user(up).await;
     assert!(res.is_err());
 
+    // トークンが無効な場合はエラーを返す
+    let lc = create_lc();
+    let mut ur = MockUserValue::new();
+    ur.expect_user_by_application_token()
+        .returning(|| Err(DbError("error".to_string())));
+    let uc = UserUseCase {
+        u_repo: Arc::new(MockUserRepo { inner: ur }),
+        line_client: Arc::new(MockLineRepo { inner: lc }),
+    };
+    let up = UpdateUser::default();
+    let res = uc.first_register_user(up).await;
+    assert!(res.is_err());
+
     // 登録に失敗した場合
     let lc = create_lc();
     let mut ur = MockUserValue::new();
