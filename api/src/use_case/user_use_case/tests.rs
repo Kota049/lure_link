@@ -64,7 +64,7 @@ impl UserRepositoryTrait for MockUserRepo {
     async fn update_token(&self, _refresh_token: &ApplicationToken) -> Result<User, Error> {
         self.inner.update_token()
     }
-    async fn register_user(&self, up: UpdateUser) -> Result<User, Error> {
+    async fn register_user(&self, _up: UpdateUser) -> Result<User, Error> {
         self.inner.register_user()
     }
 }

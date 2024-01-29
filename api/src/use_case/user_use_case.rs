@@ -4,6 +4,7 @@ use crate::entity::users::User;
 use crate::error::Error;
 use crate::repository::line::LineClientTrait;
 use crate::repository::user::UserRepositoryTrait;
+use crate::service::validation::register_user::validate_first_register_user;
 use crate::use_case::user_use_case::dto::UpdateUser;
 use std::sync::Arc;
 
@@ -55,6 +56,7 @@ impl LoginUseCase {
     }
     // 登録する
     pub async fn sign_up(&self, user: UpdateUser) -> Result<User, Error> {
-        todo!()
+        validate_first_register_user(&user)?;
+        self.u_repo.register_user(user).await
     }
 }
