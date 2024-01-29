@@ -1,5 +1,4 @@
-use crate::service::validation::validate_first_register_user;
-use crate::use_case::user_use_case::dto::UpdateUser;
+use super::*;
 
 #[test]
 fn test_validate_first_register_user() {
