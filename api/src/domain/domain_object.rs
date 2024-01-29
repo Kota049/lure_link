@@ -10,6 +10,7 @@ pub mod municipality;
 pub mod name;
 pub mod name_jp;
 pub mod prefecture;
+pub mod user_status;
 
 // マクロ定義(使い回し用)
 pub mod integer;
