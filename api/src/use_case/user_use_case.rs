@@ -4,6 +4,7 @@ use crate::entity::users::User;
 use crate::error::Error;
 use crate::repository::line::LineClientTrait;
 use crate::repository::user::UserRepositoryTrait;
+use crate::use_case::user_use_case::dto::UpdateUser;
 use std::sync::Arc;
 
 #[cfg(test)]
@@ -53,7 +54,7 @@ impl LoginUseCase {
         self.u_repo.update_token(refresh_token).await
     }
     // 登録する
-    pub async fn sign_up(&self, user: User) -> Result<User, Error> {
+    pub async fn sign_up(&self, user: UpdateUser) -> Result<User, Error> {
         todo!()
     }
 }

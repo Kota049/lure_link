@@ -2,6 +2,7 @@ use crate::domain::domain_object::application_token::ApplicationToken;
 use crate::entity::line::{LineProfile, LineToken};
 use crate::entity::users::User;
 use crate::error::Error;
+use crate::use_case::user_use_case::dto::UpdateUser;
 use axum::async_trait;
 
 #[async_trait]
@@ -22,4 +23,7 @@ pub trait UserRepositoryTrait {
 
     // update application token
     async fn update_token(&self, refresh_token: &ApplicationToken) -> Result<User, Error>;
+
+    // update user
+    async fn register_user(&self, up: UpdateUser) -> Result<User, Error>;
 }

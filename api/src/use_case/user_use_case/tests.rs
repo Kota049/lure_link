@@ -5,6 +5,7 @@ use crate::error::Error;
 use crate::error::Error::{DbError, NotFound};
 use crate::repository::line::LineClientTrait;
 use crate::repository::user::UserRepositoryTrait;
+use crate::use_case::user_use_case::dto::UpdateUser;
 use crate::use_case::user_use_case::LoginUseCase;
 use axum::async_trait;
 use mockall::automock;
@@ -36,6 +37,7 @@ pub trait UserValue {
     fn user_by_application_token(&self) -> Result<User, Error>;
     fn user_by_line_token(&self) -> Result<User, Error>;
     fn update_token(&self) -> Result<User, Error>;
+    fn register_user(&self) -> Result<User, Error>;
 }
 
 struct MockUserRepo {
@@ -61,6 +63,9 @@ impl UserRepositoryTrait for MockUserRepo {
 
     async fn update_token(&self, _refresh_token: &ApplicationToken) -> Result<User, Error> {
         self.inner.update_token()
+    }
+    async fn register_user(&self, up: UpdateUser) -> Result<User, Error> {
+        self.inner.register_user()
     }
 }
 
@@ -308,6 +313,41 @@ async fn test_refresh_token() {
     assert!(res.is_err());
 }
 
+#[tokio::test]
+async fn test_sign_up() {
+    // 正常な場合はUserを作成して返す
+    let lc = create_lc();
+    let ur = create_ur();
+    let uc = LoginUseCase {
+        u_repo: Arc::new(MockUserRepo { inner: ur }),
+        line_client: Arc::new(MockLineRepo { inner: lc }),
+    };
+    let up = UpdateUser::default();
+    let res = uc.sign_up(up).await;
+    assert!(res.is_ok());
+
+    // バリデーションに引っかかる場合
+    let up = UpdateUser {
+        last_name: None,
+        ..UpdateUser::default()
+    };
+    let res = uc.sign_up(up).await;
+    assert!(res.is_err());
+
+    // 登録に失敗した場合
+    let lc = create_lc();
+    let mut ur = MockUserValue::new();
+    ur.expect_register_user()
+        .returning(|| Err(DbError("error".to_string())));
+    let uc = LoginUseCase {
+        u_repo: Arc::new(MockUserRepo { inner: ur }),
+        line_client: Arc::new(MockLineRepo { inner: lc }),
+    };
+    let up = UpdateUser::default();
+    let res = uc.sign_up(up).await;
+    assert!(res.is_err())
+}
+
 fn create_some_user() -> User {
     User {
         id: 100.try_into().unwrap(),
@@ -338,6 +378,12 @@ fn create_ur() -> MockUserValue {
     ur.expect_update_token().returning(|| {
         Ok(User {
             id: 4i64.try_into().unwrap(),
+            ..User::default()
+        })
+    });
+    ur.expect_register_user().returning(|| {
+        Ok(User {
+            id: 5i64.try_into().unwrap(),
             ..User::default()
         })
     });
