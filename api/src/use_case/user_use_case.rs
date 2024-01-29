@@ -13,12 +13,12 @@ mod tests;
 
 pub mod dto;
 
-pub struct LoginUseCase {
+pub struct UserUseCase {
     u_repo: Arc<dyn UserRepositoryTrait + Send + Sync>,
     line_client: Arc<dyn LineClientTrait + Send + Sync>,
 }
 
-impl LoginUseCase {
+impl UserUseCase {
     // Lineの確認コードからデータを取得→正常ならトークンを発行、なければトークンを削除
     pub async fn verify_user(&self, _code: String) -> Result<User, Error> {
         // get token
@@ -55,7 +55,7 @@ impl LoginUseCase {
         self.u_repo.update_token(refresh_token).await
     }
     // 登録する
-    pub async fn sign_up(&self, user: UpdateUser) -> Result<User, Error> {
+    pub async fn first_register_user(&self, user: UpdateUser) -> Result<User, Error> {
         validate_first_register_user(&user)?;
         self.u_repo.register_user(user).await
     }

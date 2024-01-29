@@ -6,7 +6,7 @@ use crate::error::Error::{DbError, NotFound};
 use crate::repository::line::LineClientTrait;
 use crate::repository::user::UserRepositoryTrait;
 use crate::use_case::user_use_case::dto::UpdateUser;
-use crate::use_case::user_use_case::LoginUseCase;
+use crate::use_case::user_use_case::UserUseCase;
 use axum::async_trait;
 use mockall::automock;
 use std::sync::Arc;
@@ -75,7 +75,7 @@ async fn test_verify_user() {
     // 正常な場合はUser情報を返す
     let lc = create_lc();
     let ur = create_ur();
-    let uc = LoginUseCase {
+    let uc = UserUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
         line_client: Arc::new(MockLineRepo { inner: lc }),
     };
@@ -92,7 +92,7 @@ async fn test_verify_user() {
         })
     });
     let ur = create_ur();
-    let uc = LoginUseCase {
+    let uc = UserUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
         line_client: Arc::new(MockLineRepo { inner: lc }),
     };
@@ -112,7 +112,7 @@ async fn test_verify_user() {
     lc.expect_line_profile()
         .returning(|| Err(Error::LineError("test line error".to_string())));
     let ur = create_ur();
-    let uc = LoginUseCase {
+    let uc = UserUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
         line_client: Arc::new(MockLineRepo { inner: lc }),
     };
@@ -143,7 +143,7 @@ async fn test_upsert_token() {
     // line_idからデータが取得できた場合にはそのUserを返す
     let lc = create_lc();
     let ur = create_ur();
-    let uc = LoginUseCase {
+    let uc = UserUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
         line_client: Arc::new(MockLineRepo { inner: lc }),
     };
@@ -168,7 +168,7 @@ async fn test_upsert_token() {
     ur.expect_user_by_line_token()
         .returning(|| Err(NotFound("not found".to_string())));
     ur.expect_create_res().returning(|| Ok(create_some_user()));
-    let uc = LoginUseCase {
+    let uc = UserUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
         line_client: Arc::new(MockLineRepo { inner: lc }),
     };
@@ -193,7 +193,7 @@ async fn test_upsert_token() {
     ur.expect_user_by_line_token()
         .returning(|| Err(DbError("some problem occurs".to_string())));
     ur.expect_create_res().returning(|| Ok(create_some_user()));
-    let uc = LoginUseCase {
+    let uc = UserUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
         line_client: Arc::new(MockLineRepo { inner: lc }),
     };
@@ -216,7 +216,7 @@ async fn test_upsert_token() {
         .returning(|| Err(DbError("error".to_string())));
     ur.expect_create_res()
         .returning(|| Err(DbError("error".to_string())));
-    let uc = LoginUseCase {
+    let uc = UserUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
         line_client: Arc::new(MockLineRepo { inner: lc }),
     };
@@ -238,7 +238,7 @@ async fn test_verify_token() {
     // application_tokenからデータが取得できた場合にはそのUserを返す
     let lc = create_lc();
     let ur = create_ur();
-    let uc = LoginUseCase {
+    let uc = UserUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
         line_client: Arc::new(MockLineRepo { inner: lc }),
     };
@@ -251,7 +251,7 @@ async fn test_verify_token() {
     let mut ur = MockUserValue::new();
     ur.expect_user_by_application_token()
         .returning(|| Err(NotFound("not found".to_string())));
-    let uc = LoginUseCase {
+    let uc = UserUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
         line_client: Arc::new(MockLineRepo { inner: lc }),
     };
@@ -264,7 +264,7 @@ async fn test_verify_token() {
     let mut ur = MockUserValue::new();
     ur.expect_user_by_application_token()
         .returning(|| Err(DbError("some db error occurs".to_string())));
-    let uc = LoginUseCase {
+    let uc = UserUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
         line_client: Arc::new(MockLineRepo { inner: lc }),
     };
@@ -278,7 +278,7 @@ async fn test_refresh_token() {
     // refresh_tokenが存在する場合はトークンを更新する
     let lc = create_lc();
     let ur = create_ur();
-    let uc = LoginUseCase {
+    let uc = UserUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
         line_client: Arc::new(MockLineRepo { inner: lc }),
     };
@@ -291,7 +291,7 @@ async fn test_refresh_token() {
     let mut ur = MockUserValue::new();
     ur.expect_update_token()
         .returning(|| Err(NotFound("not found".to_string())));
-    let uc = LoginUseCase {
+    let uc = UserUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
         line_client: Arc::new(MockLineRepo { inner: lc }),
     };
@@ -304,7 +304,7 @@ async fn test_refresh_token() {
     let mut ur = MockUserValue::new();
     ur.expect_update_token()
         .returning(|| Err(DbError("some db error occurs".to_string())));
-    let uc = LoginUseCase {
+    let uc = UserUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
         line_client: Arc::new(MockLineRepo { inner: lc }),
     };
@@ -318,12 +318,12 @@ async fn test_sign_up() {
     // 正常な場合はUserを作成して返す
     let lc = create_lc();
     let ur = create_ur();
-    let uc = LoginUseCase {
+    let uc = UserUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
         line_client: Arc::new(MockLineRepo { inner: lc }),
     };
     let up = UpdateUser::default();
-    let res = uc.sign_up(up).await;
+    let res = uc.first_register_user(up).await;
     assert!(res.is_ok());
 
     // バリデーションに引っかかる場合
@@ -331,7 +331,7 @@ async fn test_sign_up() {
         last_name: None,
         ..UpdateUser::default()
     };
-    let res = uc.sign_up(up).await;
+    let res = uc.first_register_user(up).await;
     assert!(res.is_err());
 
     // 登録に失敗した場合
@@ -339,12 +339,12 @@ async fn test_sign_up() {
     let mut ur = MockUserValue::new();
     ur.expect_register_user()
         .returning(|| Err(DbError("error".to_string())));
-    let uc = LoginUseCase {
+    let uc = UserUseCase {
         u_repo: Arc::new(MockUserRepo { inner: ur }),
         line_client: Arc::new(MockLineRepo { inner: lc }),
     };
     let up = UpdateUser::default();
-    let res = uc.sign_up(up).await;
+    let res = uc.first_register_user(up).await;
     assert!(res.is_err())
 }
 
