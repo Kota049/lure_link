@@ -6,10 +6,6 @@ use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
 use crate::domain::domain_object::municipality::Municipality;
 use crate::domain::domain_object::prefecture::Prefecture;
 use crate::entity::users::User;
-#[cfg(test)]
-use chrono::{TimeZone, Utc};
-#[cfg(test)]
-use chrono_tz::Asia::Tokyo;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
@@ -34,21 +30,9 @@ impl Default for CarPool {
         Self {
             id: 1i64.try_into().unwrap(),
             organizer: Default::default(),
-            start_time: JaTimeStamp(
-                Utc.with_ymd_and_hms(2015, 1, 1, 0, 0, 0)
-                    .unwrap()
-                    .with_timezone(&Tokyo),
-            ),
-            end_time: JaTimeStamp(
-                Utc.with_ymd_and_hms(2015, 1, 1, 0, 0, 0)
-                    .unwrap()
-                    .with_timezone(&Tokyo),
-            ),
-            apl_deadline: JaTimeStamp(
-                Utc.with_ymd_and_hms(2015, 1, 1, 0, 0, 0)
-                    .unwrap()
-                    .with_timezone(&Tokyo),
-            ),
+            start_time: JaTimeStamp::default(),
+            end_time: JaTimeStamp::default(),
+            apl_deadline: JaTimeStamp::default(),
             departure: Default::default(),
             destination: Default::default(),
             budget: 1000i32.try_into().unwrap(),
@@ -98,21 +82,9 @@ pub struct CreateCarPool {
 impl Default for CreateCarPool {
     fn default() -> Self {
         Self {
-            start_time: JaTimeStamp(
-                Utc.with_ymd_and_hms(2015, 1, 1, 0, 0, 0)
-                    .unwrap()
-                    .with_timezone(&Tokyo),
-            ),
-            end_time: JaTimeStamp(
-                Utc.with_ymd_and_hms(2015, 1, 1, 0, 0, 0)
-                    .unwrap()
-                    .with_timezone(&Tokyo),
-            ),
-            apl_deadline: JaTimeStamp(
-                Utc.with_ymd_and_hms(2015, 1, 1, 0, 0, 0)
-                    .unwrap()
-                    .with_timezone(&Tokyo),
-            ),
+            start_time: JaTimeStamp::default(),
+            end_time: JaTimeStamp::default(),
+            apl_deadline: JaTimeStamp::default(),
             departure_prefecture_id: 1i64.try_into().unwrap(),
             departure_municipality_id: 1i64.try_into().unwrap(),
             departure_point: "a".to_string().try_into().unwrap(),
