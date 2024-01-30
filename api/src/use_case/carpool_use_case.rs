@@ -37,7 +37,7 @@ impl CarPoolUseCase {
         self.cr.update(cancel_carpool).await
     }
     // 募集を全件取得
-    pub async fn find_car_pool(&self) -> Result<CarPool, Error> {
-        todo!()
+    pub async fn find_car_pool(&self) -> Result<Vec<CarPool>, Error> {
+        self.cr.find_all().await
     }
 }
