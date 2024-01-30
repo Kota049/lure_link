@@ -29,7 +29,7 @@ impl CarPoolRepositoryTrait for MockCarPoolRepo {
         self.inner.find_all()
     }
 
-    async fn find_by_id(&self, id: &Id) -> Result<CarPool, Error> {
+    async fn find_by_id(&self, _id: &Id) -> Result<CarPool, Error> {
         self.inner.find_by()
     }
 

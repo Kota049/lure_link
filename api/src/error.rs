@@ -9,6 +9,7 @@ pub enum Error {
     AuthenticateError(String),
     LineError(String),
     NotFound(String),
+    Other(String),
 }
 
 impl Display for Error {
@@ -19,6 +20,7 @@ impl Display for Error {
             Error::AuthenticateError(e) => write!(f, "Authenticate error : {}", e),
             Error::LineError(e) => write!(f, "Line Authentication error : {}", e),
             Error::NotFound(e) => write!(f, "Resource Not Found : {}", e),
+            Error::Other(e) => write!(f, "Other Error : {}", e),
         }
     }
 }
@@ -34,6 +36,7 @@ impl IntoResponse for Error {
             Error::AuthenticateError(e) => (StatusCode::FORBIDDEN, e).into_response(),
             Error::LineError(e) => (StatusCode::UNAUTHORIZED, e).into_response(),
             Error::NotFound(e) => (StatusCode::NOT_FOUND, e).into_response(),
+            Error::Other(e) => (StatusCode::BAD_REQUEST, e).into_response(),
         }
     }
 }
