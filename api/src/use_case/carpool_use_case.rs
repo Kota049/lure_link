@@ -23,6 +23,11 @@ impl CarPoolUseCase {
     // 募集の削除
     pub async fn cancel_carpool(&self, input: CancelCarPool, user: User) -> Result<CarPool, Error> {
         let target_carpool = self.cr.find_by_id(&input.id).await?;
+        if &target_carpool.organizer.id != &user.id {
+            return Err(Error::AuthenticateError(
+                "You are not organizer".to_string(),
+            ));
+        }
         if carpool_service::is_canceled(&target_carpool) {
             return Err(Error::Other(
                 "Cannot cancel carpool because already canceled".to_string(),
