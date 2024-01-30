@@ -5,3 +5,12 @@ use serde::{Deserialize, Serialize};
 pub struct CancelCarPool {
     pub id: Id,
 }
+
+#[cfg(test)]
+impl Default for CancelCarPool {
+    fn default() -> Self {
+        Self {
+            id: 1i64.try_into().unwrap(),
+        }
+    }
+}
