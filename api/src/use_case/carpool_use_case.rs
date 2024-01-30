@@ -1,8 +1,8 @@
-use crate::entity::recruitment::CarPool;
+use crate::entity::recruitment::{CarPool, CreateCarPool};
 use crate::entity::users::User;
 use crate::error::Error;
 use crate::repository::carpool::CarPoolRepositoryTrait;
-use crate::use_case::carpool_use_case::dto::{CancelCarPool, CreateCarPool};
+use crate::use_case::carpool_use_case::dto::CancelCarPool;
 use std::sync::Arc;
 
 #[cfg(test)]
