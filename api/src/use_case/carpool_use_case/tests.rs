@@ -25,7 +25,7 @@ impl CarPoolRepositoryTrait for MockCarPoolRepo {
     async fn find_all(&self) -> Result<Vec<CarPool>, Error> {
         self.inner.find_all()
     }
-    async fn create(&self, _car_pool: CarPool) -> Result<CarPool, Error> {
+    async fn create(&self, _car_pool: CreateCarPool, _u: &User) -> Result<CarPool, Error> {
         self.inner.create()
     }
     async fn update(&self, _car_pool: CarPool) -> Result<CarPool, Error> {

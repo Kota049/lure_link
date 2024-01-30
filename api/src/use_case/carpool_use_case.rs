@@ -17,7 +17,7 @@ pub struct CarPoolUseCase {
 impl CarPoolUseCase {
     // 新規募集の作成
     pub async fn create_carpool(&self, input: CreateCarPool, user: User) -> Result<CarPool, Error> {
-        todo!()
+        self.cr.create(input, &user).await
     }
     // 募集の削除
     pub async fn cancel_carpool(&self, input: CancelCarPool, user: User) -> Result<CarPool, Error> {
