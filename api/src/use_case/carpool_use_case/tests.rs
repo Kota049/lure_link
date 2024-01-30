@@ -136,5 +136,23 @@ async fn test_cancel_carpool() {
 
 #[tokio::test]
 async fn test_find_car_pool() {
-    todo!()
+    // 正常系
+    let mut cr = MockCarPoolValue::new();
+    cr.expect_find_all()
+        .returning(|| Ok(vec![CarPool::default()]));
+    let uc = CarPoolUseCase {
+        cr: Arc::new(MockCarPoolRepo { inner: cr }),
+    };
+    let res = uc.find_car_pool().await;
+    assert!(res.is_ok());
+
+    // DBエラーの場合はエラーを返す
+    let mut cr = MockCarPoolValue::new();
+    cr.expect_find_all()
+        .returning(|| Err(Error::DbError("error occurs".to_string())));
+    let uc = CarPoolUseCase {
+        cr: Arc::new(MockCarPoolRepo { inner: cr }),
+    };
+    let res = uc.find_car_pool().await;
+    assert!(res.is_err());
 }
