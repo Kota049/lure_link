@@ -1,5 +1,6 @@
 pub mod application_token;
 pub mod budget;
+pub mod carpool_status;
 pub mod email;
 pub mod first_name;
 pub mod fishing_point;

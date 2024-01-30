@@ -9,26 +9,28 @@ use tokio_postgres::types::{FromSql, IsNull, ToSql, Type};
 mod tests;
 
 #[derive(Debug, Clone, Serialize, PartialOrd, PartialEq)]
-pub enum UserStatus {
-    Trial,
-    Registration,
+pub enum CarPoolStatus {
+    Applying,
+    AplComplete,
+    Cancel,
+    Finished,
 }
 
-impl TryFrom<String> for UserStatus {
+impl TryFrom<String> for CarPoolStatus {
     type Error = Error;
 
     fn try_from(value: String) -> Result<Self, Self::Error> {
         match value.as_str() {
-            "TRIAL" => Ok(Self::Trial),
-            "REGISTRATION" => Ok(Self::Registration),
-            _ => Err(Error::ValidateError(
-                "invalid user_use_case status".to_string(),
-            )),
+            "APPLYING" => Ok(Self::Applying),
+            "APL_COMPLETE" => Ok(Self::AplComplete),
+            "CANCEL" => Ok(Self::Cancel),
+            "FINISHED" => Ok(Self::Finished),
+            _ => Err(Error::ValidateError("invalid carpool status".to_string())),
         }
     }
 }
 
-impl<'a> FromSql<'a> for UserStatus {
+impl<'a> FromSql<'a> for CarPoolStatus {
     fn from_sql(
         type_: &Type,
         raw: &'a [u8],
@@ -45,16 +47,18 @@ impl<'a> FromSql<'a> for UserStatus {
     }
 }
 
-impl Display for UserStatus {
+impl Display for CarPoolStatus {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            UserStatus::Registration => write!(f, "REGISTRATION"),
-            UserStatus::Trial => write!(f, "TRIAL"),
+            CarPoolStatus::Applying => write!(f, "APPLYING"),
+            CarPoolStatus::AplComplete => write!(f, "APL_COMPLETE"),
+            CarPoolStatus::Cancel => write!(f, "CANCEL"),
+            CarPoolStatus::Finished => write!(f, "FINISHED"),
         }
     }
 }
 
-impl ToSql for UserStatus {
+impl ToSql for CarPoolStatus {
     fn to_sql(
         &self,
         _ty: &Type,
@@ -70,7 +74,7 @@ impl ToSql for UserStatus {
     tokio_postgres::types::to_sql_checked!();
 }
 
-impl<'de> Deserialize<'de> for UserStatus {
+impl<'de> Deserialize<'de> for CarPoolStatus {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
@@ -78,6 +82,6 @@ impl<'de> Deserialize<'de> for UserStatus {
         let value = String::deserialize(deserializer)?;
         value
             .try_into()
-            .map_err(|_| D::Error::custom("validate user_use_case status error"))
+            .map_err(|_| D::Error::custom("validate carpool status error"))
     }
 }
