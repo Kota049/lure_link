@@ -1,8 +1,8 @@
-use crate::domain::domain_object::carpool_status::CarPoolStatus;
 use crate::entity::recruitment::{CarPool, CreateCarPool};
 use crate::entity::users::User;
 use crate::error::Error;
 use crate::repository::carpool::CarPoolRepositoryTrait;
+use crate::service::carpool_service;
 use crate::use_case::carpool_use_case::dto::CancelCarPool;
 use std::sync::Arc;
 
@@ -23,15 +23,12 @@ impl CarPoolUseCase {
     // 募集の削除
     pub async fn cancel_carpool(&self, input: CancelCarPool, user: User) -> Result<CarPool, Error> {
         let target_carpool = self.cr.find_by_id(&input.id).await?;
-        if &target_carpool.status == &CarPoolStatus::Cancel {
+        if carpool_service::is_canceled(&target_carpool) {
             return Err(Error::Other(
                 "Cannot cancel carpool because already canceled".to_string(),
             ));
         }
-        let cancel_carpool = CarPool {
-            status: CarPoolStatus::Cancel,
-            ..target_carpool
-        };
+        let cancel_carpool = carpool_service::modify_to_cancel(target_carpool);
         self.cr.update(cancel_carpool).await
     }
     // 募集を全件取得
