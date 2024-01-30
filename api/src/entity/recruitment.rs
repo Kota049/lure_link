@@ -38,6 +38,7 @@ pub struct CarPool {
     pub max_participant: i16,
     pub current_participant: i16,
     pub status: CarPoolStatus,
+    pub description: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
