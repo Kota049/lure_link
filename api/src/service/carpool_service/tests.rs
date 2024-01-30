@@ -26,9 +26,9 @@ fn test_modify_to_cancel() {
     assert_eq!(&res.status, &CarPoolStatus::Cancel);
 
     // 他の項目が変更されない
-    let res_other = CarPool {
+    let expected = CarPool {
         status: CarPoolStatus::Cancel,
-        ..res
+        ..c
     };
-    assert_eq!(res_other, c)
+    assert_eq!(res, expected)
 }
