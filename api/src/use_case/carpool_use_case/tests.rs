@@ -118,6 +118,20 @@ async fn test_cancel_carpool() {
     };
     let res = uc.cancel_carpool(input.clone(), user.clone()).await;
     assert!(res.is_err());
+
+    // ユーザーと主催者が違う場合はエラーを返す
+    let user = User {
+        id: 42i64.try_into().unwrap(),
+        ..User::default()
+    };
+    let mut cr = MockCarPoolValue::new();
+    cr.expect_update().returning(|| Ok(CarPool::default()));
+    cr.expect_find_by().returning(|| Ok(CarPool::default()));
+    let uc = CarPoolUseCase {
+        cr: Arc::new(MockCarPoolRepo { inner: cr }),
+    };
+    let res = uc.cancel_carpool(input.clone(), user.clone()).await;
+    assert!(res.is_err());
 }
 
 #[tokio::test]
