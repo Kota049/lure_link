@@ -15,7 +15,7 @@ pub struct JaTimeStamp(pub(crate) DateTime<Tz>);
 
 impl Default for JaTimeStamp {
     fn default() -> Self {
-        Utc.with_ymd_and_hms(2020, 1, 1, 0, 0, 0)
+        Utc.with_ymd_and_hms(2100, 1, 1, 0, 0, 0)
             .unwrap()
             .try_into()
             .unwrap()

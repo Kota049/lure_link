@@ -75,7 +75,7 @@ async fn test_create() {
     pr.expect_find_by_user_and_carpool()
         .returning(|| Err(Error::NotFound("".to_string())));
     let mut cpr = MockCarPoolValue::new();
-    cpr.expect_find_by().returning(|| Ok(CarPool::default()));
+    cpr.expect_find_by().returning(|| Ok(valid_term_car_pool()));
 
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
@@ -92,6 +92,10 @@ async fn test_create() {
     let mut cpr = MockCarPoolValue::new();
     cpr.expect_find_by()
         .returning(|| Err(Error::DbError("error".to_string())));
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
     let res = uc.create(applicant.clone(), input.clone()).await;
     assert!(res.is_err());
 
@@ -107,9 +111,13 @@ async fn test_create() {
                 id: 100i64.try_into().unwrap(),
                 ..User::default()
             },
-            ..CarPool::default()
+            ..valid_term_car_pool()
         })
     });
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
     let res = uc.create(applicant.clone(), input.clone()).await;
     assert!(res.is_err());
 
@@ -127,6 +135,10 @@ async fn test_create() {
             ..CarPool::default()
         })
     });
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
     let res = uc.create(applicant.clone(), input.clone()).await;
     assert!(res.is_err());
 
@@ -137,6 +149,18 @@ async fn test_create() {
         .returning(|| Ok(Proposal::default()));
     let mut cpr = MockCarPoolValue::new();
     cpr.expect_find_by().returning(|| Ok(CarPool::default()));
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
     let res = uc.create(applicant.clone(), input.clone()).await;
     assert!(res.is_err())
+}
+
+fn valid_term_car_pool() -> CarPool {
+    let now = (Utc::now() + Duration::days(1)).try_into().unwrap();
+    CarPool {
+        apl_deadline: now,
+        ..CarPool::default()
+    }
 }
