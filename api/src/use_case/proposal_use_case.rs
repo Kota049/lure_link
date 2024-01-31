@@ -25,9 +25,7 @@ pub mod dto;
 
 impl ProposalUseCase {
     pub async fn create(&self, applicant: User, input: AplProposal) -> Result<Proposal, Error> {
-        let now: JaTimeStamp = Utc::now()
-            .try_into()
-            .map_err(|_| Error::Other("internal server error".to_string()))?;
+        let now = get_ja_now()?;
         let carpool = self.cpr.find_by_id(&input.car_pool_id).await?;
         if is_organizer(&carpool, &applicant) {
             return Err(Error::Other("you are organizer".to_string()));
@@ -57,18 +55,17 @@ impl ProposalUseCase {
         applicant: User,
         proposal_id: Id,
     ) -> Result<Proposal, Error> {
-        let now: JaTimeStamp = Utc::now()
-            .try_into()
-            .map_err(|_| Error::Other("internal server error".to_string()))?;
+        let now = get_ja_now()?;
         let proposal = self.pr.find(&proposal_id).await?;
-        if proposal.user != applicant {
+        if !is_applicant(&applicant, &proposal) {
             return Err(AuthenticateError("you are not applicant".to_string()));
         }
-        if proposal.carpool.start_time < now {
+        if !can_cancel_term_by_applicant(now, &proposal) {
             return Err(Other("expired cancel deadline".to_string()));
         }
         Ok(proposal)
     }
+
     pub async fn accept_proposal(
         &self,
         organizer: User,
@@ -83,4 +80,18 @@ impl ProposalUseCase {
     ) -> Result<Proposal, Error> {
         todo!()
     }
+}
+
+fn is_applicant(applicant: &User, proposal: &Proposal) -> bool {
+    &proposal.user == applicant
+}
+
+fn can_cancel_term_by_applicant(now: JaTimeStamp, proposal: &Proposal) -> bool {
+    proposal.carpool.start_time > now
+}
+
+fn get_ja_now() -> Result<JaTimeStamp, Error> {
+    Utc::now()
+        .try_into()
+        .map_err(|_| Error::Other("internal server error".to_string()))
 }
