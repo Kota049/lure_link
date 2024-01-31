@@ -18,6 +18,10 @@ pub trait ProposalRepositoryTrait {
     async fn create(&self, user: &User, create: CreateProposal) -> Result<Proposal, Error>;
     async fn update(&self, user: &User, update_proposal: UpdateProposal)
         -> Result<Proposal, Error>;
-    async fn update_proposal_status(&self, status: ProposalStatus) -> Result<Proposal, Error>;
+    async fn update_proposal_status(
+        &self,
+        proposal_id: Id,
+        status: ProposalStatus,
+    ) -> Result<Proposal, Error>;
     async fn delete(&self, id: &Id) -> Result<(), Error>;
 }

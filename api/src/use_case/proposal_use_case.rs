@@ -1,4 +1,5 @@
 use crate::domain::domain_object::id::Id;
+use crate::domain::domain_object::proposal_status::ProposalStatus;
 use crate::entity::proposal::{CreateProposal, Proposal, UpdateProposal};
 use crate::entity::users::User;
 use crate::error::Error;
@@ -60,6 +61,10 @@ impl ProposalUseCase {
         if !proposal_service::can_cancel_term_by_applicant(&now, &proposal) {
             return Err(Other("expired cancel deadline".to_string()));
         }
+        let proposal = self
+            .pr
+            .update_proposal_status(proposal_id, ProposalStatus::UserCancel)
+            .await?;
         Ok(proposal)
     }
 

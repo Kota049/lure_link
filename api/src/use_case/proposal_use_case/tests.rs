@@ -54,7 +54,11 @@ impl ProposalRepositoryTrait for MockProposalRepo {
     ) -> Result<Proposal, Error> {
         self.inner.update()
     }
-    async fn update_proposal_status(&self, _status: ProposalStatus) -> Result<Proposal, Error> {
+    async fn update_proposal_status(
+        &self,
+        _id: Id,
+        _status: ProposalStatus,
+    ) -> Result<Proposal, Error> {
         self.inner.update_proposal_status()
     }
     async fn delete(&self, _id: &Id) -> Result<(), Error> {
