@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'presentation/components/common_app_bar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,8 +18,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: Scaffold(
-        appBar: AppBar(
-            backgroundColor: Colors.blueAccent, title: const Text("LURELINK")),
+        appBar: CommonAppBar(pageName:"LURELINK"),
         body: const RecruitmentList(),
       ),
     );
