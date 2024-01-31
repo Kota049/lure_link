@@ -1,4 +1,6 @@
+use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
 use crate::entity::proposal::Proposal;
+use crate::entity::users::User;
 use crate::error::Error;
 
 #[cfg(test)]
@@ -10,4 +12,12 @@ pub fn has_applying(exists_proposal: Result<Proposal, Error>) -> Result<(), Erro
         Err(Error::NotFound(_)) => Ok(()),
         Err(e) => Err(e),
     }
+}
+
+pub fn is_applicant(user: &User, proposal: &Proposal) -> bool {
+    &proposal.user == user
+}
+
+pub fn can_cancel_term_by_applicant(now: JaTimeStamp, proposal: &Proposal) -> bool {
+    proposal.carpool.start_time > now
 }

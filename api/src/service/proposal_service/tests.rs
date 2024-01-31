@@ -1,6 +1,10 @@
+use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
 use crate::entity::proposal::Proposal;
+use crate::entity::recruitment::CarPool;
+use crate::entity::users::User;
 use crate::error::Error;
-use crate::service::proposal_service::has_applying;
+use crate::service::proposal_service::{can_cancel_term_by_applicant, has_applying, is_applicant};
+use chrono::{Duration, Utc};
 
 #[test]
 fn test_has_applying() {
@@ -15,4 +19,50 @@ fn test_has_applying() {
     let exists = Err(Error::NotFound("".to_string()));
     let res = has_applying(exists);
     assert!(res.is_ok());
+}
+
+#[test]
+fn test_is_applicant() {
+    let user = User::default();
+    let proposal = Proposal::default();
+    let res = is_applicant(&user, &proposal);
+    assert!(res);
+
+    let user = User {
+        id: 42i64.try_into().unwrap(),
+        ..User::default()
+    };
+    let res = is_applicant(&user, &proposal);
+    assert!(!res);
+}
+
+#[test]
+fn test_can_cancel_term_by_applicant() {
+    let now = Utc::now();
+    let after = (now + Duration::days(1)).try_into().unwrap();
+    let before = (now - Duration::days(1)).try_into().unwrap();
+    let now: JaTimeStamp = now.try_into().unwrap();
+
+    let res = can_cancel_term_by_applicant(
+        now.clone(),
+        &Proposal {
+            carpool: CarPool {
+                start_time: after,
+                ..CarPool::default()
+            },
+            ..Proposal::default()
+        },
+    );
+    assert!(res);
+    let res = can_cancel_term_by_applicant(
+        now,
+        &Proposal {
+            carpool: CarPool {
+                start_time: before,
+                ..CarPool::default()
+            },
+            ..Proposal::default()
+        },
+    );
+    assert!(!res);
 }

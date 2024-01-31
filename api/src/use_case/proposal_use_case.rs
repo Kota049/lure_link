@@ -1,6 +1,4 @@
 use crate::domain::domain_object::id::Id;
-use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
-use crate::domain::domain_object::proposal_status::ProposalStatus;
 use crate::entity::proposal::{CreateProposal, Proposal, UpdateProposal};
 use crate::entity::users::User;
 use crate::error::Error;
@@ -8,9 +6,8 @@ use crate::error::Error::{AuthenticateError, Other};
 use crate::repository::carpool::CarPoolRepositoryTrait;
 use crate::repository::proposal::ProposalRepositoryTrait;
 use crate::service::carpool_service::is_organizer;
-use crate::service::{carpool_service, proposal_service};
+use crate::service::{carpool_service, proposal_service, time_service};
 use crate::use_case::proposal_use_case::dto::AplProposal;
-use chrono::Utc;
 use std::sync::Arc;
 
 pub struct ProposalUseCase {
@@ -25,7 +22,7 @@ pub mod dto;
 
 impl ProposalUseCase {
     pub async fn create(&self, applicant: User, input: AplProposal) -> Result<Proposal, Error> {
-        let now = get_ja_now()?;
+        let now = time_service::get_ja_now()?;
         let carpool = self.cpr.find_by_id(&input.car_pool_id).await?;
         if is_organizer(&carpool, &applicant) {
             return Err(Error::Other("you are organizer".to_string()));
@@ -55,12 +52,12 @@ impl ProposalUseCase {
         applicant: User,
         proposal_id: Id,
     ) -> Result<Proposal, Error> {
-        let now = get_ja_now()?;
+        let now = time_service::get_ja_now()?;
         let proposal = self.pr.find(&proposal_id).await?;
-        if !is_applicant(&applicant, &proposal) {
+        if !proposal_service::is_applicant(&applicant, &proposal) {
             return Err(AuthenticateError("you are not applicant".to_string()));
         }
-        if !can_cancel_term_by_applicant(now, &proposal) {
+        if !proposal_service::can_cancel_term_by_applicant(now, &proposal) {
             return Err(Other("expired cancel deadline".to_string()));
         }
         Ok(proposal)
@@ -80,18 +77,4 @@ impl ProposalUseCase {
     ) -> Result<Proposal, Error> {
         todo!()
     }
-}
-
-fn is_applicant(applicant: &User, proposal: &Proposal) -> bool {
-    &proposal.user == applicant
-}
-
-fn can_cancel_term_by_applicant(now: JaTimeStamp, proposal: &Proposal) -> bool {
-    proposal.carpool.start_time > now
-}
-
-fn get_ja_now() -> Result<JaTimeStamp, Error> {
-    Utc::now()
-        .try_into()
-        .map_err(|_| Error::Other("internal server error".to_string()))
 }
