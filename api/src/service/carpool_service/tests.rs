@@ -1,7 +1,9 @@
 use crate::domain::domain_object::carpool_status::CarPoolStatus;
+use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
 use crate::entity::recruitment::CarPool;
 use crate::entity::users::User;
-use crate::service::carpool_service::{is_canceled, is_organizer, modify_to_cancel};
+use crate::service::carpool_service::{can_apl_term, is_canceled, is_organizer, modify_to_cancel};
+use chrono::{Duration, Utc};
 
 #[test]
 fn test_is_canceled() {
@@ -47,4 +49,24 @@ fn test_is_organizer() {
     };
     let res = is_organizer(&c, &u);
     assert!(!res);
+}
+
+#[test]
+fn test_can_apl_term() {
+    let now: JaTimeStamp = Utc::now().try_into().unwrap();
+    let after = (Utc::now() + Duration::days(1)).try_into().unwrap();
+    let c = CarPool {
+        apl_deadline: after,
+        ..CarPool::default()
+    };
+    let res = can_apl_term(&now, &c);
+    assert!(!res);
+
+    let before = (Utc::now() - Duration::days(1)).try_into().unwrap();
+    let c = CarPool {
+        apl_deadline: before,
+        ..CarPool::default()
+    };
+    let res = can_apl_term(&now, &c);
+    assert!(res);
 }

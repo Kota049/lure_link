@@ -6,6 +6,7 @@ use crate::error::Error;
 use crate::repository::carpool::CarPoolRepositoryTrait;
 use crate::repository::proposal::ProposalRepositoryTrait;
 use crate::service::carpool_service::is_organizer;
+use crate::service::{carpool_service, proposal_service};
 use crate::use_case::proposal_use_case::dto::AplProposal;
 use chrono::Utc;
 use std::sync::Arc;
@@ -30,14 +31,9 @@ impl ProposalUseCase {
             return Err(Error::Other("you are organizer".to_string()));
         }
         let exists_proposal = self.pr.find_by_user_and_carpool(&applicant, &carpool).await;
-        println!("{exists_proposal:?}");
-        match exists_proposal {
-            Ok(_) => return Err(Error::Other("already applying".to_string())),
-            Err(Error::NotFound(_)) => {}
-            Err(e) => return Err(e),
-        }
+        proposal_service::has_applying(exists_proposal)?;
 
-        if carpool.apl_deadline < now {
+        if carpool_service::can_apl_term(&now, &carpool) {
             return Err(Error::Other("expired applying deadline".to_string()));
         }
 
