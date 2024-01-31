@@ -164,3 +164,101 @@ fn valid_term_car_pool() -> CarPool {
         ..CarPool::default()
     }
 }
+
+#[tokio::test]
+async fn test_cancel_by_applicant() {
+    let applicant = User::default();
+    let proposal_id: Id = 100i64.try_into().unwrap();
+
+    // 正常系
+    let mut pr = MockProposalValue::new();
+    pr.expect_find_by_user_and_carpool().returning(|| {
+        Ok(Proposal {
+            carpool: CarPool {
+                start_time: (Utc::now() - Duration::days(1)).try_into().unwrap(),
+                ..CarPool::default()
+            },
+            ..applying_proposal()
+        })
+    });
+    let cpr = MockCarPoolValue::new();
+
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc
+        .cancel_by_applicant(applicant.clone(), proposal_id.clone())
+        .await;
+    assert!(res.is_ok());
+
+    // 申し込みがない場合はエラー
+    let mut pr = MockProposalValue::new();
+    pr.expect_find_by_user_and_carpool()
+        .returning(|| Err(Error::NotFound("".to_string())));
+    let cpr = MockCarPoolValue::new();
+
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc
+        .cancel_by_applicant(applicant.clone(), proposal_id.clone())
+        .await;
+    assert!(res.is_err());
+
+    // 申込者とキャンセル依頼者が違う場合はエラー
+    let mut pr = MockProposalValue::new();
+    pr.expect_find_by_user_and_carpool().returning(|| {
+        Ok(Proposal {
+            carpool: CarPool {
+                start_time: (Utc::now() + Duration::days(1)).try_into().unwrap(),
+                ..CarPool::default()
+            },
+            user: User {
+                id: 42i64.try_into().unwrap(),
+                ..User::default()
+            },
+            ..applying_proposal()
+        })
+    });
+    let cpr = MockCarPoolValue::new();
+
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc
+        .cancel_by_applicant(applicant.clone(), proposal_id.clone())
+        .await;
+    assert!(res.is_err());
+
+    // 出発日時を過ぎている場合はキャンセルできない
+    let mut pr = MockProposalValue::new();
+    pr.expect_find_by_user_and_carpool().returning(|| {
+        Ok(Proposal {
+            carpool: CarPool {
+                start_time: (Utc::now() - Duration::days(1)).try_into().unwrap(),
+                ..CarPool::default()
+            },
+            ..applying_proposal()
+        })
+    });
+    let cpr = MockCarPoolValue::new();
+
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc
+        .cancel_by_applicant(applicant.clone(), proposal_id.clone())
+        .await;
+    assert!(res.is_err());
+}
+
+fn applying_proposal() -> Proposal {
+    Proposal {
+        status: ProposalStatus::Applying,
+        ..Proposal::default()
+    }
+}
