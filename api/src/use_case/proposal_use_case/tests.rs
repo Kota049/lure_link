@@ -172,10 +172,10 @@ async fn test_cancel_by_applicant() {
 
     // 正常系
     let mut pr = MockProposalValue::new();
-    pr.expect_find_by_user_and_carpool().returning(|| {
+    pr.expect_find().returning(|| {
         Ok(Proposal {
             carpool: CarPool {
-                start_time: (Utc::now() - Duration::days(1)).try_into().unwrap(),
+                start_time: (Utc::now() + Duration::days(1)).try_into().unwrap(),
                 ..CarPool::default()
             },
             ..applying_proposal()
@@ -194,7 +194,7 @@ async fn test_cancel_by_applicant() {
 
     // 申し込みがない場合はエラー
     let mut pr = MockProposalValue::new();
-    pr.expect_find_by_user_and_carpool()
+    pr.expect_find()
         .returning(|| Err(Error::NotFound("".to_string())));
     let cpr = MockCarPoolValue::new();
 
@@ -209,7 +209,7 @@ async fn test_cancel_by_applicant() {
 
     // 申込者とキャンセル依頼者が違う場合はエラー
     let mut pr = MockProposalValue::new();
-    pr.expect_find_by_user_and_carpool().returning(|| {
+    pr.expect_find().returning(|| {
         Ok(Proposal {
             carpool: CarPool {
                 start_time: (Utc::now() + Duration::days(1)).try_into().unwrap(),
@@ -235,7 +235,7 @@ async fn test_cancel_by_applicant() {
 
     // 出発日時を過ぎている場合はキャンセルできない
     let mut pr = MockProposalValue::new();
-    pr.expect_find_by_user_and_carpool().returning(|| {
+    pr.expect_find().returning(|| {
         Ok(Proposal {
             carpool: CarPool {
                 start_time: (Utc::now() - Duration::days(1)).try_into().unwrap(),

@@ -1,8 +1,10 @@
 use crate::domain::domain_object::id::Id;
 use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
+use crate::domain::domain_object::proposal_status::ProposalStatus;
 use crate::entity::proposal::{CreateProposal, Proposal, UpdateProposal};
 use crate::entity::users::User;
 use crate::error::Error;
+use crate::error::Error::{AuthenticateError, Other};
 use crate::repository::carpool::CarPoolRepositoryTrait;
 use crate::repository::proposal::ProposalRepositoryTrait;
 use crate::service::carpool_service::is_organizer;
@@ -55,7 +57,17 @@ impl ProposalUseCase {
         applicant: User,
         proposal_id: Id,
     ) -> Result<Proposal, Error> {
-        todo!()
+        let now: JaTimeStamp = Utc::now()
+            .try_into()
+            .map_err(|_| Error::Other("internal server error".to_string()))?;
+        let proposal = self.pr.find(&proposal_id).await?;
+        if proposal.user != applicant {
+            return Err(AuthenticateError("you are not applicant".to_string()));
+        }
+        if proposal.carpool.start_time < now {
+            return Err(Other("expired cancel deadline".to_string()));
+        }
+        Ok(proposal)
     }
     pub async fn accept_proposal(
         &self,
