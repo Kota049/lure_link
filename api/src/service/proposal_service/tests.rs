@@ -44,7 +44,7 @@ fn test_can_cancel_term_by_applicant() {
     let now: JaTimeStamp = now.try_into().unwrap();
 
     let res = can_cancel_term_by_applicant(
-        now.clone(),
+        &now,
         &Proposal {
             carpool: CarPool {
                 start_time: after,
@@ -55,7 +55,7 @@ fn test_can_cancel_term_by_applicant() {
     );
     assert!(res);
     let res = can_cancel_term_by_applicant(
-        now,
+        &now,
         &Proposal {
             carpool: CarPool {
                 start_time: before,

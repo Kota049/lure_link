@@ -18,6 +18,6 @@ pub fn is_applicant(user: &User, proposal: &Proposal) -> bool {
     &proposal.user == user
 }
 
-pub fn can_cancel_term_by_applicant(now: JaTimeStamp, proposal: &Proposal) -> bool {
-    proposal.carpool.start_time > now
+pub fn can_cancel_term_by_applicant(now: &JaTimeStamp, proposal: &Proposal) -> bool {
+    &proposal.carpool.start_time > now
 }

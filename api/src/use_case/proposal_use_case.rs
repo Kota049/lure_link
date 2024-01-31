@@ -57,7 +57,7 @@ impl ProposalUseCase {
         if !proposal_service::is_applicant(&applicant, &proposal) {
             return Err(AuthenticateError("you are not applicant".to_string()));
         }
-        if !proposal_service::can_cancel_term_by_applicant(now, &proposal) {
+        if !proposal_service::can_cancel_term_by_applicant(&now, &proposal) {
             return Err(Other("expired cancel deadline".to_string()));
         }
         Ok(proposal)
