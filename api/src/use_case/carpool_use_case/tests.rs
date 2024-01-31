@@ -19,8 +19,8 @@ pub trait CarPoolValue {
     fn delete(&self) -> Result<(), Error>;
 }
 
-struct MockCarPoolRepo {
-    inner: MockCarPoolValue,
+pub struct MockCarPoolRepo {
+    pub inner: MockCarPoolValue,
 }
 
 #[async_trait]

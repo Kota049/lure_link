@@ -7,7 +7,7 @@ use crate::use_case::carpool_use_case::dto::CancelCarPool;
 use std::sync::Arc;
 
 #[cfg(test)]
-mod tests;
+pub mod tests;
 
 pub mod dto;
 
