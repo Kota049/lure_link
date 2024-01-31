@@ -181,6 +181,8 @@ async fn test_cancel_by_applicant() {
             ..applying_proposal()
         })
     });
+    pr.expect_update_proposal_status()
+        .returning(|| Ok(Proposal::default()));
     let cpr = MockCarPoolValue::new();
 
     let uc = ProposalUseCase {
@@ -196,6 +198,8 @@ async fn test_cancel_by_applicant() {
     let mut pr = MockProposalValue::new();
     pr.expect_find()
         .returning(|| Err(Error::NotFound("".to_string())));
+    pr.expect_update_proposal_status()
+        .returning(|| Ok(Proposal::default()));
     let cpr = MockCarPoolValue::new();
 
     let uc = ProposalUseCase {
@@ -222,6 +226,8 @@ async fn test_cancel_by_applicant() {
             ..applying_proposal()
         })
     });
+    pr.expect_update_proposal_status()
+        .returning(|| Ok(Proposal::default()));
     let cpr = MockCarPoolValue::new();
 
     let uc = ProposalUseCase {
@@ -244,6 +250,32 @@ async fn test_cancel_by_applicant() {
             ..applying_proposal()
         })
     });
+    pr.expect_update_proposal_status()
+        .returning(|| Ok(Proposal::default()));
+    let cpr = MockCarPoolValue::new();
+
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc
+        .cancel_by_applicant(applicant.clone(), proposal_id.clone())
+        .await;
+    assert!(res.is_err());
+
+    // 申し込みの更新に失敗した場合はエラーを返す
+    let mut pr = MockProposalValue::new();
+    pr.expect_find().returning(|| {
+        Ok(Proposal {
+            carpool: CarPool {
+                start_time: (Utc::now() + Duration::days(1)).try_into().unwrap(),
+                ..CarPool::default()
+            },
+            ..applying_proposal()
+        })
+    });
+    pr.expect_update_proposal_status()
+        .returning(|| Err(Error::DbError("".to_string())));
     let cpr = MockCarPoolValue::new();
 
     let uc = ProposalUseCase {
