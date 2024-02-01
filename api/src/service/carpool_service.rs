@@ -2,6 +2,7 @@ use crate::domain::domain_object::carpool_status::CarPoolStatus;
 use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
 use crate::entity::recruitment::CarPool;
 use crate::entity::users::User;
+use crate::error::Error;
 
 #[cfg(test)]
 mod tests;
@@ -27,4 +28,8 @@ pub fn can_apl_term(now: &JaTimeStamp, carpool: &CarPool) -> bool {
 
 pub fn is_applying(car_pool: &CarPool) -> bool {
     car_pool.status == CarPoolStatus::Applying
+}
+
+pub fn add_one_accept(car_pool: CarPool) -> Result<CarPool, Error> {
+    todo!()
 }
