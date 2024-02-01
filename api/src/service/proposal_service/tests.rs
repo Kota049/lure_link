@@ -1,11 +1,12 @@
 use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
 use crate::domain::domain_object::proposal_status::ProposalStatus;
 use crate::entity::proposal::Proposal;
-use crate::entity::recruitment::CarPool;
+use crate::entity::recruitment::{CarPool, Point};
 use crate::entity::users::User;
 use crate::error::Error;
 use crate::service::proposal_service::{
-    can_cancel_term_by_applicant, has_applying, is_applicant, is_non_participation,
+    can_cancel_term_by_applicant, has_applying, is_acceptable_term, is_applicant,
+    is_including_candidate_pick_up_location, is_non_participation,
 };
 use chrono::{Duration, Utc};
 
@@ -98,5 +99,63 @@ fn test_is_non_participation() {
         ..Proposal::default()
     };
     let res = is_non_participation(&proposal);
+    assert!(!res);
+}
+
+#[test]
+fn test_is_including_candidate_pick_up_location() {
+    let pick_up = Point::default();
+    let another_pick_up = Point {
+        municipality: "invalid".to_string().try_into().unwrap(),
+        ..Point::default()
+    };
+
+    let proposal = Proposal {
+        hope_pick_up_location_1: another_pick_up.clone(),
+        ..Proposal::default()
+    };
+    let res = is_including_candidate_pick_up_location(&proposal, &pick_up);
+    assert!(!res);
+
+    let proposal = Proposal {
+        hope_pick_up_location_1: pick_up.clone(),
+        ..Proposal::default()
+    };
+    let res = is_including_candidate_pick_up_location(&proposal, &pick_up);
+    assert!(res);
+
+    let proposal = Proposal {
+        hope_pick_up_location_1: another_pick_up.clone(),
+        hope_pick_up_location_2: Some(pick_up.clone()),
+        ..Proposal::default()
+    };
+    let res = is_including_candidate_pick_up_location(&proposal, &pick_up);
+    assert!(res);
+}
+
+#[test]
+fn test_is_acceptable_term() {
+    let now = Utc::now();
+    let expired = (now + Duration::hours(12)).try_into().unwrap();
+    let valid = (now + Duration::days(2)).try_into().unwrap();
+
+    let valid_proposal = Proposal {
+        carpool: CarPool {
+            start_time: valid,
+            ..CarPool::default()
+        },
+        ..Proposal::default()
+    };
+    let res = is_acceptable_term(&now.try_into().unwrap(), &valid_proposal);
+    assert!(res);
+
+    let expired_proposal = Proposal {
+        carpool: CarPool {
+            start_time: expired,
+            ..CarPool::default()
+        },
+        ..Proposal::default()
+    };
+    let res = is_acceptable_term(&now.try_into().unwrap(), &expired_proposal);
     assert!(!res);
 }

@@ -2,7 +2,9 @@ use crate::domain::domain_object::carpool_status::CarPoolStatus;
 use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
 use crate::entity::recruitment::CarPool;
 use crate::entity::users::User;
-use crate::service::carpool_service::{can_apl_term, is_canceled, is_organizer, modify_to_cancel};
+use crate::service::carpool_service::{
+    can_apl_term, is_applying, is_canceled, is_organizer, modify_to_cancel,
+};
 use chrono::{Duration, Utc};
 
 #[test]
@@ -69,4 +71,21 @@ fn test_can_apl_term() {
     };
     let res = can_apl_term(&now, &c);
     assert!(res);
+}
+
+#[test]
+fn test_is_applying() {
+    let car_pool = CarPool {
+        status: CarPoolStatus::Applying,
+        ..CarPool::default()
+    };
+    let res = is_applying(&car_pool);
+    assert!(res);
+
+    let car_pool = CarPool {
+        status: CarPoolStatus::AplComplete,
+        ..CarPool::default()
+    };
+    let res = is_applying(&car_pool);
+    assert!(!res);
 }

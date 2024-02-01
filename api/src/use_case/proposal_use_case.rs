@@ -1,6 +1,4 @@
-use crate::domain::domain_object::carpool_status::CarPoolStatus;
 use crate::domain::domain_object::id::Id;
-use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
 use crate::domain::domain_object::proposal_status::ProposalStatus;
 use crate::entity::proposal::{AcceptProposal, CreateProposal, Proposal, UpdateProposal};
 use crate::entity::recruitment::CarPool;
@@ -9,12 +7,13 @@ use crate::error::Error;
 use crate::error::Error::{AuthenticateError, Other};
 use crate::repository::carpool::CarPoolRepositoryTrait;
 use crate::repository::proposal::ProposalRepositoryTrait;
-use crate::service::carpool_service::is_organizer;
-use crate::service::proposal_service::is_non_participation;
+use crate::service::carpool_service::{is_applying, is_organizer};
+use crate::service::proposal_service::{
+    is_acceptable_term, is_including_candidate_pick_up_location, is_non_participation,
+};
 use crate::service::time_service::get_ja_now;
 use crate::service::{carpool_service, proposal_service, time_service};
 use crate::use_case::proposal_use_case::dto::AplProposal;
-use chrono::{Duration, Utc};
 use std::sync::Arc;
 
 pub struct ProposalUseCase {
@@ -87,26 +86,13 @@ impl ProposalUseCase {
         if !is_organizer(&proposal.carpool, &organizer) {
             return Err(AuthenticateError("you are not organizer".to_string()));
         }
-        if proposal.carpool.status == CarPoolStatus::AplComplete {
+        if !is_applying(&proposal.carpool) {
             return Err(Other("already accepted".to_string()));
         }
-        let mut pick_up_candidate = Vec::with_capacity(3);
-        pick_up_candidate.push(proposal.hope_pick_up_location_1);
-        if let Some(p) = proposal.hope_pick_up_location_2.clone() {
-            pick_up_candidate.push(p);
-        }
-        if let Some(p) = proposal.hope_pick_up_location_3.clone() {
-            pick_up_candidate.push(p);
-        }
-        if !pick_up_candidate.contains(&accept_proposal.pick_up_point) {
+        if !is_including_candidate_pick_up_location(&proposal, &accept_proposal.pick_up_point) {
             return Err(Other("invalid pick up point".to_string()));
         }
-
-        let accept_deadline: JaTimeStamp = (proposal.carpool.start_time.0.with_timezone(&Utc)
-            - Duration::days(1))
-        .try_into()
-        .unwrap();
-        if accept_deadline < now {
+        if !is_acceptable_term(&now, &proposal) {
             return Err(Other("expired acceptable term".to_string()));
         }
 

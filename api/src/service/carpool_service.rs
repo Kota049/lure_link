@@ -24,3 +24,7 @@ pub fn is_organizer(c: &CarPool, u: &User) -> bool {
 pub fn can_apl_term(now: &JaTimeStamp, carpool: &CarPool) -> bool {
     &carpool.apl_deadline < now
 }
+
+pub fn is_applying(car_pool: &CarPool) -> bool {
+    car_pool.status == CarPoolStatus::Applying
+}

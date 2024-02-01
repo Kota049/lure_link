@@ -1,7 +1,6 @@
 use crate::domain::domain_object::carpool_status::CarPoolStatus;
 use crate::domain::domain_object::id::Id;
 use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
-use crate::domain::domain_object::prefecture::Prefecture;
 use crate::domain::domain_object::proposal_status::ProposalStatus;
 use crate::entity::proposal::{AcceptProposal, CreateProposal, Proposal, UpdateProposal};
 use crate::entity::recruitment::{CarPool, Point};
@@ -67,7 +66,7 @@ impl ProposalRepositoryTrait for MockProposalRepo {
     async fn delete(&self, _id: &Id) -> Result<(), Error> {
         self.inner.delete()
     }
-    async fn accept(&self, accept_proposal: AcceptProposal) -> Result<Proposal, Error> {
+    async fn accept(&self, _accept_proposal: AcceptProposal) -> Result<Proposal, Error> {
         self.inner.accept()
     }
 }
