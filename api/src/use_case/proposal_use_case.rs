@@ -11,7 +11,7 @@ use crate::service::proposal_service::{
     is_acceptable_term, is_including_candidate_pick_up_location, is_non_participation,
 };
 use crate::service::time_service::get_ja_now;
-use crate::service::{carpool_service, proposal_service, time_service};
+use crate::service::{carpool_service, proposal_service};
 use crate::use_case::proposal_use_case::dto::AplProposal;
 use std::sync::Arc;
 
