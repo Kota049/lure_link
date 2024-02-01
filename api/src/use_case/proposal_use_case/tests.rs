@@ -546,7 +546,7 @@ async fn test_edit_proposal() {
     let res = uc.edit_proposal(user.clone(), input.clone()).await;
     assert!(res.is_ok());
 
-    // 申込者以外のユーザーが更新仕様とした場合
+    // 申込者以外のユーザーが更新しようとした場合
     let res = uc.edit_proposal(another_user.clone(), input.clone()).await;
     assert!(res.is_err());
 

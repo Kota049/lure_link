@@ -8,7 +8,7 @@ use crate::repository::carpool::CarPoolRepositoryTrait;
 use crate::repository::proposal::ProposalRepositoryTrait;
 use crate::service::carpool_service::{add_one_accept, is_applying, is_organizer};
 use crate::service::proposal_service::{
-    is_acceptable_term, is_including_candidate_pick_up_location, is_non_participation,
+    is_acceptable_term, is_applicant, is_including_candidate_pick_up_location, is_non_participation,
 };
 use crate::service::time_service::get_ja_now;
 use crate::service::{carpool_service, proposal_service};
@@ -104,6 +104,14 @@ impl ProposalUseCase {
         user: User,
         input: UpdateProposal,
     ) -> Result<Proposal, Error> {
-        todo!()
+        let proposal = self.pr.find(&input.id).await?;
+        if !is_applicant(&user, &proposal) {
+            return Err(AuthenticateError("you are not applicant".to_string()));
+        }
+        if proposal.status != ProposalStatus::Applying {
+            return Err(Other("cannot update because already fixed".to_string()));
+        }
+
+        self.pr.update(&user, input).await
     }
 }
