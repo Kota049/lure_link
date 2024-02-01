@@ -1,9 +1,12 @@
 use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
+use crate::domain::domain_object::proposal_status::ProposalStatus;
 use crate::entity::proposal::Proposal;
 use crate::entity::recruitment::CarPool;
 use crate::entity::users::User;
 use crate::error::Error;
-use crate::service::proposal_service::{can_cancel_term_by_applicant, has_applying, is_applicant};
+use crate::service::proposal_service::{
+    can_cancel_term_by_applicant, has_applying, is_applicant, is_non_participation,
+};
 use chrono::{Duration, Utc};
 
 #[test]
@@ -64,5 +67,36 @@ fn test_can_cancel_term_by_applicant() {
             ..Proposal::default()
         },
     );
+    assert!(!res);
+}
+
+#[test]
+fn test_is_non_participation() {
+    let proposal = Proposal {
+        status: ProposalStatus::UserCancel,
+        ..Proposal::default()
+    };
+    let res = is_non_participation(&proposal);
+    assert!(res);
+
+    let proposal = Proposal {
+        status: ProposalStatus::OrganizerCancel,
+        ..Proposal::default()
+    };
+    let res = is_non_participation(&proposal);
+    assert!(res);
+
+    let proposal = Proposal {
+        status: ProposalStatus::Deny,
+        ..Proposal::default()
+    };
+    let res = is_non_participation(&proposal);
+    assert!(res);
+
+    let proposal = Proposal {
+        status: ProposalStatus::Applying,
+        ..Proposal::default()
+    };
+    let res = is_non_participation(&proposal);
     assert!(!res);
 }

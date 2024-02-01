@@ -7,6 +7,7 @@ use crate::error::Error::{AuthenticateError, Other};
 use crate::repository::carpool::CarPoolRepositoryTrait;
 use crate::repository::proposal::ProposalRepositoryTrait;
 use crate::service::carpool_service::is_organizer;
+use crate::service::proposal_service::is_non_participation;
 use crate::service::{carpool_service, proposal_service, time_service};
 use crate::use_case::proposal_use_case::dto::AplProposal;
 use std::sync::Arc;
@@ -61,7 +62,7 @@ impl ProposalUseCase {
         if !proposal_service::can_cancel_term_by_applicant(&now, &proposal) {
             return Err(Other("expired cancel deadline".to_string()));
         }
-        if proposal.status == ProposalStatus::UserCancel {
+        if is_non_participation(&proposal) {
             return Err(Other("already cancel or denied".to_string()));
         }
         let proposal = self
