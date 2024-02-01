@@ -1,6 +1,6 @@
 use crate::domain::domain_object::id::Id;
 use crate::domain::domain_object::payment_status::PaymentStatus;
-use crate::entity::recruitment::Point;
+use crate::entity::car_pool::Point;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]

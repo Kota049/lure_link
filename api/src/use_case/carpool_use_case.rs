@@ -1,4 +1,4 @@
-use crate::entity::recruitment::{CarPool, CreateCarPool};
+use crate::entity::car_pool::{CarPool, CreateCarPool};
 use crate::entity::users::User;
 use crate::error::Error;
 use crate::repository::carpool::CarPoolRepositoryTrait;

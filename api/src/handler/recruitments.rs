@@ -1,7 +1,6 @@
-use axum::response::{Response};
+use axum::response::Response;
 
-pub async fn read_recruitments(
-) -> Result<Response, Response> {
+pub async fn read_recruitments() -> Result<Response, Response> {
     todo!()
     // let primitive_recruitments = get_recruitment_summary_list(&state.client).await;
     // if let Err(e) = primitive_recruitments {
@@ -10,14 +9,14 @@ pub async fn read_recruitments(
     // let primitive_recruitments = primitive_recruitments.unwrap();
     //
     // let mut result: Vec<Value> = Vec::new();
-    // for recruitment in primitive_recruitments {
-    //     let recruitment = recruitment.sophisticate();
+    // for car_pool in primitive_recruitments {
+    //     let car_pool = car_pool.sophisticate();
     //     // 正常でない募集の場合はレスポンスに含まない
-    //     if recruitment.is_err() {
+    //     if car_pool.is_err() {
     //         continue;
     //     }
-    //     let recruitment = recruitment.unwrap();
-    //     result.push(recruitment.to_value());
+    //     let car_pool = car_pool.unwrap();
+    //     result.push(car_pool.to_value());
     // }
     // Ok((StatusCode::OK, json!(result).to_string()).into_response())
 }

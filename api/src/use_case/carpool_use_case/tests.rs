@@ -1,6 +1,6 @@
 use crate::domain::domain_object::carpool_status::CarPoolStatus;
 use crate::domain::domain_object::id::Id;
-use crate::entity::recruitment::{CarPool, CreateCarPool};
+use crate::entity::car_pool::{CarPool, CreateCarPool};
 use crate::entity::users::User;
 use crate::error::Error;
 use crate::repository::carpool::CarPoolRepositoryTrait;

@@ -1,6 +1,6 @@
 use crate::domain::domain_object::carpool_status::CarPoolStatus;
 use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
-use crate::entity::recruitment::CarPool;
+use crate::entity::car_pool::CarPool;
 use crate::entity::users::User;
 use crate::service::carpool_service::{
     add_one_accept, can_apl_term, is_applying, is_canceled, is_organizer, modify_to_cancel,

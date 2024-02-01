@@ -1,7 +1,7 @@
 use crate::domain::domain_object::id::Id;
 use crate::domain::domain_object::proposal_status::ProposalStatus;
+use crate::entity::car_pool::CarPool;
 use crate::entity::proposal::{AcceptProposal, CreateProposal, Proposal, UpdateProposal};
-use crate::entity::recruitment::CarPool;
 use crate::entity::users::User;
 use crate::error::Error;
 use axum::async_trait;
