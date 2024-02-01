@@ -1,5 +1,5 @@
 use crate::entity::car_pool::{CarPool, CreateCarPool};
-use crate::entity::users::User;
+use crate::entity::user::User;
 use crate::error::Error;
 use crate::repository::carpool::CarPoolRepositoryTrait;
 use crate::service::carpool_service::*;

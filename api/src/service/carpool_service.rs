@@ -1,7 +1,7 @@
 use crate::domain::domain_object::carpool_status::CarPoolStatus;
 use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
 use crate::entity::car_pool::CarPool;
-use crate::entity::users::User;
+use crate::entity::user::User;
 use crate::error::Error;
 use crate::error::Error::Other;
 

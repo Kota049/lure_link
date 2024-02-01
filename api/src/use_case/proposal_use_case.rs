@@ -1,7 +1,7 @@
 use crate::domain::domain_object::id::Id;
 use crate::domain::domain_object::proposal_status::ProposalStatus;
 use crate::entity::proposal::{AcceptProposal, CreateProposal, Proposal, UpdateProposal};
-use crate::entity::users::User;
+use crate::entity::user::User;
 use crate::error::Error;
 use crate::error::Error::{AuthenticateError, Other};
 use crate::repository::carpool::CarPoolRepositoryTrait;

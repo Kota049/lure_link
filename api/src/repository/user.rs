@@ -1,6 +1,6 @@
 use crate::domain::domain_object::application_token::ApplicationToken;
 use crate::entity::line::{LineProfile, LineToken};
-use crate::entity::users::User;
+use crate::entity::user::User;
 use crate::error::Error;
 use crate::use_case::user_use_case::dto::UpdateUser;
 use axum::async_trait;

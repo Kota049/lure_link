@@ -4,7 +4,7 @@ use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
 use crate::domain::domain_object::proposal_status::ProposalStatus;
 use crate::entity::car_pool::{CarPool, Point};
 use crate::entity::proposal::{AcceptProposal, CreateProposal, Proposal, UpdateProposal};
-use crate::entity::users::User;
+use crate::entity::user::User;
 use crate::error::Error;
 use crate::repository::proposal::ProposalRepositoryTrait;
 use crate::use_case::carpool_use_case::tests::{MockCarPoolRepo, MockCarPoolValue};

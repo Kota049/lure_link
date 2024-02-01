@@ -3,7 +3,7 @@ use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
 use crate::domain::domain_object::payment_status::PaymentStatus;
 use crate::domain::domain_object::proposal_status::ProposalStatus;
 use crate::entity::car_pool::{CarPool, Point};
-use crate::entity::users::User;
+use crate::entity::user::User;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]

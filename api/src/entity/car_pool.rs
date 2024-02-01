@@ -5,7 +5,7 @@ use crate::domain::domain_object::id::Id;
 use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
 use crate::domain::domain_object::municipality::Municipality;
 use crate::domain::domain_object::prefecture::Prefecture;
-use crate::entity::users::User;
+use crate::entity::user::User;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]

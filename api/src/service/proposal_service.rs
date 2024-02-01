@@ -2,7 +2,7 @@ use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
 use crate::domain::domain_object::proposal_status::ProposalStatus;
 use crate::entity::car_pool::Point;
 use crate::entity::proposal::Proposal;
-use crate::entity::users::User;
+use crate::entity::user::User;
 use crate::error::Error;
 use chrono::{Duration, Utc};
 

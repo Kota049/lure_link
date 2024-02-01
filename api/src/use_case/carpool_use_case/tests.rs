@@ -1,7 +1,7 @@
 use crate::domain::domain_object::carpool_status::CarPoolStatus;
 use crate::domain::domain_object::id::Id;
 use crate::entity::car_pool::{CarPool, CreateCarPool};
-use crate::entity::users::User;
+use crate::entity::user::User;
 use crate::error::Error;
 use crate::repository::carpool::CarPoolRepositoryTrait;
 use crate::use_case::carpool_use_case::dto::CancelCarPool;

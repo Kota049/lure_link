@@ -1,6 +1,6 @@
 use crate::domain::domain_object::id::Id;
 use crate::entity::car_pool::{CarPool, CreateCarPool};
-use crate::entity::users::User;
+use crate::entity::user::User;
 use crate::error::Error;
 use axum::async_trait;
 
