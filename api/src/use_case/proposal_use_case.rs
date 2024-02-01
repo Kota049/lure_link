@@ -1,6 +1,6 @@
 use crate::domain::domain_object::id::Id;
 use crate::domain::domain_object::proposal_status::ProposalStatus;
-use crate::entity::proposal::{CreateProposal, Proposal, UpdateProposal};
+use crate::entity::proposal::{AcceptProposal, CreateProposal, Proposal, UpdateProposal};
 use crate::entity::users::User;
 use crate::error::Error;
 use crate::error::Error::{AuthenticateError, Other};
@@ -75,7 +75,7 @@ impl ProposalUseCase {
     pub async fn accept_proposal(
         &self,
         organizer: User,
-        proposal_id: Id,
+        accept_proposal: AcceptProposal,
     ) -> Result<Proposal, Error> {
         todo!()
     }

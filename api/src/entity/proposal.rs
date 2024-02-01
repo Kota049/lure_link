@@ -69,10 +69,10 @@ impl Default for CreateProposal {
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct UpdateProposal {
     pub id: Id,
-    hope_pick_up_location_1: Point,
-    hope_pick_up_location_2: Option<Point>,
-    hope_pick_up_location_3: Option<Point>,
-    description: String,
+    pub hope_pick_up_location_1: Point,
+    pub hope_pick_up_location_2: Option<Point>,
+    pub hope_pick_up_location_3: Option<Point>,
+    pub description: String,
 }
 
 #[cfg(test)]
@@ -84,6 +84,22 @@ impl Default for UpdateProposal {
             hope_pick_up_location_2: None,
             hope_pick_up_location_3: None,
             description: "".to_string(),
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+pub struct AcceptProposal {
+    pub id: Id,
+    pub pick_up_point: Point,
+}
+
+#[cfg(test)]
+impl Default for AcceptProposal {
+    fn default() -> Self {
+        Self {
+            id: 1i64.try_into().unwrap(),
+            pick_up_point: Default::default(),
         }
     }
 }

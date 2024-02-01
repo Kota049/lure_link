@@ -1,6 +1,6 @@
 use crate::domain::domain_object::id::Id;
 use crate::domain::domain_object::proposal_status::ProposalStatus;
-use crate::entity::proposal::{CreateProposal, Proposal, UpdateProposal};
+use crate::entity::proposal::{AcceptProposal, CreateProposal, Proposal, UpdateProposal};
 use crate::entity::recruitment::CarPool;
 use crate::entity::users::User;
 use crate::error::Error;
@@ -24,4 +24,5 @@ pub trait ProposalRepositoryTrait {
         status: ProposalStatus,
     ) -> Result<Proposal, Error>;
     async fn delete(&self, id: &Id) -> Result<(), Error>;
+    async fn accept(&self, accept_proposal: AcceptProposal) -> Result<Proposal, Error>;
 }

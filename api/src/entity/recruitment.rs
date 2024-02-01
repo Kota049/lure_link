@@ -36,7 +36,7 @@ impl Default for CarPool {
             departure: Default::default(),
             destination: Default::default(),
             budget: 1000i32.try_into().unwrap(),
-            max_participant: 0,
+            max_participant: 3,
             current_participant: 0,
             status: CarPoolStatus::Applying,
             description: "".to_string(),

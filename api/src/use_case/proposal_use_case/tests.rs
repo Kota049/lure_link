@@ -1,8 +1,10 @@
+use crate::domain::domain_object::carpool_status::CarPoolStatus;
 use crate::domain::domain_object::id::Id;
 use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
+use crate::domain::domain_object::prefecture::Prefecture;
 use crate::domain::domain_object::proposal_status::ProposalStatus;
-use crate::entity::proposal::{CreateProposal, Proposal, UpdateProposal};
-use crate::entity::recruitment::CarPool;
+use crate::entity::proposal::{AcceptProposal, CreateProposal, Proposal, UpdateProposal};
+use crate::entity::recruitment::{CarPool, Point};
 use crate::entity::users::User;
 use crate::error::Error;
 use crate::repository::proposal::ProposalRepositoryTrait;
@@ -23,6 +25,7 @@ pub trait ProposalValue {
     fn update_proposal_status(&self) -> Result<Proposal, Error>;
     fn delete(&self) -> Result<(), Error>;
     fn find_by_user_and_carpool(&self) -> Result<Proposal, Error>;
+    fn accept(&self) -> Result<Proposal, Error>;
 }
 
 pub struct MockProposalRepo {
@@ -63,6 +66,9 @@ impl ProposalRepositoryTrait for MockProposalRepo {
     }
     async fn delete(&self, _id: &Id) -> Result<(), Error> {
         self.inner.delete()
+    }
+    async fn accept(&self, accept_proposal: AcceptProposal) -> Result<Proposal, Error> {
+        self.inner.accept()
     }
 }
 
@@ -322,4 +328,191 @@ fn applying_proposal() -> Proposal {
         status: ProposalStatus::Applying,
         ..Proposal::default()
     }
+}
+
+#[tokio::test]
+async fn test_accept_proposal() {
+    let organizer = User::default();
+    let accept_proposal = AcceptProposal::default();
+
+    // 正常系
+    let mut pr = MockProposalValue::new();
+    pr.expect_find().returning(|| {
+        Ok(Proposal {
+            carpool: CarPool {
+                start_time: (Utc::now() + Duration::days(2)).try_into().unwrap(),
+                ..CarPool::default()
+            },
+            ..applying_proposal()
+        })
+    });
+    pr.expect_accept().returning(|| Ok(Proposal::default()));
+    let mut cpr = MockCarPoolValue::new();
+    cpr.expect_update().returning(|| Ok(CarPool::default()));
+
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc
+        .accept_proposal(organizer.clone(), accept_proposal.clone())
+        .await;
+    assert!(res.is_ok());
+
+    // Proposalが存在しない場合はエラー
+    let mut pr = MockProposalValue::new();
+    pr.expect_find()
+        .returning(|| Err(Error::DbError("".to_string())));
+    pr.expect_accept().returning(|| Ok(Proposal::default()));
+    let mut cpr = MockCarPoolValue::new();
+    cpr.expect_update().returning(|| Ok(CarPool::default()));
+
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc
+        .accept_proposal(organizer.clone(), accept_proposal.clone())
+        .await;
+    assert!(res.is_err());
+
+    // Proposalの更新に失敗した場合はエラー
+    let mut pr = MockProposalValue::new();
+    pr.expect_find().returning(|| {
+        Ok(Proposal {
+            carpool: CarPool {
+                start_time: (Utc::now() + Duration::days(2)).try_into().unwrap(),
+                ..CarPool::default()
+            },
+            ..applying_proposal()
+        })
+    });
+    pr.expect_accept()
+        .returning(|| Err(Error::DbError("".to_string())));
+    let mut cpr = MockCarPoolValue::new();
+    cpr.expect_update().returning(|| Ok(CarPool::default()));
+
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc
+        .accept_proposal(organizer.clone(), accept_proposal.clone())
+        .await;
+    assert!(res.is_err());
+
+    // CarPoolの更新に失敗した場合はエラー
+    let mut pr = MockProposalValue::new();
+    pr.expect_find().returning(|| {
+        Ok(Proposal {
+            carpool: CarPool {
+                start_time: (Utc::now() + Duration::days(2)).try_into().unwrap(),
+                ..CarPool::default()
+            },
+            ..applying_proposal()
+        })
+    });
+    pr.expect_accept().returning(|| Ok(Proposal::default()));
+    let mut cpr = MockCarPoolValue::new();
+    cpr.expect_update()
+        .returning(|| Err(Error::DbError("".to_string())));
+
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc
+        .accept_proposal(organizer.clone(), accept_proposal.clone())
+        .await;
+    assert!(res.is_ok());
+
+    // 開始日の1日前より後に承認しようとする場合はエラー
+    let mut pr = MockProposalValue::new();
+    pr.expect_find().returning(|| {
+        Ok(Proposal {
+            carpool: CarPool {
+                start_time: (Utc::now() + Duration::hours(12)).try_into().unwrap(),
+                ..CarPool::default()
+            },
+            ..applying_proposal()
+        })
+    });
+    pr.expect_accept().returning(|| Ok(Proposal::default()));
+    let mut cpr = MockCarPoolValue::new();
+    cpr.expect_update().returning(|| Ok(CarPool::default()));
+
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc
+        .accept_proposal(organizer.clone(), accept_proposal.clone())
+        .await;
+    assert!(res.is_err());
+
+    // 主催者以外が承認しようとした場合はエラー
+    let another_organizer = User {
+        id: 42i64.try_into().unwrap(),
+        ..User::default()
+    };
+    let mut pr = MockProposalValue::new();
+    pr.expect_find().returning(|| {
+        Ok(Proposal {
+            carpool: CarPool {
+                start_time: (Utc::now() + Duration::days(2)).try_into().unwrap(),
+                ..CarPool::default()
+            },
+            ..applying_proposal()
+        })
+    });
+    pr.expect_accept().returning(|| Ok(Proposal::default()));
+    let mut cpr = MockCarPoolValue::new();
+    cpr.expect_update().returning(|| Ok(CarPool::default()));
+
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc
+        .accept_proposal(another_organizer.clone(), accept_proposal.clone())
+        .await;
+    assert!(res.is_err());
+
+    // ピックアップポイントが不正な場合はエラー
+    let invalid_accept_proposal = AcceptProposal {
+        pick_up_point: Point {
+            municipality: "invalid municipality".to_string().try_into().unwrap(),
+            ..Point::default()
+        },
+        ..AcceptProposal::default()
+    };
+    let res = uc
+        .accept_proposal(organizer.clone(), invalid_accept_proposal.clone())
+        .await;
+    assert!(res.is_err());
+
+    // すでに参加人数が集まっている場合はエラー
+    let mut pr = MockProposalValue::new();
+    pr.expect_find().returning(|| {
+        Ok(Proposal {
+            carpool: CarPool {
+                start_time: (Utc::now() + Duration::days(2)).try_into().unwrap(),
+                status: CarPoolStatus::AplComplete,
+                ..CarPool::default()
+            },
+            ..applying_proposal()
+        })
+    });
+    pr.expect_accept().returning(|| Ok(Proposal::default()));
+    let mut cpr = MockCarPoolValue::new();
+    cpr.expect_update().returning(|| Ok(CarPool::default()));
+
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc
+        .accept_proposal(organizer.clone(), accept_proposal.clone())
+        .await;
+    assert!(res.is_err());
 }
