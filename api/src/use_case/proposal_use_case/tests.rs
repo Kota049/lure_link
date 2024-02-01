@@ -525,7 +525,7 @@ async fn test_accept_proposal() {
 }
 
 #[tokio::test]
-async fn test_edit_proposal() {
+async fn test_update_proposal_by_applicant() {
     let user = User::default();
     let another_user = User {
         id: 42i64.try_into().unwrap(),
@@ -543,11 +543,15 @@ async fn test_edit_proposal() {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
     };
-    let res = uc.edit_proposal(user.clone(), input.clone()).await;
+    let res = uc
+        .update_proposal_by_applicant(user.clone(), input.clone())
+        .await;
     assert!(res.is_ok());
 
     // 申込者以外のユーザーが更新しようとした場合
-    let res = uc.edit_proposal(another_user.clone(), input.clone()).await;
+    let res = uc
+        .update_proposal_by_applicant(another_user.clone(), input.clone())
+        .await;
     assert!(res.is_err());
 
     // 承認前でない場合
@@ -564,7 +568,9 @@ async fn test_edit_proposal() {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
     };
-    let res = uc.edit_proposal(user.clone(), input.clone()).await;
+    let res = uc
+        .update_proposal_by_applicant(user.clone(), input.clone())
+        .await;
     assert!(res.is_err());
 
     // 申し込みが存在しない場合
@@ -577,7 +583,9 @@ async fn test_edit_proposal() {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
     };
-    let res = uc.edit_proposal(user.clone(), input.clone()).await;
+    let res = uc
+        .update_proposal_by_applicant(user.clone(), input.clone())
+        .await;
     assert!(res.is_err());
 
     // 更新に失敗した場合
@@ -590,6 +598,8 @@ async fn test_edit_proposal() {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
     };
-    let res = uc.edit_proposal(user.clone(), input.clone()).await;
+    let res = uc
+        .update_proposal_by_applicant(user.clone(), input.clone())
+        .await;
     assert!(res.is_err());
 }
