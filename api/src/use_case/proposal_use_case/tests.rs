@@ -357,6 +357,7 @@ async fn test_accept_proposal() {
     let res = uc
         .accept_proposal(organizer.clone(), accept_proposal.clone())
         .await;
+    println!("{res:?}");
     assert!(res.is_ok());
 
     // Proposalが存在しない場合はエラー
@@ -374,6 +375,7 @@ async fn test_accept_proposal() {
     let res = uc
         .accept_proposal(organizer.clone(), accept_proposal.clone())
         .await;
+    println!("{res:?}");
     assert!(res.is_err());
 
     // Proposalの更新に失敗した場合はエラー
@@ -399,6 +401,7 @@ async fn test_accept_proposal() {
     let res = uc
         .accept_proposal(organizer.clone(), accept_proposal.clone())
         .await;
+    println!("{res:?}");
     assert!(res.is_err());
 
     // CarPoolの更新に失敗した場合はエラー
@@ -424,7 +427,8 @@ async fn test_accept_proposal() {
     let res = uc
         .accept_proposal(organizer.clone(), accept_proposal.clone())
         .await;
-    assert!(res.is_ok());
+    println!("{res:?}");
+    assert!(res.is_err());
 
     // 開始日の1日前より後に承認しようとする場合はエラー
     let mut pr = MockProposalValue::new();
@@ -448,6 +452,7 @@ async fn test_accept_proposal() {
     let res = uc
         .accept_proposal(organizer.clone(), accept_proposal.clone())
         .await;
+    println!("{res:?}");
     assert!(res.is_err());
 
     // 主催者以外が承認しようとした場合はエラー
@@ -476,6 +481,7 @@ async fn test_accept_proposal() {
     let res = uc
         .accept_proposal(another_organizer.clone(), accept_proposal.clone())
         .await;
+    println!("{res:?}");
     assert!(res.is_err());
 
     // ピックアップポイントが不正な場合はエラー
@@ -489,6 +495,7 @@ async fn test_accept_proposal() {
     let res = uc
         .accept_proposal(organizer.clone(), invalid_accept_proposal.clone())
         .await;
+    println!("{res:?}");
     assert!(res.is_err());
 
     // すでに参加人数が集まっている場合はエラー
@@ -514,5 +521,6 @@ async fn test_accept_proposal() {
     let res = uc
         .accept_proposal(organizer.clone(), accept_proposal.clone())
         .await;
+    println!("{res:?}");
     assert!(res.is_err());
 }
