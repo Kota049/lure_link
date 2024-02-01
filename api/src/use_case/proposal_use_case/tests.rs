@@ -523,3 +523,73 @@ async fn test_accept_proposal() {
     println!("{res:?}");
     assert!(res.is_err());
 }
+
+#[tokio::test]
+async fn test_edit_proposal() {
+    let user = User::default();
+    let another_user = User {
+        id: 42i64.try_into().unwrap(),
+        ..User::default()
+    };
+    let input = UpdateProposal::default();
+
+    // 正常系
+    let mut pr = MockProposalValue::new();
+    pr.expect_find().returning(|| Ok(applying_proposal()));
+    pr.expect_update().returning(|| Ok(Proposal::default()));
+    let cpr = MockCarPoolValue::new();
+
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc.edit_proposal(user.clone(), input.clone()).await;
+    assert!(res.is_ok());
+
+    // 申込者以外のユーザーが更新仕様とした場合
+    let res = uc.edit_proposal(another_user.clone(), input.clone()).await;
+    assert!(res.is_err());
+
+    // 承認前でない場合
+    let mut pr = MockProposalValue::new();
+    pr.expect_find().returning(|| {
+        Ok(Proposal {
+            status: ProposalStatus::Acceptance,
+            ..Proposal::default()
+        })
+    });
+    pr.expect_update().returning(|| Ok(Proposal::default()));
+    let cpr = MockCarPoolValue::new();
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc.edit_proposal(user.clone(), input.clone()).await;
+    assert!(res.is_err());
+
+    // 申し込みが存在しない場合
+    let mut pr = MockProposalValue::new();
+    pr.expect_find()
+        .returning(|| Err(Error::NotFound("".to_string())));
+    pr.expect_update().returning(|| Ok(Proposal::default()));
+    let cpr = MockCarPoolValue::new();
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc.edit_proposal(user.clone(), input.clone()).await;
+    assert!(res.is_err());
+
+    // 更新に失敗した場合
+    let mut pr = MockProposalValue::new();
+    pr.expect_find().returning(|| Ok(applying_proposal()));
+    pr.expect_update()
+        .returning(|| Err(Error::DbError("".to_string())));
+    let cpr = MockCarPoolValue::new();
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc.edit_proposal(user.clone(), input.clone()).await;
+    assert!(res.is_err());
+}
