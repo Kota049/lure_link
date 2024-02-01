@@ -1,13 +1,12 @@
 use crate::domain::domain_object::id::Id;
 use crate::domain::domain_object::proposal_status::ProposalStatus;
 use crate::entity::proposal::{AcceptProposal, CreateProposal, Proposal, UpdateProposal};
-use crate::entity::recruitment::CarPool;
 use crate::entity::users::User;
 use crate::error::Error;
 use crate::error::Error::{AuthenticateError, Other};
 use crate::repository::carpool::CarPoolRepositoryTrait;
 use crate::repository::proposal::ProposalRepositoryTrait;
-use crate::service::carpool_service::{is_applying, is_organizer};
+use crate::service::carpool_service::{add_one_accept, is_applying, is_organizer};
 use crate::service::proposal_service::{
     is_acceptable_term, is_including_candidate_pick_up_location, is_non_participation,
 };
@@ -28,16 +27,16 @@ pub mod dto;
 
 impl ProposalUseCase {
     pub async fn create(&self, applicant: User, input: AplProposal) -> Result<Proposal, Error> {
-        let now = time_service::get_ja_now()?;
+        let now = get_ja_now()?;
         let carpool = self.cpr.find_by_id(&input.car_pool_id).await?;
         if is_organizer(&carpool, &applicant) {
-            return Err(Error::Other("you are organizer".to_string()));
+            return Err(Other("you are organizer".to_string()));
         }
         let exists_proposal = self.pr.find_by_user_and_carpool(&applicant, &carpool).await;
         proposal_service::has_applying(exists_proposal)?;
 
         if carpool_service::can_apl_term(&now, &carpool) {
-            return Err(Error::Other("expired applying deadline".to_string()));
+            return Err(Other("expired applying deadline".to_string()));
         }
 
         let create_proposal = CreateProposal {
@@ -58,7 +57,7 @@ impl ProposalUseCase {
         applicant: User,
         proposal_id: Id,
     ) -> Result<Proposal, Error> {
-        let now = time_service::get_ja_now()?;
+        let now = get_ja_now()?;
         let proposal = self.pr.find(&proposal_id).await?;
         if !proposal_service::is_applicant(&applicant, &proposal) {
             return Err(AuthenticateError("you are not applicant".to_string()));
@@ -96,10 +95,7 @@ impl ProposalUseCase {
             return Err(Other("expired acceptable term".to_string()));
         }
 
-        let update_carpool = CarPool {
-            current_participant: proposal.carpool.current_participant.clone() + 1,
-            ..proposal.carpool.clone()
-        };
+        let update_carpool = add_one_accept(proposal.carpool)?;
         self.cpr.update(update_carpool).await?;
         self.pr.accept(accept_proposal).await
     }
