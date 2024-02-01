@@ -3,6 +3,7 @@ use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
 use crate::entity::recruitment::CarPool;
 use crate::entity::users::User;
 use crate::error::Error;
+use crate::error::Error::Other;
 
 #[cfg(test)]
 mod tests;
@@ -31,5 +32,19 @@ pub fn is_applying(car_pool: &CarPool) -> bool {
 }
 
 pub fn add_one_accept(car_pool: CarPool) -> Result<CarPool, Error> {
-    todo!()
+    let update_participant = car_pool.current_participant + 1;
+    if update_participant > car_pool.max_participant {
+        return Err(Other("over max participant".to_string()));
+    }
+    if update_participant == car_pool.max_participant {
+        return Ok(CarPool {
+            current_participant: update_participant,
+            status: CarPoolStatus::AplComplete,
+            ..car_pool
+        });
+    }
+    Ok(CarPool {
+        current_participant: update_participant,
+        ..car_pool
+    })
 }
