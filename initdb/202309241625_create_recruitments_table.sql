@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS recruitments (
     destination_point varchar(255) NOT NULL,
     organizer_id BIGINT NOT NULL,
     participant_count SMALLINT NOT NULL,
-    start_datetime timestamp NOT NULL,
-    application_datetime timestamp NOT NULL,
+    start_datetime timestamp with time zone NOT NULL,
+    application_datetime timestamp with time zone NOT NULL,
     budget INT NOT NULL,
 
     PRIMARY KEY(id),
