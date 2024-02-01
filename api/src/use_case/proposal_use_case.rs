@@ -8,7 +8,8 @@ use crate::repository::carpool::CarPoolRepositoryTrait;
 use crate::repository::proposal::ProposalRepositoryTrait;
 use crate::service::carpool_service::{add_one_accept, is_applying, is_organizer};
 use crate::service::proposal_service::{
-    is_acceptable_term, is_applicant, is_including_candidate_pick_up_location, is_non_participation,
+    can_cancel_term_by_applicant, is_acceptable_term, is_applicant,
+    is_including_candidate_pick_up_location, is_non_participation, is_updatable_term_by_applicant,
 };
 use crate::service::time_service::get_ja_now;
 use crate::service::{carpool_service, proposal_service};
@@ -59,10 +60,10 @@ impl ProposalUseCase {
     ) -> Result<Proposal, Error> {
         let now = get_ja_now()?;
         let proposal = self.pr.find(&proposal_id).await?;
-        if !proposal_service::is_applicant(&applicant, &proposal) {
+        if !is_applicant(&applicant, &proposal) {
             return Err(AuthenticateError("you are not applicant".to_string()));
         }
-        if !proposal_service::can_cancel_term_by_applicant(&now, &proposal) {
+        if !can_cancel_term_by_applicant(&now, &proposal) {
             return Err(Other("expired cancel deadline".to_string()));
         }
         if is_non_participation(&proposal) {
@@ -108,10 +109,9 @@ impl ProposalUseCase {
         if !is_applicant(&user, &proposal) {
             return Err(AuthenticateError("you are not applicant".to_string()));
         }
-        if proposal.status != ProposalStatus::Applying {
+        if !is_updatable_term_by_applicant(&proposal) {
             return Err(Other("cannot update because already fixed".to_string()));
         }
-
         self.pr.update(&user, input).await
     }
 }

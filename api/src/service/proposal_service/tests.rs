@@ -6,7 +6,7 @@ use crate::entity::user::User;
 use crate::error::Error;
 use crate::service::proposal_service::{
     can_cancel_term_by_applicant, has_applying, is_acceptable_term, is_applicant,
-    is_including_candidate_pick_up_location, is_non_participation,
+    is_including_candidate_pick_up_location, is_non_participation, is_updatable_term_by_applicant,
 };
 use chrono::{Duration, Utc};
 
@@ -158,4 +158,21 @@ fn test_is_acceptable_term() {
     };
     let res = is_acceptable_term(&now.try_into().unwrap(), &expired_proposal);
     assert!(!res);
+}
+
+#[test]
+fn test_is_updatable_term_by_applicant() {
+    let p = Proposal {
+        status: ProposalStatus::Applying,
+        ..Proposal::default()
+    };
+    let res = is_updatable_term_by_applicant(&p);
+    assert!(res);
+
+    let p = Proposal {
+        status: ProposalStatus::Acceptance,
+        ..Proposal::default()
+    };
+    let res = is_updatable_term_by_applicant(&p);
+    assert!(!res)
 }

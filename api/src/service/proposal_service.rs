@@ -49,3 +49,7 @@ pub fn is_acceptable_term(now: &JaTimeStamp, proposal: &Proposal) -> bool {
     let now = now.0.with_timezone(&Utc);
     now < accept_deadline
 }
+
+pub fn is_updatable_term_by_applicant(proposal: &Proposal) -> bool {
+    proposal.status == ProposalStatus::Applying
+}
