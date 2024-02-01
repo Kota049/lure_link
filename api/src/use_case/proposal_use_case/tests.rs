@@ -290,6 +290,31 @@ async fn test_cancel_by_applicant() {
         .cancel_by_applicant(applicant.clone(), proposal_id.clone())
         .await;
     assert!(res.is_err());
+
+    // すでにキャンセルされている場合はエラー
+    let mut pr = MockProposalValue::new();
+    pr.expect_find().returning(|| {
+        Ok(Proposal {
+            carpool: CarPool {
+                start_time: (Utc::now() + Duration::days(1)).try_into().unwrap(),
+                ..CarPool::default()
+            },
+            status: ProposalStatus::UserCancel,
+            ..applying_proposal()
+        })
+    });
+    pr.expect_update_proposal_status()
+        .returning(|| Ok(Proposal::default()));
+    let cpr = MockCarPoolValue::new();
+
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc
+        .cancel_by_applicant(applicant.clone(), proposal_id.clone())
+        .await;
+    assert!(res.is_err());
 }
 
 fn applying_proposal() -> Proposal {
