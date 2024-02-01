@@ -61,6 +61,9 @@ impl ProposalUseCase {
         if !proposal_service::can_cancel_term_by_applicant(&now, &proposal) {
             return Err(Other("expired cancel deadline".to_string()));
         }
+        if proposal.status == ProposalStatus::UserCancel {
+            return Err(Other("already cancel or denied".to_string()));
+        }
         let proposal = self
             .pr
             .update_proposal_status(proposal_id, ProposalStatus::UserCancel)
