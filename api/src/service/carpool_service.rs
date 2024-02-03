@@ -50,5 +50,19 @@ pub fn add_one_accept(car_pool: CarPool) -> Result<CarPool, Error> {
 }
 
 pub fn delete_one_accept(car_pool: CarPool) -> Result<CarPool, Error> {
-    todo!()
+    if car_pool.current_participant < 1 {
+        return Err(Other("there is no participant".to_string()));
+    }
+    let updated_status = match car_pool.status {
+        CarPoolStatus::Applying => CarPoolStatus::Applying,
+        CarPoolStatus::AplComplete => CarPoolStatus::Applying,
+        CarPoolStatus::Cancel => return Err(Other("cancel car pool".to_string())),
+        CarPoolStatus::Finished => return Err(Other("finished car pool".to_string())),
+    };
+
+    Ok(CarPool {
+        current_participant: car_pool.current_participant - 1,
+        status: updated_status,
+        ..car_pool
+    })
 }
