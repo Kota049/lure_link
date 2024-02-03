@@ -36,7 +36,7 @@ impl ProposalUseCase {
         let exists_proposal = self.pr.find_by_user_and_carpool(&applicant, &carpool).await;
         proposal_service::has_applying(exists_proposal)?;
 
-        if carpool_service::can_apl_term(&now, &carpool) {
+        if !carpool_service::can_apl_term(&now, &carpool) {
             return Err(Other("expired applying deadline".to_string()));
         }
 

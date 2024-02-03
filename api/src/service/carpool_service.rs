@@ -24,7 +24,7 @@ pub fn is_organizer(c: &CarPool, u: &User) -> bool {
 }
 
 pub fn can_apl_term(now: &JaTimeStamp, carpool: &CarPool) -> bool {
-    &carpool.apl_deadline < now
+    now < &carpool.apl_deadline
 }
 
 pub fn is_applying(car_pool: &CarPool) -> bool {
@@ -47,4 +47,8 @@ pub fn add_one_accept(car_pool: CarPool) -> Result<CarPool, Error> {
         current_participant: update_participant,
         ..car_pool
     })
+}
+
+pub fn delete_one_accept(car_pool: CarPool) -> Result<CarPool, Error> {
+    todo!()
 }

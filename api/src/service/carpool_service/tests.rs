@@ -1,9 +1,11 @@
 use crate::domain::domain_object::carpool_status::CarPoolStatus;
+use crate::domain::domain_object::carpool_status::CarPoolStatus::AplComplete;
 use crate::domain::domain_object::ja_timestamp::JaTimeStamp;
 use crate::entity::car_pool::CarPool;
 use crate::entity::user::User;
 use crate::service::carpool_service::{
-    add_one_accept, can_apl_term, is_applying, is_canceled, is_organizer, modify_to_cancel,
+    add_one_accept, can_apl_term, delete_one_accept, is_applying, is_canceled, is_organizer,
+    modify_to_cancel,
 };
 use chrono::{Duration, Utc};
 
@@ -62,7 +64,7 @@ fn test_can_apl_term() {
         ..CarPool::default()
     };
     let res = can_apl_term(&now, &c);
-    assert!(!res);
+    assert!(res);
 
     let before = (Utc::now() - Duration::days(1)).try_into().unwrap();
     let c = CarPool {
@@ -70,7 +72,7 @@ fn test_can_apl_term() {
         ..CarPool::default()
     };
     let res = can_apl_term(&now, &c);
-    assert!(res);
+    assert!(!res);
 }
 
 #[test]
@@ -119,5 +121,55 @@ fn test_add_one_accept() {
         ..CarPool::default()
     };
     let res = add_one_accept(c);
+    assert!(res.is_err());
+}
+
+#[test]
+fn test_delete_one_accept() {
+    // Applyingの場合は人数を減らした上で、StatusをApplyingのままにする
+    let c = CarPool {
+        current_participant: 2,
+        status: CarPoolStatus::Applying,
+        ..CarPool::default()
+    };
+    let res = delete_one_accept(c).unwrap();
+    assert_eq!(res.status, CarPoolStatus::Applying);
+    assert_eq!(res.current_participant, 1);
+
+    // AplCompleteで申し込み受付期間だった場合はApplyingに戻す
+    let c = CarPool {
+        current_participant: 2,
+        status: AplComplete,
+        ..CarPool::default()
+    };
+    let res = delete_one_accept(c).unwrap();
+    assert_eq!(res.current_participant, 1);
+    assert_eq!(res.status, CarPoolStatus::Applying);
+
+    // cancelの場合はエラーを返す
+    let c = CarPool {
+        current_participant: 2,
+        status: CarPoolStatus::Cancel,
+        ..CarPool::default()
+    };
+    let res = delete_one_accept(c);
+    assert!(res.is_err());
+
+    // finishedの場合はエラーを返す
+    let c = CarPool {
+        current_participant: 2,
+        status: CarPoolStatus::Finished,
+        ..CarPool::default()
+    };
+    let res = delete_one_accept(c);
+    assert!(res.is_err());
+
+    // 参加者0人の場合はエラーを返す
+    let c = CarPool {
+        current_participant: 0,
+        status: CarPoolStatus::Applying,
+        ..CarPool::default()
+    };
+    let res = delete_one_accept(c);
     assert!(res.is_err());
 }
