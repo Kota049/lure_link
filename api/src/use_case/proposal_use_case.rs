@@ -6,7 +6,9 @@ use crate::error::Error;
 use crate::error::Error::{AuthenticateError, Other};
 use crate::repository::carpool::CarPoolRepositoryTrait;
 use crate::repository::proposal::ProposalRepositoryTrait;
-use crate::service::carpool_service::{add_one_accept, is_applying, is_organizer};
+use crate::service::carpool_service::{
+    add_one_accept, delete_one_accept, is_applying, is_organizer,
+};
 use crate::service::proposal_service::{
     can_cancel_term_by_applicant, is_acceptable_term, is_applicant,
     is_including_candidate_pick_up_location, is_non_participation, is_updatable_term_by_applicant,
@@ -101,7 +103,16 @@ impl ProposalUseCase {
         self.pr.accept(accept_proposal).await
     }
     pub async fn deny_proposal(&self, user: User, proposal_id: Id) -> Result<Proposal, Error> {
-        todo!()
+        let proposal = self.pr.find(&proposal_id).await?;
+        if !is_organizer(&proposal.carpool, &user) {
+            return Err(AuthenticateError("you are not organizer".to_string()));
+        }
+
+        let update_carpool = delete_one_accept(proposal.carpool.clone())?;
+        self.cpr.update(update_carpool).await?;
+        self.pr
+            .update_proposal_status(proposal_id, ProposalStatus::Deny)
+            .await
     }
     pub async fn update_proposal_by_applicant(
         &self,

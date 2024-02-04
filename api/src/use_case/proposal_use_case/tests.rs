@@ -539,6 +539,7 @@ async fn test_deny_proposal() {
         Ok(Proposal {
             carpool: CarPool {
                 start_time: (Utc::now() + Duration::days(2)).try_into().unwrap(),
+                current_participant: 2i64.try_into().unwrap(),
                 ..CarPool::default()
             },
             ..applying_proposal()
