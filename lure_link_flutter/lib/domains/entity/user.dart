@@ -1,3 +1,5 @@
+import 'package:lure_link_flutter/domains/value_object/user_status.dart';
+
 class User {
   final int id;
   final String applicationToken;
@@ -7,7 +9,7 @@ class User {
   final String? lastName;
   final String? firstNameJp;
   final String? lastNameJp;
-  final String? userStatus;
+  final UserStatus? userStatus;
 
   User(
       this.nickName,
