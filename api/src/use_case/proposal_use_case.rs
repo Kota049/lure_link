@@ -100,6 +100,9 @@ impl ProposalUseCase {
         self.cpr.update(update_carpool).await?;
         self.pr.accept(accept_proposal).await
     }
+    pub async fn deny_proposal(&self, user: User, proposal_id: Id) -> Result<Proposal, Error> {
+        todo!()
+    }
     pub async fn update_proposal_by_applicant(
         &self,
         user: User,

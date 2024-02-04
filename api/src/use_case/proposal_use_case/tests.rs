@@ -525,6 +525,61 @@ async fn test_accept_proposal() {
 }
 
 #[tokio::test]
+async fn test_deny_proposal() {
+    let user = User::default();
+    let another_user = User {
+        id: 42i64.try_into().unwrap(),
+        ..User::default()
+    };
+    let id: Id = 1i64.try_into().unwrap();
+
+    // 正常系
+    let mut pr = MockProposalValue::new();
+    pr.expect_find().returning(|| {
+        Ok(Proposal {
+            carpool: CarPool {
+                start_time: (Utc::now() + Duration::days(2)).try_into().unwrap(),
+                ..CarPool::default()
+            },
+            ..applying_proposal()
+        })
+    });
+    pr.expect_update_proposal_status()
+        .returning(|| Ok(Proposal::default()));
+    let mut cpr = MockCarPoolValue::new();
+    cpr.expect_update().returning(|| Ok(CarPool::default()));
+
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc.deny_proposal(user.clone(), id.clone()).await;
+    println!("{res:?}");
+    assert!(res.is_ok());
+
+    // 主催者じゃない場合はエラー
+    let res = uc.deny_proposal(another_user.clone(), id.clone()).await;
+    assert!(res.is_err());
+
+    // Proposalが存在しない場合はエラー
+    let mut pr = MockProposalValue::new();
+    pr.expect_find()
+        .returning(|| Err(Error::DbError("".to_string())));
+    pr.expect_update_proposal_status()
+        .returning(|| Ok(Proposal::default()));
+    let mut cpr = MockCarPoolValue::new();
+    cpr.expect_update().returning(|| Ok(CarPool::default()));
+
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc.deny_proposal(user.clone(), id.clone()).await;
+    println!("{res:?}");
+    assert!(res.is_err());
+}
+
+#[tokio::test]
 async fn test_update_proposal_by_applicant() {
     let user = User::default();
     let another_user = User {
