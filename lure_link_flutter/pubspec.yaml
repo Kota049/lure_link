@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^1.1.0
   dartz: ^0.10.1
+  flutter_line_sdk:
+  flutter_dotenv:
 
 dev_dependencies:
   flutter_test:
@@ -92,3 +94,4 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
   assets:
     - images/saba.png
+    - .env
