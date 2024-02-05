@@ -14,8 +14,8 @@ class LineLogin implements LineLoginRepository {
     // todo: LineAPIへのアクセス
     try {
       final result = await LineSDK.instance.login();
-      final accecc_token = result.accessToken.toString();
-      return Left(accecc_token);
+      final accessToken = result.accessToken.toString();
+      return Left(accessToken);
     } catch (_) {
       return Right(CustomError("failed to login to LINE"));
     }
