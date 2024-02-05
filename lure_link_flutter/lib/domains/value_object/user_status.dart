@@ -4,7 +4,7 @@ enum UserStatus {
   undefined,
   ;
 
-  UserStatus parse(String v) {
+  static UserStatus parse(String v) {
     switch (v) {
       case 'TRAIL':
         return UserStatus.trial;
@@ -14,15 +14,17 @@ enum UserStatus {
         return UserStatus.undefined;
     }
   }
+}
 
-  String display(UserStatus u) {
-    switch (u) {
+extension UserStatusExt on UserStatus {
+  String get display {
+    switch (this) {
       case UserStatus.trial:
         return '仮登録';
       case UserStatus.registration:
         return '本登録';
       default:
-        return 'Undefined';
+        return 'undefined';
     }
   }
 }
