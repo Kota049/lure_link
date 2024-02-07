@@ -20,7 +20,7 @@ class RecruitmentList extends StatelessWidget {
               }
             },
             child: Text("LINE LOGIN")),
-        RecruitmentCard(
+        const RecruitmentCard(
           destinationPrefecture: "",
           destinationCity: "",
           destination: "富津岬",
@@ -30,7 +30,7 @@ class RecruitmentList extends StatelessWidget {
           budget: "3000円",
           memberCount: "0/2人",
         ),
-        RecruitmentCard(
+        const RecruitmentCard(
           destinationPrefecture: "",
           destinationCity: "",
           destination: "潮風公園",
@@ -40,7 +40,7 @@ class RecruitmentList extends StatelessWidget {
           budget: "10000円",
           memberCount: "1/2人",
         ),
-        RecruitmentCard(
+        const RecruitmentCard(
           destinationPrefecture: "",
           destinationCity: "",
           destination: "豊洲ぐるり公園",
@@ -50,7 +50,7 @@ class RecruitmentList extends StatelessWidget {
           budget: "1000円",
           memberCount: "0/1人",
         ),
-        RecruitmentCard(
+        const RecruitmentCard(
           destinationPrefecture: "",
           destinationCity: "",
           destination: "武庫川一文字",
