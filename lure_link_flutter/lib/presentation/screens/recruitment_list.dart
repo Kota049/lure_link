@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lure_link_flutter/domains/repository/line_login/login.dart';
 import '../components/recruitment_card.dart';
 
 class RecruitmentList extends StatelessWidget {
@@ -6,10 +7,21 @@ class RecruitmentList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
+        // todo:テスト用なのであとで削除します
+        TextButton(
+            onPressed: () async {
+              try {
+                final res = await LineLogin().login();
+                print(res);
+              } catch (_) {
+                print("object");
+              }
+            },
+            child: Text("LINE LOGIN")),
         RecruitmentCard(
-          destinationPrefecture: "" ,
+          destinationPrefecture: "",
           destinationCity: "",
           destination: "富津岬",
           user: '村岡正憲',
@@ -19,7 +31,7 @@ class RecruitmentList extends StatelessWidget {
           memberCount: "0/2人",
         ),
         RecruitmentCard(
-          destinationPrefecture: "" ,
+          destinationPrefecture: "",
           destinationCity: "",
           destination: "潮風公園",
           user: 'RED鈴木',
@@ -29,7 +41,7 @@ class RecruitmentList extends StatelessWidget {
           memberCount: "1/2人",
         ),
         RecruitmentCard(
-          destinationPrefecture: "" ,
+          destinationPrefecture: "",
           destinationCity: "",
           destination: "豊洲ぐるり公園",
           user: '高橋優介',
@@ -39,7 +51,7 @@ class RecruitmentList extends StatelessWidget {
           memberCount: "0/1人",
         ),
         RecruitmentCard(
-          destinationPrefecture: "" ,
+          destinationPrefecture: "",
           destinationCity: "",
           destination: "武庫川一文字",
           user: '橋本翔大',
