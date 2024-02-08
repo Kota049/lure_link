@@ -39,6 +39,7 @@ dependencies:
   dartz: ^0.10.1
   flutter_line_sdk:
   flutter_dotenv:
+  flutter_secure_storage: ^9.0.0
 
 dev_dependencies:
   flutter_test:

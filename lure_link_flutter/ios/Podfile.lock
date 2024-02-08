@@ -3,13 +3,20 @@ PODS:
   - flutter_line_sdk (2.3.6):
     - Flutter
     - LineSDKSwift (~> 5.3)
+  - flutter_secure_storage (6.0.0):
+    - Flutter
   - LineSDKSwift (5.11.0):
     - LineSDKSwift/Core (= 5.11.0)
   - LineSDKSwift/Core (5.11.0)
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_line_sdk (from `.symlinks/plugins/flutter_line_sdk/ios`)
+  - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -20,11 +27,17 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_line_sdk:
     :path: ".symlinks/plugins/flutter_line_sdk/ios"
+  flutter_secure_storage:
+    :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_line_sdk: 76198d6c56481253ffda5af6dc8632d1f0c7db67
+  flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
   LineSDKSwift: bfcf8ff6a94ac8e5becad608240e3801f7694857
+  path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
 
 PODFILE CHECKSUM: f7ba0d59f776749cf1af3e77cd4c62e64fff55c5
 
