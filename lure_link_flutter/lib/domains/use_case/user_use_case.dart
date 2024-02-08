@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:lure_link_flutter/domains/repository/line_login/login.dart';
 import '../repository/api/user.dart';
 import '../repository/storage/storage.dart';
+import '../value_object/login_status.dart';
 
 class UserUseCase extends ChangeNotifier {
   // state
@@ -25,10 +26,4 @@ class UserUseCase extends ChangeNotifier {
       return;
     }
   }
-}
-
-enum LoginStatus {
-  authenticated,
-  unauthenticated,
-  undefined,
 }
