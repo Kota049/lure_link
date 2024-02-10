@@ -8,6 +8,8 @@ class UserUseCase extends ChangeNotifier {
   // state
   LoginStatus loginStatus;
   String? accessToken;
+
+  // depends on
   final LineLoginRepository lineRepo;
   final UserRepository userRepository;
   final StorageRepository storageRepository;
