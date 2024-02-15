@@ -16,7 +16,7 @@ class LineLogin implements LineLoginRepository {
       final accessToken = result.accessToken.toString();
       return Right(accessToken);
     } catch (_) {
-      return Left(CustomError("failed to login to LINE"));
+      return Left(CustomError("failed to login.dart to LINE"));
     }
   }
 }

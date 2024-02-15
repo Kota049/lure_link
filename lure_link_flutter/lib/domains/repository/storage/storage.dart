@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../value_object/custom_error.dart';
 
-abstract interface class StorageRepository {
+abstract interface class StorageRepositoryInterface {
   Future<Either<CustomError, String>> readStoredAccessToken();
 
   Future<Either<CustomError, void>> updateStorageAccessToken(
@@ -10,7 +10,7 @@ abstract interface class StorageRepository {
 }
 
 // ===============concrete
-class Storage extends StorageRepository {
+class StorageRepository extends StorageRepositoryInterface {
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
 
   @override

@@ -14,8 +14,8 @@ class UserUseCase extends ChangeNotifier {
 
   // depends on
   final LineLoginRepository lineRepo;
-  final UserRepository userRepository;
-  final StorageRepository storageRepository;
+  final UserRepositoryInterface userRepository;
+  final StorageRepositoryInterface storageRepository;
 
   UserUseCase(this.lineRepo, this.userRepository, this.storageRepository)
       : loginStatus = LoginStatus.undefined,
