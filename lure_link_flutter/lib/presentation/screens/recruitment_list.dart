@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lure_link_flutter/domains/repository/line_login/login.dart';
-import '../components/recruitment_card.dart';
+import '../widgets/recruitment_card.dart';
 
 class RecruitmentList extends StatelessWidget {
   const RecruitmentList({super.key});
