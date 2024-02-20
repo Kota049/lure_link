@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lure_link_flutter/domains/repository/line_login/login.dart';
 import '../widgets/common_app_bar.dart';
 import '../widgets/recruitment_card.dart';
 
@@ -12,7 +11,7 @@ class RecruitmentList extends StatelessWidget {
       appBar: const CommonAppBar(pageName: "LURELINK"),
       body: Column(
         children: [
-          // check user state and switch to display login button
+          // todo: check user state and switch to display login button
           TextButton(
               onPressed: () async {
                 Navigator.of(context).pushNamed('/login');
