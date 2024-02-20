@@ -5,9 +5,8 @@ import 'package:lure_link_flutter/domains/repository/api/user.dart';
 import 'package:lure_link_flutter/domains/repository/line_login/login.dart';
 import 'package:lure_link_flutter/domains/repository/storage/storage.dart';
 import 'package:lure_link_flutter/domains/use_case/login_manager.dart';
+import 'package:lure_link_flutter/infrastructure/routing/routing.dart';
 import 'package:provider/provider.dart';
-import 'presentation/screens/login.dart';
-import 'presentation/screens/recruitment_list.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
@@ -38,11 +37,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         initialRoute: "/",
-        routes:
-        {
-          "/":(BuildContext context)=>const RecruitmentList(),
-          "/login":(BuildContext context)=>const LoginScreen(),
-        },
+        routes: routing(),
       ),
     );
   }
