@@ -21,7 +21,6 @@ class LoginScreenState extends State<LoginScreen> {
     final userUseCase = Provider.of<UserUseCase>(context);
 
     return Scaffold(
-      // todo:CommonAppBarが必要かどうかの吟味は必要
       appBar: const CommonAppBar(pageName: "LURELINK"),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

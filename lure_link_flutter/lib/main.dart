@@ -39,9 +39,12 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const Scaffold(
-          body: LoginScreen(),
-        ),
+        initialRoute: "/",
+        routes:
+        {
+          "/":(BuildContext context)=>const RecruitmentList(),
+          "/login":(BuildContext context)=>const LoginScreen(),
+        },
       ),
     );
     // return MaterialApp(
