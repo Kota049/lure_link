@@ -59,7 +59,7 @@ class LoginScreenState extends State<LoginScreen> {
                                   _errors.add(l);
                                 })
                               },
-                          (_) => {});
+                          (_) => {if (context.mounted) Navigator.of(context).pushNamed("/")});
                     }
                   : null,
               child: const Text('ログイン'),
