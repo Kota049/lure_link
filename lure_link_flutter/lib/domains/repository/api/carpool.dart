@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:lure_link_flutter/domains/entity/Carpool.dart';
+import 'package:lure_link_flutter/domains/entity/carpool.dart';
 import 'package:lure_link_flutter/domains/value_object/custom_error.dart';
 
 abstract interface class CarpoolRepositoryInterface {
