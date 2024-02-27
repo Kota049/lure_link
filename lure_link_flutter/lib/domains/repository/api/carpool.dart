@@ -4,13 +4,13 @@ import 'package:lure_link_flutter/domains/value_object/custom_error.dart';
 
 abstract interface class CarpoolRepositoryInterface {
   Future<Either<CustomError,List<Carpool>>>index();
-  Future<Either<CustomError,Carpool>>getCarpool();
+  Future<Either<CustomError,Carpool>>get();
 }
 
 // ===============concrete
 class CarPoolRepository extends CarpoolRepositoryInterface {
   @override
-  Future<Either<CustomError, Carpool>> getCarpool() {
+  Future<Either<CustomError, Carpool>> get() {
     // TODO: implement getCarpool
     throw UnimplementedError();
   }
