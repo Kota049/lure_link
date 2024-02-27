@@ -21,6 +21,10 @@ class UserUseCase extends ChangeNotifier {
       : loginStatus = LoginStatus.undefined,
         user = null;
 
+  bool isAuthenticated() {
+    return loginStatus == LoginStatus.authenticated;
+  }
+
   Future<void> init() async {
     // ローカルストレージからトークンを取得する
     Either<CustomError, String> storedToken =
