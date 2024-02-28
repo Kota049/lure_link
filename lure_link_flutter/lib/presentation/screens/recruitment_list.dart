@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../domains/use_case/login_manager.dart';
-import '../widgets/common_app_bar.dart';
+// import 'package:provider/provider.dart';
+// import '../../domains/use_case/login_manager.dart';
+// import '../widgets/common_app_bar.dart';
+import '../widgets/not_login_app_bar.dart';
 import '../widgets/recruitment_card.dart';
 
 class RecruitmentList extends StatelessWidget {
@@ -9,18 +10,18 @@ class RecruitmentList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userUseCase = Provider.of<UserUseCase>(context);
+    // final userUseCase = Provider.of<UserUseCase>(context);
     return Scaffold(
-      appBar: const CommonAppBar(pageName: "LURELINK"),
+      appBar: const NotLoginAppBar(pageName: "LURELINK"),
       body: Column(
         children: [
-          !userUseCase.isAuthenticated()
-              ? TextButton(
-                  onPressed: () async {
-                    Navigator.of(context).pushNamed('/login');
-                  },
-                  child: const Text("LINE LOGIN"))
-              : const SizedBox(),
+          // !userUseCase.isAuthenticated()
+          //     ? TextButton(
+          //         onPressed: () async {
+          //           Navigator.of(context).pushNamed('/login');
+          //         },
+          //         child: const Text("LINE LOGIN"))
+          //     : const SizedBox(),
           const RecruitmentCard(
             destinationPrefecture: "",
             destinationCity: "",
