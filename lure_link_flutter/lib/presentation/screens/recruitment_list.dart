@@ -1,9 +1,48 @@
 import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-// import '../../domains/use_case/login_manager.dart';
-// import '../widgets/common_app_bar.dart';
 import '../widgets/not_login_app_bar.dart';
+import 'package:lure_link_flutter/domains/entity/Carpool.dart';
+import 'package:provider/provider.dart';
+import '../../domains/use_case/login_manager.dart';
+import '../../domains/value_object/custom_error.dart';
+import '../widgets/common_app_bar.dart';
 import '../widgets/recruitment_card.dart';
+
+class CarPoolScreen extends StatefulWidget {
+  const CarPoolScreen({super.key});
+
+  @override
+  CarPoolScreenState createState() => CarPoolScreenState();
+}
+
+class CarPoolScreenState extends State<CarPoolScreen>{
+  List<Carpool> _carPoolList = [];
+  final List<CustomError> _errors = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final userUseCase = Provider.of<UserUseCase>(context);
+    return Scaffold(
+      appBar: const CommonAppBar(pageName: "LURELINK"),
+      body: Column(
+        children: [
+          !userUseCase.isAuthenticated()
+              ? TextButton(
+              onPressed: () async {
+                Navigator.of(context).pushNamed('/login');
+              },
+              child: const Text("LINE LOGIN"))
+              : const SizedBox(),
+        ],
+      ),
+    );
+  }
+}
 
 class RecruitmentList extends StatelessWidget {
   const RecruitmentList({super.key});
