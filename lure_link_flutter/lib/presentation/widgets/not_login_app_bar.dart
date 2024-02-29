@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../domains/use_case/login_manager.dart';
+import '../../domains/use_case/user_use_case.dart';
 
 class NotLoginAppBar extends StatelessWidget implements PreferredSizeWidget{
   const NotLoginAppBar({super.key , required this.pageName});

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/not_login_app_bar.dart';
 import 'package:lure_link_flutter/domains/entity/Carpool.dart';
 import 'package:provider/provider.dart';
-import '../../domains/use_case/login_manager.dart';
+import '../../domains/use_case/user_use_case.dart';
 import '../../domains/value_object/custom_error.dart';
 import '../widgets/common_app_bar.dart';
 import '../widgets/recruitment_card.dart';
@@ -50,18 +50,11 @@ class RecruitmentList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final userUseCase = Provider.of<UserUseCase>(context);
-    return Scaffold(
-      appBar: const NotLoginAppBar(pageName: "LURELINK"),
+    return const Scaffold(
+      appBar: NotLoginAppBar(pageName: "LURELINK"),
       body: Column(
         children: [
-          // !userUseCase.isAuthenticated()
-          //     ? TextButton(
-          //         onPressed: () async {
-          //           Navigator.of(context).pushNamed('/login');
-          //         },
-          //         child: const Text("LINE LOGIN"))
-          //     : const SizedBox(),
-          const RecruitmentCard(
+          RecruitmentCard(
             destinationPrefecture: "",
             destinationCity: "",
             destination: "富津岬",
@@ -71,7 +64,7 @@ class RecruitmentList extends StatelessWidget {
             budget: "3000円",
             memberCount: "0/2人",
           ),
-          const RecruitmentCard(
+          RecruitmentCard(
             destinationPrefecture: "",
             destinationCity: "",
             destination: "潮風公園",
@@ -81,7 +74,7 @@ class RecruitmentList extends StatelessWidget {
             budget: "10000円",
             memberCount: "1/2人",
           ),
-          const RecruitmentCard(
+          RecruitmentCard(
             destinationPrefecture: "",
             destinationCity: "",
             destination: "豊洲ぐるり公園",
@@ -91,7 +84,7 @@ class RecruitmentList extends StatelessWidget {
             budget: "1000円",
             memberCount: "0/1人",
           ),
-          const RecruitmentCard(
+          RecruitmentCard(
             destinationPrefecture: "",
             destinationCity: "",
             destination: "武庫川一文字",

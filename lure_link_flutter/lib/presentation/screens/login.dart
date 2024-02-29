@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lure_link_flutter/domains/use_case/login_manager.dart';
+import 'package:lure_link_flutter/domains/use_case/user_use_case.dart';
 import 'package:provider/provider.dart';
 
 import '../../domains/value_object/custom_error.dart';
