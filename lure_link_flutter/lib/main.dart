@@ -29,7 +29,8 @@ class MyApp extends StatelessWidget {
     final lineRepo = LineLogin();
     final userRepository = UserRepository();
     final storageRepository = StorageRepository();
-    final carPoolRepository = CarPoolRepository();
+    // fix: mocking for confirm code
+    final carPoolRepository = MockCarPoolReopsitory();
 
     return MultiProvider(
         providers: [
