@@ -9,8 +9,8 @@ class Carpool {
   DateTime endTime;
   DateTime aplDeadline;
   String departurePoint;
-  String depaturePrefecture;
-  String depatureMunicipality;
+  String departurePrefecture;
+  String departureMunicipality;
   String destinationPoint;
   String destinationPrefecture;
   String destinationMunicipality;
@@ -28,8 +28,8 @@ class Carpool {
       this.endTime,
       this.aplDeadline,
       this.departurePoint,
-      this.depaturePrefecture,
-      this.depatureMunicipality,
+      this.departurePrefecture,
+      this.departureMunicipality,
       this.destinationPoint,
       this.destinationPrefecture,
       this.destinationMunicipality,
@@ -49,8 +49,8 @@ class Carpool {
           json['endTime'] as DateTime,
           json['aplDeadline'] as DateTime,
           json['departurePoint'] as String,
-          json['depaturePrefecture'] as String,
-          json['depatureMunicipality'] as String,
+          json['departurePrefecture'] as String,
+          json['departureMunicipality'] as String,
           json['destinationPoint'] as String,
           json['destinationPrefecture'] as String,
           json['destinationMunicipality'] as String,
@@ -70,8 +70,8 @@ class Carpool {
       'endTime':endTime,
       'aplDeadline':aplDeadline,
       'departurePoint':departurePoint,
-      'depaturePrefecture':depaturePrefecture,
-      'depatureMunicipality':depatureMunicipality,
+      'departurePrefecture':departurePrefecture,
+      'departureMunicipality':departureMunicipality,
       'destinationPoint':destinationPoint,
       'destinationPrefecture':destinationPrefecture,
       'destinationMunicipality':destinationMunicipality,

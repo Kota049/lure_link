@@ -60,7 +60,7 @@ class CarPoolSummary extends StatelessWidget {
                 child: Row(
                   children: [
                     const Icon(IconData(0xe1d7, fontFamily: 'MaterialIcons')),
-                    Text(carpool.destinationPoint),
+                    Text(carpool.departurePoint),
                   ],
                 )),
           ),

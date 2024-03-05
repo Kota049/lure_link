@@ -22,7 +22,6 @@ class CarPoolScreenState extends State<CarPoolScreen> {
     Future(() async {
       final carPoolUseCase = Provider.of<CarPoolUseCase>(context, listen: false);
       final res = await carPoolUseCase.index();
-      // res.fold((l) => _errors.add(l), (r) => _carPoolList = r);
       setState(() {res.fold((l) => _errors.add(l), (r) => _carPoolList = r);});
     });
     super.initState();
