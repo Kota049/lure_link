@@ -5,6 +5,7 @@ import '../../domains/entity/carpool.dart';
 import '../widgets/app_bar_with_login.dart';
 import 'package:provider/provider.dart';
 import '../../domains/value_object/custom_error.dart';
+import '../widgets/common_navigation_bar.dart';
 
 class CarPoolScreen extends StatefulWidget {
   const CarPoolScreen({super.key});
@@ -38,6 +39,7 @@ class CarPoolScreenState extends State<CarPoolScreen> {
                   .map((el) => CarPoolSummary(carpool: el))
                   .toList(),
             ),
+      bottomNavigationBar: CommonNavigationBar(),
     );
   }
 }
