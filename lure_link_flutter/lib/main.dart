@@ -13,25 +13,37 @@ import 'package:provider/provider.dart';
 void main() async {
   await dotenv.load(fileName: ".env");
   final lineChannelId = dotenv.get("LINE_CHANNEL_ID", fallback: "000000000");
+  final lineRepo = LineLogin();
+  final userRepository = UserRepository();
+  final storageRepository = StorageRepository();
+  final carPoolRepository = MockCarPoolReopsitory();
   WidgetsFlutterBinding.ensureInitialized();
   LineSDK.instance.setup(lineChannelId).then((_) {
     print('LineSDK Prepared');
   });
-  runApp(const MyApp());
+  runApp(MyApp(
+      lineRepo: lineRepo,
+      userRepository: userRepository,
+      storageRepository: storageRepository,
+      carPoolRepository: carPoolRepository));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp(
+      {super.key,
+      required this.lineRepo,
+      required this.userRepository,
+      required this.storageRepository,
+      required this.carPoolRepository});
+
+  final LineLoginRepository lineRepo;
+  final UserRepositoryInterface userRepository;
+  final StorageRepositoryInterface storageRepository;
+  final CarpoolRepositoryInterface carPoolRepository;
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final lineRepo = LineLogin();
-    final userRepository = UserRepository();
-    final storageRepository = StorageRepository();
-    // fix: mocking for confirm code
-    final carPoolRepository = MockCarPoolReopsitory();
-
     return MultiProvider(
         providers: [
           ChangeNotifierProvider<UserUseCase>(
