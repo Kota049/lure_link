@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
 
-class CommonNavigationBar extends StatefulWidget{
-  const CommonNavigationBar ({Key? key}) : super(key: key);
-  @override
-  State<CommonNavigationBar> createState() => _CommonNavigationBarState();
-}
+class BottomNavigation extends StatelessWidget{
+  final Function(int) updated;
+  final int selectedIndex;
 
-class _CommonNavigationBarState extends State<CommonNavigationBar>{
-  int selectedIndex = 0;
+  const BottomNavigation(this.updated, this.selectedIndex, {super.key});
 
   @override
   Widget build(BuildContext context){
     return BottomNavigationBar(
-      items: [
+      items: const [
         BottomNavigationBarItem(
           icon:Icon(
             Icons.edit_document,
           ),
-          label:'申し込む',
+          label:'申し込み一覧',
         ),
         BottomNavigationBarItem(
           icon: Icon(
@@ -29,9 +26,12 @@ class _CommonNavigationBarState extends State<CommonNavigationBar>{
           icon: Icon(
             Icons.directions_car_filled,
           ),
-          label:'TOP',
+          label:'自分の募集',
         ),
       ],
+      currentIndex: selectedIndex,
+      selectedItemColor: Colors.amber[800],
+      onTap: updated,
     );
   }
 }

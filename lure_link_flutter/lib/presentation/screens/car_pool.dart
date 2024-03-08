@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lure_link_flutter/domains/use_case/car_pool_use_case.dart';
 import 'package:lure_link_flutter/presentation/widgets/car_pool_summary.dart';
 import '../../domains/entity/carpool.dart';
-import '../widgets/app_bar_with_login.dart';
 import 'package:provider/provider.dart';
 import '../../domains/value_object/custom_error.dart';
-import '../widgets/common_navigation_bar.dart';
 
 class CarPoolScreen extends StatefulWidget {
   const CarPoolScreen({super.key});
@@ -21,25 +19,23 @@ class CarPoolScreenState extends State<CarPoolScreen> {
   @override
   void initState() {
     Future(() async {
-      final carPoolUseCase = Provider.of<CarPoolUseCase>(context, listen: false);
+      final carPoolUseCase =
+          Provider.of<CarPoolUseCase>(context, listen: false);
       final res = await carPoolUseCase.index();
-      setState(() {res.fold((l) => _errors.add(l), (r) => _carPoolList = r);});
+      setState(() {
+        res.fold((l) => _errors.add(l), (r) => _carPoolList = r);
+      });
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const AppBarWithLoginButton(pageName: "LURELINK"),
-      body: _carPoolList.isEmpty
-          ? const SizedBox()
-          : Column(
-              children: _carPoolList
-                  .map((el) => CarPoolSummary(carpool: el))
-                  .toList(),
-            ),
-      bottomNavigationBar: CommonNavigationBar(),
-    );
+    return _carPoolList.isEmpty
+        ? const SizedBox()
+        : Column(
+            children:
+                _carPoolList.map((el) => CarPoolSummary(carpool: el)).toList(),
+          );
   }
 }
