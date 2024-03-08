@@ -33,7 +33,7 @@ class CarPoolScreenState extends State<CarPoolScreen> {
   Widget build(BuildContext context) {
     return _carPoolList.isEmpty
         ? const SizedBox()
-        : Column(
+        : ListView(
             children:
                 _carPoolList.map((el) => CarPoolSummary(carpool: el)).toList(),
           );
