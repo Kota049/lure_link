@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lure_link_flutter/domains/entity/carpool.dart';
+import 'package:intl/intl.dart';
 
 class CarPoolSummary extends StatelessWidget {
   final Carpool carpool;
@@ -8,6 +9,9 @@ class CarPoolSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var feeNotation = NumberFormat.currency(locale: 'ja_JP', symbol: '¥');
+    var dateNotation = DateFormat('yyyy/MM/dd hh:mm');
+
     return Card(
         child: Row(
       children: <Widget>[
@@ -43,10 +47,11 @@ class CarPoolSummary extends StatelessWidget {
           fit: FlexFit.loose,
           child: ListTile(
             title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 FittedBox(
                     fit: BoxFit.scaleDown,
-                    child: Text(carpool.startTime.toString())),
+                    child: Text(dateNotation.format(carpool.startTime).toString())),
                 Row(
                   children: [
                     const Icon(IconData(0xe3ab, fontFamily: 'MaterialIcons')),
@@ -57,6 +62,7 @@ class CarPoolSummary extends StatelessWidget {
             ),
             subtitle: FittedBox(
                 fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
                 child: Row(
                   children: [
                     const Icon(IconData(0xe1d7, fontFamily: 'MaterialIcons')),
@@ -70,8 +76,8 @@ class CarPoolSummary extends StatelessWidget {
           fit: FlexFit.loose,
           child: Column(
             children: [
-              Text(carpool.budget.toString()),
-              Text(carpool.maxParticipant.toString())
+              Text(feeNotation.format(carpool.budget).toString()),
+              Text(carpool.maxParticipant.toString() + '人')
             ],
           ),
         )
