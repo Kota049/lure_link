@@ -3,6 +3,8 @@ use crate::domain::domain_object::payment_status::PaymentStatus;
 use crate::entity::car_pool::Point;
 use serde::{Deserialize, Serialize};
 
+pub mod proposal_user_status;
+
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct AplProposal {
     pub car_pool_id: Id,

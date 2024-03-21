@@ -17,6 +17,7 @@ use crate::service::time_service::get_ja_now;
 use crate::service::{carpool_service, proposal_service};
 use crate::use_case::proposal_use_case::dto::AplProposal;
 use std::sync::Arc;
+use crate::use_case::proposal_use_case::dto::proposal_user_status::ProposalUserStatus;
 
 pub struct ProposalUseCase {
     pr: Arc<dyn ProposalRepositoryTrait + Send + Sync>,
@@ -127,5 +128,9 @@ impl ProposalUseCase {
             return Err(Other("cannot update because already fixed".to_string()));
         }
         self.pr.update(&user, input).await
+    }
+
+    pub async fn get_applying_status_for_user(&self, user: User, carpool_id: Id) -> Result<ProposalUserStatus, Error> {
+        todo!()
     }
 }

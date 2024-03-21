@@ -14,6 +14,7 @@ use axum::async_trait;
 use chrono::{Duration, Utc};
 use mockall::automock;
 use std::sync::Arc;
+use crate::use_case::proposal_use_case::dto::proposal_user_status::ProposalUserStatus;
 
 #[automock]
 pub trait ProposalValue {
@@ -658,4 +659,99 @@ async fn test_update_proposal_by_applicant() {
         .update_proposal_by_applicant(user.clone(), input.clone())
         .await;
     assert!(res.is_err());
+}
+
+#[tokio::test]
+async fn test_get_applying_status_for_user() {
+    let applicant = User {
+        id: 100i64.try_into().unwrap(),
+        ..User::default()
+    };
+    let car_pool_id: Id = 100i64.try_into().unwrap();
+
+    // 申し込みできる場合はCanAplを返す
+    let mut pr = MockProposalValue::new();
+    pr.expect_create().returning(|| Ok(Proposal::default()));
+    pr.expect_find_by_user_and_carpool()
+        .returning(|| Err(Error::NotFound("".to_string())));
+    let mut cpr = MockCarPoolValue::new();
+    cpr.expect_find_by().returning(|| Ok(valid_term_car_pool()));
+
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc.get_applying_status_for_user(applicant.clone(), car_pool_id.clone()).await.unwrap();
+    assert_eq!(res, ProposalUserStatus::CanApl);
+
+    // 募集が見つからない場合はエラー
+    let mut pr = MockProposalValue::new();
+    pr.expect_create().returning(|| Ok(Proposal::default()));
+    pr.expect_find_by_user_and_carpool()
+        .returning(|| Err(Error::NotFound("".to_string())));
+    let mut cpr = MockCarPoolValue::new();
+    cpr.expect_find_by()
+        .returning(|| Err(Error::DbError("error".to_string())));
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc.get_applying_status_for_user(applicant.clone(), car_pool_id.clone()).await;
+    assert!(res.is_err());
+
+    // 申込者が主催者だった場合はOwnerを返す
+    let mut pr = MockProposalValue::new();
+    pr.expect_create().returning(|| Ok(Proposal::default()));
+    pr.expect_find_by_user_and_carpool()
+        .returning(|| Err(Error::NotFound("".to_string())));
+    let mut cpr = MockCarPoolValue::new();
+    cpr.expect_find_by().returning(|| {
+        Ok(CarPool {
+            organizer: User {
+                id: 100i64.try_into().unwrap(),
+                ..User::default()
+            },
+            ..valid_term_car_pool()
+        })
+    });
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc.get_applying_status_for_user(applicant.clone(), car_pool_id.clone()).await.unwrap();
+    assert_eq!(res, ProposalUserStatus::Owner);
+
+    // 申し込み期限日を過ぎてる場合はCannotAplを返す
+    let post_deadline: JaTimeStamp = (Utc::now() - Duration::days(1)).try_into().unwrap();
+    let mut pr = MockProposalValue::new();
+    pr.expect_create().returning(|| Ok(Proposal::default()));
+    pr.expect_find_by_user_and_carpool()
+        .returning(|| Err(Error::NotFound("".to_string())));
+    let mut cpr = MockCarPoolValue::new();
+    cpr.expect_find_by().returning(move || {
+        Ok(CarPool {
+            apl_deadline: post_deadline.clone(),
+            ..CarPool::default()
+        })
+    });
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc.get_applying_status_for_user(applicant.clone(), car_pool_id.clone()).await.unwrap();
+    assert_eq!(res, ProposalUserStatus::CannotApl);
+
+    // すでに申し込みをしている場合はApplyingを返す
+    let mut pr = MockProposalValue::new();
+    pr.expect_create().returning(|| Ok(Proposal::default()));
+    pr.expect_find_by_user_and_carpool()
+        .returning(|| Ok(Proposal::default()));
+    let mut cpr = MockCarPoolValue::new();
+    cpr.expect_find_by().returning(|| Ok(CarPool::default()));
+    let uc = ProposalUseCase {
+        pr: Arc::new(MockProposalRepo { inner: pr }),
+        cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+    };
+    let res = uc.get_applying_status_for_user(applicant.clone(), car_pool_id.clone()).await.unwrap();
+    assert_eq!(res, ProposalUserStatus::Applying);
 }
