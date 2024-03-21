@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_line_sdk/flutter_line_sdk.dart';
+import 'package:lure_link_flutter/domains/entity/carpool.dart';
 import 'package:lure_link_flutter/domains/repository/api/carpool.dart';
 import 'package:lure_link_flutter/domains/repository/api/user.dart';
 import 'package:lure_link_flutter/domains/repository/line_login/login.dart';
@@ -8,6 +9,7 @@ import 'package:lure_link_flutter/domains/repository/storage/storage.dart';
 import 'package:lure_link_flutter/domains/use_case/car_pool_use_case.dart';
 import 'package:lure_link_flutter/domains/use_case/user_use_case.dart';
 import 'package:lure_link_flutter/infrastructure/routing/routing.dart';
+import 'package:lure_link_flutter/presentation/screens/car_pool_applying.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -62,6 +64,14 @@ class MyApp extends StatelessWidget {
           ),
           initialRoute: "/",
           routes: routing(),
+          onGenerateRoute: (settings) {
+            if (settings.name == '/detail') {
+              return MaterialPageRoute(
+                builder: (context) => CarPoolDetailScreen(carpool:settings.arguments as Carpool),
+              );
+            }
+            return null;
+          },
         ));
   }
 }

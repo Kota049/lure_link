@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lure_link_flutter/domains/entity/carpool.dart';
 import 'package:intl/intl.dart';
-import '../screens/car_detail.dart';
 
 class CarPoolSummary extends StatelessWidget {
   final Carpool carpool;
@@ -13,8 +12,11 @@ class CarPoolSummary extends StatelessWidget {
     var feeNotation = NumberFormat.currency(locale: 'ja_JP', symbol: '¥');
     var dateNotation = DateFormat('yyyy/MM/dd hh:mm');
 
-    return Card(
-      child: ElevatedButton(
+    return GestureDetector(
+        onTapDown: (details) {
+      Navigator.of(context).pushNamed("/detail", arguments: carpool);
+    },
+      child: Card(
         child: Row(
           children: <Widget>[
             Flexible(
@@ -83,19 +85,12 @@ class CarPoolSummary extends StatelessWidget {
               child: Column(
                 children: [
                   Text(feeNotation.format(carpool.budget).toString()),
-                  Text(carpool.maxParticipant.toString() + '人')
+                  Text('${carpool.maxParticipant}人')
                 ],
               ),
             )
           ],
         ),
-        onPressed: () {
-          // ここにボタンを押した時に呼ばれるコードを書く
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => CarDetail()),
-          );
-        },
       ),
     );
   }
