@@ -131,6 +131,19 @@ impl ProposalUseCase {
     }
 
     pub async fn get_applying_status_for_user(&self, user: User, carpool_id: Id) -> Result<ProposalUserStatus, Error> {
-        todo!()
+        let now = get_ja_now()?;
+        let carpool = self.cpr.find_by_id(&carpool_id).await?;
+        if is_organizer(&carpool, &user) {
+            return Ok(ProposalUserStatus::Owner);
+        }
+        let exists_proposal = self.pr.find_by_user_and_carpool(&user, &carpool).await;
+        if exists_proposal.is_ok() {
+            return Ok(ProposalUserStatus::Applying);
+        }
+
+        if carpool_service::can_apl_term(&now, &carpool) {
+            return Ok(ProposalUserStatus::CanApl);
+        }
+        Ok(ProposalUserStatus::CannotApl)
     }
 }
