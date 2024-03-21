@@ -9,7 +9,7 @@ import 'package:lure_link_flutter/domains/repository/storage/storage.dart';
 import 'package:lure_link_flutter/domains/use_case/car_pool_use_case.dart';
 import 'package:lure_link_flutter/domains/use_case/user_use_case.dart';
 import 'package:lure_link_flutter/infrastructure/routing/routing.dart';
-import 'package:lure_link_flutter/presentation/screens/car_pool_applying.dart';
+import 'package:lure_link_flutter/presentation/screens/car_pool_detail.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
