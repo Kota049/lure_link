@@ -1,11 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:lure_link_flutter/domains/entity/carpool.dart';
 import 'package:lure_link_flutter/domains/value_object/carpool_status.dart';
+import 'package:lure_link_flutter/domains/value_object/carpool_user_status.dart';
 import 'package:lure_link_flutter/domains/value_object/custom_error.dart';
 
 abstract interface class CarpoolRepositoryInterface {
   Future<Either<CustomError,List<Carpool>>>index();
   Future<Either<CustomError,Carpool>>get();
+  Future<Either<CustomError,CarPoolUserStatus>>getCanApl(int carpoolId, String userToken);
 }
 
 // ===============concrete
@@ -21,11 +23,18 @@ class CarPoolRepository extends CarpoolRepositoryInterface {
     // TODO: implement index
     throw UnimplementedError();
   }
+
+  @override
+  Future<Either<CustomError, CarPoolUserStatus>> getCanApl(int carpoolId, String userToken) {
+    // TODO: implement getCanApl
+    throw UnimplementedError();
+  }
+
 }
 
 
 // ================mock for test
-class MockCarPoolReopsitory extends CarpoolRepositoryInterface{
+class MockCarPoolRepository extends CarpoolRepositoryInterface{
   @override
   Future<Either<CustomError, Carpool>> get() {
     // TODO: implement get
@@ -55,6 +64,11 @@ class MockCarPoolReopsitory extends CarpoolRepositoryInterface{
       Carpool(1, 1, "テスト花子2", DateTime(2024,1,2,1,0,0,0),DateTime(2024,1,3,1,0,0,0) , DateTime(2024,1,4,1,0,0,0), "東京競馬場", "府中市", "東京都","荒川中川合流地点" , "江東区", "東京都", 2000, 2, 0, CarPoolStatus.applying, ""),
     ]);
     return res;
+  }
+
+  @override
+  Future<Either<CustomError, CarPoolUserStatus>> getCanApl(int carpoolId, String userToken) async {
+    return right(CarPoolUserStatus.canApl);
   }
 
 }

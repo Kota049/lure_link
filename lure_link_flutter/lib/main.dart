@@ -18,7 +18,7 @@ void main() async {
   final lineRepo = LineLogin();
   final userRepository = UserRepository();
   final storageRepository = StorageRepository();
-  final carPoolRepository = MockCarPoolReopsitory();
+  final carPoolRepository = MockCarPoolRepository();
   WidgetsFlutterBinding.ensureInitialized();
   LineSDK.instance.setup(lineChannelId).then((_) {
     print('LineSDK Prepared');
