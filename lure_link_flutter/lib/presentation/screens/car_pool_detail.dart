@@ -71,7 +71,7 @@ class CarPoolDetailScreen extends StatelessWidget {
               ]),
             ],
           ),
-          ApplyBtn(status: carpool.status),
+          const ApplyBtn(),
         ]));
   }
 }
