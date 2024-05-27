@@ -14,6 +14,7 @@ pub enum PaymentStatus {
     Authorization,
     Cancel,
     SettleFixed,
+    Yet,
 }
 
 impl TryFrom<String> for PaymentStatus {
@@ -25,6 +26,7 @@ impl TryFrom<String> for PaymentStatus {
             "FREE" => Ok(Self::Free),
             "CANCEL" => Ok(Self::Cancel),
             "SETTLE_FIXED" => Ok(Self::SettleFixed),
+            "YET" => Ok(Self::Yet),
             _ => Err(Error::ValidateError("invalid payment status".to_string())),
         }
     }
@@ -51,6 +53,7 @@ impl Display for PaymentStatus {
             PaymentStatus::Free => write!(f, "FREE"),
             PaymentStatus::Cancel => write!(f, "CANCEL"),
             PaymentStatus::SettleFixed => write!(f, "SETTLE_FIXED"),
+            PaymentStatus::Yet => write!(f, "YET")
         }
     }
 }
@@ -73,8 +76,8 @@ impl ToSql for PaymentStatus {
 
 impl<'de> Deserialize<'de> for PaymentStatus {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
+        where
+            D: Deserializer<'de>,
     {
         let value = String::deserialize(deserializer)?;
         value

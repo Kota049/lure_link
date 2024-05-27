@@ -21,6 +21,7 @@ pub struct User {
     pub first_name_jp: Option<NameJp>,
     pub last_name_jp: Option<NameJp>,
     pub user_status: UserStatus,
+    pub stripe_user_id: Option<String>,
 }
 
 impl Default for User {
@@ -38,6 +39,7 @@ impl Default for User {
             first_name_jp: None,
             last_name_jp: None,
             user_status: UserStatus::Trial,
+            stripe_user_id: None,
         }
     }
 }
