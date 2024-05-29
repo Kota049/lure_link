@@ -14,6 +14,15 @@ pub struct StripeRepository {
     client: Client,
 }
 
+impl StripeRepository {
+    pub fn new() -> Result<Self, Error> {
+        let secret_key = dotenv::var("STRIPE_SECRET_KEY").map_err(|e| Error::Other(e.to_string()))?;
+        Ok(Self {
+            client: Client::new(secret_key)
+        })
+    }
+}
+
 #[async_trait]
 impl StripeRepositoryTrait for StripeRepository {
     async fn create_stripe_user(&self, u: User) -> Result<User, Error> {
