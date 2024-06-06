@@ -8,13 +8,41 @@ use crate::entity::user::User;
 use crate::error::Error;
 use crate::repository::proposal::ProposalRepositoryTrait;
 use crate::use_case::carpool_use_case::tests::{MockCarPoolRepo, MockCarPoolValue};
+use crate::use_case::user_use_case::tests::{MockUserRepo, MockUserValue};
 use crate::use_case::proposal_use_case::dto::AplProposal;
 use crate::use_case::proposal_use_case::ProposalUseCase;
 use axum::async_trait;
 use chrono::{Duration, Utc};
 use mockall::automock;
 use std::sync::Arc;
+use stripe::PaymentIntent;
+use crate::repository::stripe::StripeRepositoryTrait;
 use crate::use_case::proposal_use_case::dto::proposal_user_status::ProposalUserStatus;
+
+
+#[automock]
+pub trait StripeValue {
+    fn hoge(&self) -> Result<(), Error>;
+}
+
+pub struct MockStripeRepo {
+    pub inner: MockStripeValue,
+}
+
+#[async_trait]
+impl StripeRepositoryTrait for MockStripeRepo {
+    async fn create_stripe_user(&self, u: User) -> Result<User, Error> {
+        todo!()
+    }
+
+    async fn get_ephemeral_key(&self, u: User) -> Result<String, Error> {
+        todo!()
+    }
+
+    async fn create_payment_intent(&self, u: User, c: CarPool) -> Result<PaymentIntent, Error> {
+        todo!()
+    }
+}
 
 #[automock]
 pub trait ProposalValue {
@@ -72,6 +100,22 @@ impl ProposalRepositoryTrait for MockProposalRepo {
     }
 }
 
+impl Default for ProposalUseCase {
+    fn default() -> Self {
+        let mut pr = MockProposalValue::new();
+        let mut cpr = MockCarPoolValue::new();
+        let mut ur = MockUserValue::new();
+        let mut stripe = MockStripeValue::new();
+
+        ProposalUseCase {
+            pr: Arc::new(MockProposalRepo { inner: pr }),
+            cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+            sr: Arc::new(MockStripeRepo { inner: stripe }),
+            ur: Arc::new(MockUserRepo { inner: ur }),
+        }
+    }
+}
+
 #[tokio::test]
 async fn test_create() {
     let applicant = User {
@@ -90,6 +134,7 @@ async fn test_create() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc.create(applicant.clone(), input.clone()).await;
     assert!(res.is_ok());
@@ -105,6 +150,7 @@ async fn test_create() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc.create(applicant.clone(), input.clone()).await;
     assert!(res.is_err());
@@ -127,6 +173,7 @@ async fn test_create() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc.create(applicant.clone(), input.clone()).await;
     assert!(res.is_err());
@@ -148,6 +195,7 @@ async fn test_create() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc.create(applicant.clone(), input.clone()).await;
     assert!(res.is_err());
@@ -162,6 +210,7 @@ async fn test_create() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc.create(applicant.clone(), input.clone()).await;
     assert!(res.is_err())
@@ -198,6 +247,7 @@ async fn test_cancel_by_applicant() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc
         .cancel_by_applicant(applicant.clone(), proposal_id.clone())
@@ -215,6 +265,7 @@ async fn test_cancel_by_applicant() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc
         .cancel_by_applicant(applicant.clone(), proposal_id.clone())
@@ -243,6 +294,7 @@ async fn test_cancel_by_applicant() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc
         .cancel_by_applicant(applicant.clone(), proposal_id.clone())
@@ -267,6 +319,7 @@ async fn test_cancel_by_applicant() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc
         .cancel_by_applicant(applicant.clone(), proposal_id.clone())
@@ -291,6 +344,7 @@ async fn test_cancel_by_applicant() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc
         .cancel_by_applicant(applicant.clone(), proposal_id.clone())
@@ -316,6 +370,7 @@ async fn test_cancel_by_applicant() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc
         .cancel_by_applicant(applicant.clone(), proposal_id.clone())
@@ -353,6 +408,7 @@ async fn test_accept_proposal() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc
         .accept_proposal(organizer.clone(), accept_proposal.clone())
@@ -371,6 +427,7 @@ async fn test_accept_proposal() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc
         .accept_proposal(organizer.clone(), accept_proposal.clone())
@@ -397,6 +454,7 @@ async fn test_accept_proposal() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc
         .accept_proposal(organizer.clone(), accept_proposal.clone())
@@ -423,6 +481,7 @@ async fn test_accept_proposal() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc
         .accept_proposal(organizer.clone(), accept_proposal.clone())
@@ -448,6 +507,7 @@ async fn test_accept_proposal() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc
         .accept_proposal(organizer.clone(), accept_proposal.clone())
@@ -477,6 +537,7 @@ async fn test_accept_proposal() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc
         .accept_proposal(another_organizer.clone(), accept_proposal.clone())
@@ -517,6 +578,7 @@ async fn test_accept_proposal() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc
         .accept_proposal(organizer.clone(), accept_proposal.clone())
@@ -554,6 +616,7 @@ async fn test_deny_proposal() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc.deny_proposal(user.clone(), id.clone()).await;
     println!("{res:?}");
@@ -575,6 +638,7 @@ async fn test_deny_proposal() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc.deny_proposal(user.clone(), id.clone()).await;
     println!("{res:?}");
@@ -599,6 +663,7 @@ async fn test_update_proposal_by_applicant() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc
         .update_proposal_by_applicant(user.clone(), input.clone())
@@ -624,6 +689,7 @@ async fn test_update_proposal_by_applicant() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc
         .update_proposal_by_applicant(user.clone(), input.clone())
@@ -639,6 +705,7 @@ async fn test_update_proposal_by_applicant() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc
         .update_proposal_by_applicant(user.clone(), input.clone())
@@ -654,6 +721,7 @@ async fn test_update_proposal_by_applicant() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc
         .update_proposal_by_applicant(user.clone(), input.clone())
@@ -680,6 +748,7 @@ async fn test_get_applying_status_for_user() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc.get_applying_status_for_user(applicant.clone(), car_pool_id.clone()).await.unwrap();
     assert_eq!(res, ProposalUserStatus::CanApl);
@@ -695,6 +764,7 @@ async fn test_get_applying_status_for_user() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc.get_applying_status_for_user(applicant.clone(), car_pool_id.clone()).await;
     assert!(res.is_err());
@@ -717,6 +787,7 @@ async fn test_get_applying_status_for_user() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc.get_applying_status_for_user(applicant.clone(), car_pool_id.clone()).await.unwrap();
     assert_eq!(res, ProposalUserStatus::Owner);
@@ -737,6 +808,7 @@ async fn test_get_applying_status_for_user() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc.get_applying_status_for_user(applicant.clone(), car_pool_id.clone()).await.unwrap();
     assert_eq!(res, ProposalUserStatus::CannotApl);
@@ -751,6 +823,7 @@ async fn test_get_applying_status_for_user() {
     let uc = ProposalUseCase {
         pr: Arc::new(MockProposalRepo { inner: pr }),
         cpr: Arc::new(MockCarPoolRepo { inner: cpr }),
+        ..ProposalUseCase::default()
     };
     let res = uc.get_applying_status_for_user(applicant.clone(), car_pool_id.clone()).await.unwrap();
     assert_eq!(res, ProposalUserStatus::Applying);

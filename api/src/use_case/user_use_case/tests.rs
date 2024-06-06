@@ -38,10 +38,11 @@ pub trait UserValue {
     fn user_by_line_token(&self) -> Result<User, Error>;
     fn update_token(&self) -> Result<User, Error>;
     fn register_user(&self) -> Result<User, Error>;
+    fn save(&self) -> Result<User, Error>;
 }
 
-struct MockUserRepo {
-    inner: MockUserValue,
+pub struct MockUserRepo {
+    pub(crate) inner: MockUserValue,
 }
 
 #[async_trait]
@@ -66,6 +67,10 @@ impl UserRepositoryTrait for MockUserRepo {
     }
     async fn register_user(&self, _up: UpdateUser) -> Result<User, Error> {
         self.inner.register_user()
+    }
+
+    async fn save(&self, user: User) -> Result<User, Error> {
+        self.inner.save()
     }
 }
 

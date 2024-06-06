@@ -9,7 +9,7 @@ use crate::use_case::user_use_case::dto::UpdateUser;
 use std::sync::Arc;
 
 #[cfg(test)]
-mod tests;
+pub mod tests;
 
 pub mod dto;
 

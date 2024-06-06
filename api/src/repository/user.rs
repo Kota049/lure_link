@@ -24,6 +24,9 @@ pub trait UserRepositoryTrait {
     // update application token
     async fn update_token(&self, refresh_token: &ApplicationToken) -> Result<User, Error>;
 
-    // update user
+    // register user
     async fn register_user(&self, up: UpdateUser) -> Result<User, Error>;
+
+    // save user
+    async fn save(&self, user: User) -> Result<User, Error>;
 }

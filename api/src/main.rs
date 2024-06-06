@@ -1,9 +1,8 @@
-use std::sync::Arc;
 use axum::{routing::get, Router, middleware};
-use axum::http::Request;
-use axum::middleware::Next;
+use axum::routing::{put};
 use tokio;
 use api::infrastructure::AppState;
+use api::presentation::handlers::proposal::get_payment;
 use api::presentation::middleware::auth;
 
 #[tokio::main]
@@ -13,27 +12,18 @@ async fn main() {
         String::from("4000")
     });
     let bind_target = format!("0.0.0.0:{}", port_number);
+    let app_state = AppState::init().unwrap();
+    let non_auth_router = Router::new().route("/hello", get(|| async { "Hello world" }));
+    let auth_router = Router::new()
+        .route("/carpool/:id/payment-info", put(get_payment))
+        .route_layer(middleware::from_fn_with_state(app_state.clone(), auth));
 
-    let app_state = Arc::new(AppState::init().unwrap());
+    let app =
+        Router::new()
+            .merge(non_auth_router)
+            .merge(auth_router)
+            .with_state(app_state);
 
-    let unguard_route = Router::new().route("/", get(|| async { "Hello, World!" }));
-    let guard_route = Router::new()
-        .route("/a", get(|| async { "HELLO WORLD" }))
-        .layer(middleware::from_fn(auth));
-
-    let app = Router::new()
-        .nest("/", unguard_route)
-        .nest("/", guard_route)
-        .layer(axum::middleware::from_fn(move |mut req: Request<_>, next: Next<_>| {
-            let state = Arc::clone(&app_state);
-            async move {
-                req.extensions_mut().insert(state);
-                next.run(req).await
-            }
-        }));
-
-    axum::Server::bind(&bind_target.parse().unwrap())
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+    let listener = tokio::net::TcpListener::bind(bind_target).await.unwrap();
+    axum::serve(listener, app).await.unwrap();
 }

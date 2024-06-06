@@ -32,4 +32,8 @@ impl UserRepositoryTrait for UserRepository {
     async fn register_user(&self, up: UpdateUser) -> Result<User, Error> {
         Ok(User::default())
     }
+
+    async fn save(&self, user: User) -> Result<User, Error> {
+        Ok(user)
+    }
 }

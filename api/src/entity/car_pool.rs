@@ -51,7 +51,6 @@ pub struct Point {
     pub point_name: PointName,
 }
 
-#[cfg(test)]
 impl Default for Point {
     fn default() -> Self {
         Self {

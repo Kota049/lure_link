@@ -1,7 +1,7 @@
 use std::str::FromStr;
 use axum::async_trait;
 use stripe::{Client, CreateCustomer, CreateEphemeralKey, CreatePaymentIntent, Currency, Customer, CustomerId, EphemeralKey, PaymentIntent, PaymentIntentCaptureMethod};
-use crate::entity::proposal::Proposal;
+use crate::entity::car_pool::CarPool;
 use crate::entity::user::User;
 use crate::error::Error;
 use crate::error::Error::Other;
@@ -58,7 +58,7 @@ impl StripeRepositoryTrait for StripeRepository {
         epheramel_key.secret.ok_or(Error::Other("cannot create epheramel key".to_string()))
     }
 
-    async fn create_payment_intent(&self, u: User, p: Proposal) -> Result<PaymentIntent, Error> {
+    async fn create_payment_intent(&self, u: User, c: CarPool) -> Result<PaymentIntent, Error> {
         // FIXME parse carpool's budget to i64
         let mut create_payment = CreatePaymentIntent::new(1000, Currency::JPY);
         // あとでキャプチャする

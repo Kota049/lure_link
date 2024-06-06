@@ -15,13 +15,33 @@ use crate::service::proposal_service::{
 };
 use crate::service::time_service::get_ja_now;
 use crate::service::{carpool_service, proposal_service};
-use crate::use_case::proposal_use_case::dto::AplProposal;
+use crate::use_case::proposal_use_case::dto::{AplProposal, PaymentInfo};
 use std::sync::Arc;
+use crate::repository::stripe::StripeRepositoryTrait;
+use crate::repository::user::UserRepositoryTrait;
 use crate::use_case::proposal_use_case::dto::proposal_user_status::ProposalUserStatus;
 
 pub struct ProposalUseCase {
     pr: Arc<dyn ProposalRepositoryTrait + Send + Sync>,
     cpr: Arc<dyn CarPoolRepositoryTrait + Send + Sync>,
+    sr: Arc<dyn StripeRepositoryTrait + Send + Sync>,
+    ur: Arc<dyn UserRepositoryTrait + Send + Sync>,
+}
+
+impl ProposalUseCase {
+    pub fn new(
+        pr: Arc<dyn ProposalRepositoryTrait + Send + Sync>,
+        cpr: Arc<dyn CarPoolRepositoryTrait + Send + Sync>,
+        sr: Arc<dyn StripeRepositoryTrait + Send + Sync>,
+        ur: Arc<dyn UserRepositoryTrait + Send + Sync>,
+    ) -> Self {
+        ProposalUseCase {
+            pr,
+            cpr,
+            sr,
+            ur,
+        }
+    }
 }
 
 #[cfg(test)]
@@ -30,6 +50,27 @@ pub mod tests;
 pub mod dto;
 
 impl ProposalUseCase {
+    //todo: test
+    pub async fn get_payment(&self, applicant: User, carpool_id: Id) -> Result<PaymentInfo, Error> {
+        let mut applicant = applicant;
+        let carpool = self.cpr.find_by_id(&carpool_id).await?;
+
+        if applicant.stripe_user_id.is_none() {
+            applicant = self.sr.create_stripe_user(applicant.clone()).await?;
+            applicant = self.ur.save(applicant).await?;
+        }
+        let ephemeral_key = self.sr.get_ephemeral_key(applicant.clone()).await?;
+        let payment_intent = self.sr.create_payment_intent(applicant.clone(), carpool).await?;
+
+        if payment_intent.client_secret.is_none() {
+            return Err(Other("payment_intentの作成に失敗しました".to_string()));
+        }
+        Ok(PaymentInfo {
+            customer_id: applicant.stripe_user_id.unwrap(),
+            ephemeral_key,
+            payment_intent_key: payment_intent.client_secret.unwrap(),
+        })
+    }
     pub async fn create(&self, applicant: User, input: AplProposal) -> Result<Proposal, Error> {
         let now = get_ja_now()?;
         let carpool = self.cpr.find_by_id(&input.car_pool_id).await?;

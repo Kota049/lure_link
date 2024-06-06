@@ -1,9 +1,26 @@
+use axum::http::StatusCode;
+use axum::Json;
+use axum::response::{IntoResponse, Response};
 use crate::domain::domain_object::id::Id;
 use crate::domain::domain_object::payment_status::PaymentStatus;
 use crate::entity::car_pool::Point;
 use serde::{Deserialize, Serialize};
 
 pub mod proposal_user_status;
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+pub struct PaymentInfo {
+    pub customer_id: String,
+    pub ephemeral_key: String,
+    pub payment_intent_key: String,
+}
+
+impl IntoResponse for PaymentInfo {
+    fn into_response(self) -> Response {
+        (StatusCode::OK, Json(self)).into_response()
+    }
+}
+
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct AplProposal {
