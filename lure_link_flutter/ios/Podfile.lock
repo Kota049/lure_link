@@ -1,6 +1,6 @@
 PODS:
   - Flutter (1.0.0)
-  - flutter_line_sdk (2.3.6):
+  - flutter_line_sdk (2.3.7):
     - Flutter
     - LineSDKSwift (~> 5.3)
   - flutter_secure_storage (6.0.0):
@@ -33,8 +33,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
 
 SPEC CHECKSUMS:
-  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_line_sdk: 76198d6c56481253ffda5af6dc8632d1f0c7db67
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_line_sdk: 9298c13d41dc7f78f62a428ab1906e4c95efe8da
   flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
   LineSDKSwift: bfcf8ff6a94ac8e5becad608240e3801f7694857
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c

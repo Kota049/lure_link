@@ -13,16 +13,16 @@ import 'package:lure_link_flutter/presentation/screens/car_pool_detail.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   final lineChannelId = dotenv.get("LINE_CHANNEL_ID", fallback: "000000000");
+  await LineSDK.instance.setup(lineChannelId).then((_) {
+    print('LineSDK Prepared');
+  });
   final lineRepo = LineLogin();
   final userRepository = UserRepository();
   final storageRepository = StorageRepository();
   final carPoolRepository = MockCarPoolRepository();
-  WidgetsFlutterBinding.ensureInitialized();
-  LineSDK.instance.setup(lineChannelId).then((_) {
-    print('LineSDK Prepared');
-  });
   runApp(MyApp(
       lineRepo: lineRepo,
       userRepository: userRepository,

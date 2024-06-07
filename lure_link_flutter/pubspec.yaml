@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^1.1.0
   dartz: ^0.10.1
-  flutter_line_sdk:
+  flutter_line_sdk: ^2.3.7
   flutter_dotenv:
   flutter_secure_storage: ^9.0.0
   either_dart: ^1.0.0
