@@ -3,38 +3,41 @@ enum CarPoolUserStatus {
   canApl,
   cannotApl,
   owner,
-  undefined
-  ;
+  undefined,
+  notLogin;
 
   static CarPoolUserStatus parse(String v) {
     switch (v) {
-      case '申し込み中':
+      case 'APPLYING':
         return CarPoolUserStatus.applying;
-      case '申し込み可能':
+      case 'CAN_APL':
         return CarPoolUserStatus.canApl;
-      case '申し込み不可':
+      case 'CANNOT_APL':
         return CarPoolUserStatus.cannotApl;
-      case '主催者':
+      case 'OWNER':
         return CarPoolUserStatus.owner;
+      case 'NOT_LOGIN':
+        return CarPoolUserStatus.notLogin;
       default:
         return CarPoolUserStatus.undefined;
     }
   }
 }
-
-extension ApplyBtnStatus on CarPoolUserStatus{
-  String get btnText{
+extension ApplyButtonText on CarPoolUserStatus {
+  String get btnText {
     switch (this) {
       case CarPoolUserStatus.applying:
-        return '申し込み内容をを確認する';
+        return '申し込みを確認する';
       case CarPoolUserStatus.canApl:
         return '申し込む';
       case CarPoolUserStatus.cannotApl:
-        return '申し込みは締め切りました';
+        return '現在申し込みはできません';
       case CarPoolUserStatus.owner:
-        return '募集詳細へ';
+        return '募集詳細を確認する';
+      case CarPoolUserStatus.notLogin:
+        return 'ログインして申し込む';
       default:
-        return '申し込みできません';
+        return '現在申し込みできません';
     }
   }
 }
@@ -50,6 +53,8 @@ extension UserStatusExt on CarPoolUserStatus {
         return 'CANNOT_APL';
       case CarPoolUserStatus.owner:
         return 'OWNER';
+      case CarPoolUserStatus.notLogin:
+        return 'NOT_LOGIN';
       default:
         return 'undefined';
     }

@@ -3,11 +3,11 @@ import 'package:lure_link_flutter/domains/entity/carpool.dart';
 import 'package:lure_link_flutter/domains/use_case/user_use_case.dart';
 import 'package:lure_link_flutter/domains/value_object/carpool_status.dart';
 import 'package:lure_link_flutter/domains/value_object/carpool_user_status.dart';
+import 'package:lure_link_flutter/presentation/widgets/apply_btn.dart';
 import 'package:provider/provider.dart';
 import '../../domains/use_case/car_pool_use_case.dart';
 import '../../domains/value_object/custom_error.dart';
 import '../widgets/app_bar_with_login.dart';
-import '../widgets/apply_btn.dart';
 
 class CarPoolDetailScreen extends StatefulWidget{
   final Carpool carpool;
@@ -25,6 +25,9 @@ class CarPoolDetailScreenState extends State<CarPoolDetailScreen>{
       final carPoolUseCase = Provider.of<CarPoolUseCase>(context, listen: false);
       final userRepository = Provider.of<UserUseCase>(context,listen: false);
       if (userRepository.user?.applicationToken == null){
+        setState(() {
+          _carPoolUserStatus = CarPoolUserStatus.notLogin;
+        });
         return;
       }
       final res = await carPoolUseCase.canApl(widget.carpool.id, userRepository.user!.applicationToken);
@@ -97,7 +100,7 @@ class CarPoolDetailScreenState extends State<CarPoolDetailScreen>{
               ]),
             ],
           ),
-          ApplyButton(carPoolUserStatus: _carPoolUserStatus),
+        ApplyButton(carPoolUserStatus: _carPoolUserStatus),
         ]));
   }
 }
